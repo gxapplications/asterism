@@ -1,0 +1,9 @@
+lib
+test
+example
+var
+doc
+.idea
+.jshintrc
+.jshintignore
+.travis.yml
