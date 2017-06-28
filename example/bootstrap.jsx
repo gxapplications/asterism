@@ -3,7 +3,7 @@
 import React from 'react'
 import { render } from 'react-dom'
 
-import { Asterism } from '../lib/index.jsx'
+import { MainComponent } from '../lib/main-component.jsx'
 
 import './example.css'
 
@@ -11,7 +11,7 @@ class App extends React.Component {
   render () {
     return (
       <div>
-        <Asterism />
+        <MainComponent />
       </div>
     )
   }

@@ -44,7 +44,8 @@
     ],
     "plugins": [
       [
-        "css-modules-transform", {
+        "css-modules-transform",
+        {
           "generateScopedName": "[local]",
           "extractCss": "./dist/styles.css"
         }
@@ -74,9 +75,11 @@
   },
   "dependencies": {
     "classnames": "^2.2.5",
+    "materialize-css": "^0.98.2",
     "prop-types": "^15.5.10",
     "react": "^15.5.4",
-    "react-gridifier": "^0.1.1"
+    "react-gridifier": "^0.1.1",
+    "react-materialize": "^1.0.3"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",
@@ -97,7 +100,6 @@
     "ignore-styles": "^5.0.1",
     "jsdoc": "^3.4.0",
     "jsdom": "^11.0.0",
-    "materialize-css": "^0.98.2",
     "mocha": "^3.4.2",
     "nyc": "^6.1.1",
     "precommit-hook": "^3.0.0",

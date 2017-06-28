@@ -2,13 +2,14 @@
 
 import React from 'react'
 import { Gridifier } from 'react-gridifier/dist/materialize'
+import { Navbar, NavItem, Icon } from 'react-materialize'
 
 import OrderHandler from './order-handler'
 
 import 'react-gridifier/dist/styles.css'
 import './styles.css'
 
-class Asterism extends React.Component {
+class MainComponent extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
@@ -21,20 +22,27 @@ class Asterism extends React.Component {
   render () {
     return (
       <div className='asterism'>
+        <Navbar fixed brand='&nbsp;&nbsp;⁂&nbsp;&nbsp;' href={null} right>
+          <NavItem onClick={this.toggleEditMode.bind(this)}><Icon>edit</Icon> Turn edit mode</NavItem>
+        </Navbar>
         <Gridifier editable={this.state.editMode} sortDispersion orderHandler={this.orderHandler} />
       </div>
     )
   }
+
+  toggleEditMode () {
+    this.setState({ editMode: !this.state.editMode })
+  }
 }
 
-Asterism.propTypes = {
+MainComponent.propTypes = {
 
 }
 
-Asterism.defaultProps = {
+MainComponent.defaultProps = {
 
 }
 
-export default Asterism
+export default MainComponent
 
-export { Asterism }
+export { MainComponent }
