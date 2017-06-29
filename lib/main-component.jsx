@@ -1,10 +1,12 @@
 'use strict'
 
 import classnames from 'classnames'
+import PropTypes from 'prop-types'
 import React from 'react'
 import { Gridifier } from 'react-gridifier/dist/materialize'
 import { Navbar, NavItem, Icon } from 'react-materialize'
 
+import defaultMaterialTheme from './default-material-theme'
 import OrderHandler from './order-handler'
 
 import 'react-gridifier/dist/styles.css'
@@ -21,8 +23,9 @@ class MainComponent extends React.Component {
   }
 
   render () {
+    const { theme } = this.props
     return (
-      <div className='asterism'>
+      <div className={classnames('asterism', theme.backgrounds.body)}>
         <Navbar fixed brand='&nbsp;&nbsp;⁂&nbsp;&nbsp;' href={null} right
           options={{ closeOnClick: true }}
           className={classnames({ 'teal': !this.state.editMode, 'green': this.state.editMode })}
@@ -40,11 +43,11 @@ class MainComponent extends React.Component {
 }
 
 MainComponent.propTypes = {
-
+  theme: PropTypes.object.isRequired
 }
 
 MainComponent.defaultProps = {
-
+  theme: defaultMaterialTheme
 }
 
 export default MainComponent
