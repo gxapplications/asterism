@@ -1,5 +1,6 @@
 'use strict'
 
+import classnames from 'classnames'
 import React from 'react'
 import { Gridifier } from 'react-gridifier/dist/materialize'
 import { Navbar, NavItem, Icon } from 'react-materialize'
@@ -22,8 +23,11 @@ class MainComponent extends React.Component {
   render () {
     return (
       <div className='asterism'>
-        <Navbar fixed brand='&nbsp;&nbsp;⁂&nbsp;&nbsp;' href={null} right>
-          <NavItem onClick={this.toggleEditMode.bind(this)}><Icon>edit</Icon> Turn edit mode</NavItem>
+        <Navbar fixed brand='&nbsp;&nbsp;⁂&nbsp;&nbsp;' href={null} right
+          options={{ closeOnClick: true }}
+          className={classnames({ 'teal': !this.state.editMode, 'green': this.state.editMode })}
+        >
+          <NavItem onClick={this.toggleEditMode.bind(this)}><Icon>edit</Icon>Edit mode</NavItem>
         </Navbar>
         <Gridifier editable={this.state.editMode} sortDispersion orderHandler={this.orderHandler} />
       </div>

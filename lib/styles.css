@@ -1,3 +1,7 @@
 .asterism {
-    background: lightgrey;
+  background: lightgrey;
+}
+
+.asterism .navbar-fixed {
+  z-index: 998;
 }
