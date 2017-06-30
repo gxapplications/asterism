@@ -2,8 +2,9 @@
 
 const Path = require('path')
 
+// TODO !0: ajouter l'écoute et le build des CSS, vers /build/styles.css
 module.exports = {
-  entry: './example/bootstrap.jsx',
+  entry: './example/component.jsx',
   output: {
     path: Path.join(__dirname, 'build'),
     filename: 'bundle.js',
