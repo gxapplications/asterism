@@ -6,7 +6,9 @@
   "contributors": [],
   "license": "MIT. This is open source. But please take care of the Gridifier license: http://gridifier.io/license",
   "scripts": {
-    "start": "webpack-dev-server --config example/webpack.config.js --no-info --progress --inline",
+    "start:component": "webpack-dev-server --config example/webpack.config.js --no-info --progress --inline",
+    "start::dist": "node dist/index.js",
+    "start": "node example/live.js",
     "dist": "babel lib --presets babel-preset-es2015-node6 --presets babel-preset-stage-2 --out-dir dist",
     "prepublish": "npm run dist",
     "doc:jsdoc": "jsdoc --package package.json --readme README.md --destination doc/jsdoc/ lib/**",

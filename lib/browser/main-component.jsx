@@ -30,7 +30,7 @@ class MainComponent extends React.Component {
           options={{ closeOnClick: true }}
           className={classnames({ 'teal': !this.state.editMode, 'green': this.state.editMode })}
         >
-          <NavItem onClick={this.toggleEditMode.bind(this)}><Icon>edit</Icon>Edit mode</NavItem>
+          <NavItem onClick={this.toggleEditMode.bind(this)}><Icon>edit</Icon><span className='hide-on-large-only'>Edit mode</span></NavItem>
         </Navbar>
         <Gridifier editable={this.state.editMode} sortDispersion orderHandler={this.orderHandler} />
       </div>
