@@ -1,10 +1,14 @@
 'use strict'
 
 const Path = require('path')
+const webpack = require('webpack')
 
-// TODO !0: ajouter l'écoute et le build des CSS, vers /build/styles.css
 module.exports = {
-  entry: './example/component.jsx',
+  entry: [
+    './example/component.jsx',
+    './lib/browser/styles.css',
+    'react-gridifier/dist/styles.css'
+  ],
   output: {
     path: Path.join(__dirname, 'build'),
     filename: 'bundle.js',
@@ -25,21 +29,20 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        exclude: /node_modules/,
-        include: Path.join(__dirname, '..'),
         use: [
           {
-            loader: 'style-loader'
+            loader: 'style-loader?sourceMap'
           },
           {
-            loader: 'css-loader'
+            loader: 'css-loader?sourceMap'
           }
         ]
       }
     ]
   },
-  resolve: {
-    extensions: ['.js', '.jsx', '.json']
-  },
+  plugins: [
+    new webpack.HotModuleReplacementPlugin(),
+    new webpack.NamedModulesPlugin()
+  ],
   devtool: 'cheap-module-source-map'
 }
