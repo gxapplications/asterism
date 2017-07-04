@@ -2,3 +2,8 @@ lib
 test
 example
 var
+.idea
+.groc.json
+.jshintrc
+.jshintignore
+.travis.yml
