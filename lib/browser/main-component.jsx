@@ -1,11 +1,13 @@
 'use strict'
 
-import classnames from 'classnames'
+import cx from 'classnames'
 import PropTypes from 'prop-types'
 import React from 'react'
 import { Gridifier } from 'react-gridifier/dist/materialize'
-import { Navbar, NavItem, Icon, Button } from 'react-materialize'
+import { Navbar, NavItem, Icon } from 'react-materialize'
+import { TransitionGroup } from 'react-transition-group'
 
+import AddCategoryButtons from './edition/add-category-buttons'
 import defaultMaterialTheme from './default-material-theme'
 import OrderHandler from './order-handler'
 
@@ -16,7 +18,8 @@ class MainComponent extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      editMode: false
+      editMode: false,
+      animationLevel: 3 // 1..3
     }
 
     this.orderHandler = new OrderHandler(window.localStorage, 'asterism-order-handler')
@@ -24,22 +27,23 @@ class MainComponent extends React.Component {
 
   render () {
     const { theme } = this.props
+    const { editMode, animationLevel } = this.state
     return (
-      <div className={classnames('asterism', theme.backgrounds.body)}>
+      <div className={cx('asterism', theme.backgrounds.body)}>
         <Navbar fixed brand='&nbsp;&nbsp;⁂&nbsp;&nbsp;' href={null} right
           options={{ closeOnClick: true }}
-          className={classnames({ [theme.backgrounds.card]: !this.state.editMode, [theme.backgrounds.editing]: this.state.editMode })}
+          className={cx({ [theme.backgrounds.card]: !editMode, [theme.backgrounds.editing]: editMode })}
         >
           <NavItem onClick={this.toggleEditMode.bind(this)}><Icon>edit</Icon><span className='hide-on-large-only'>Edit mode</span></NavItem>
-
         </Navbar>
-        <Gridifier editable={this.state.editMode} sortDispersion orderHandler={this.orderHandler} />
-        <Button floating fab='vertical' icon='insert_chart' className='red' large style={{top: '45px', right: '24px'}}>
-          <Button floating icon='insert_chart' className='red'/>
-          <Button floating icon='format_quote' className='yellow darken-1'/>
-          <Button floating icon='publish' className='green'/>
-          <Button floating icon='attach_file' className='blue'/>
-        </Button>
+
+        <Gridifier editable={editMode} sortDispersion orderHandler={this.orderHandler} />
+
+        {animationLevel >= 3 ? (
+          <TransitionGroup>
+            {editMode ? (<AddCategoryButtons theme={theme} />) : null}
+          </TransitionGroup>
+        ) : (editMode ? (<AddCategoryButtons theme={theme} />) : null)}
       </div>
     )
   }

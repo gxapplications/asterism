@@ -93,6 +93,7 @@
     "react": "^15.5.4",
     "react-gridifier": "^0.1.1",
     "react-materialize": "^1.0.3",
+    "react-transition-group": "^1.2.0",
     "style-loader": "^0.18.2",
     "webpack": "^2.6.1",
     "webpack-dev-middleware": "^1.11.0"
