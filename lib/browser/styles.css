@@ -5,3 +5,49 @@
 .asterism .navbar-fixed {
   z-index: 998;
 }
+
+#category-modal {
+    left: -5px;
+}
+
+#category-modal .coloring-header {
+  margin-top: -24px;
+  margin-left: -24px;
+  margin-right: -24px;
+  padding: 23px;
+  overflow: hidden;
+  position: relative;
+  color: #fff;
+}
+
+#category-modal .ripple {
+  opacity: 1;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  transform: scale(0);
+  position: absolute;
+  left: calc(50% - 50px);
+  top: calc(50% - 50px);
+    z-index: -1;
+  transition:
+    all 0.15s,
+    transform 0.15s 0.2s ease-in;
+}
+
+#category-modal .ripple.rippleEffect {
+    transform: scale(12);
+}
+
+#category-modal-bullet {
+  position: absolute;
+  display: none;
+  transition-duration: 0.15s;
+  box-shadow: none;
+  transition:
+    all 0.15s,
+    top 0.15s ease-in,
+    left 0.15s ease-out,
+    transform 0.15s linear;
+  z-index: 1004;
+}

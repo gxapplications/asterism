@@ -41,9 +41,9 @@ class MainComponent extends React.Component {
 
         {animationLevel >= 3 ? (
           <TransitionGroup>
-            {editMode ? (<AddCategoryButtons theme={theme} />) : null}
+            {editMode ? (<AddCategoryButtons animationLevel={animationLevel} theme={theme} />) : null}
           </TransitionGroup>
-        ) : (editMode ? (<AddCategoryButtons theme={theme} />) : null)}
+        ) : (editMode ? (<AddCategoryButtons animationLevel={animationLevel} theme={theme} />) : null)}
       </div>
     )
   }
