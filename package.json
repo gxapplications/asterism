@@ -8,8 +8,8 @@
   "scripts": {
     "start:component": "webpack-dev-server --config example/webpack.config.js --no-info --progress --inline",
     "start:dist": "npm run dist && cross-env NODE_ENV=production node example/dist.js",
-    "start": "cross-env NODE_ENV=development nodemon --watch lib/server example/hot-reload.js",
-    "dist": "rimraf dist && babel lib --presets babel-preset-es2015-node6 --presets babel-preset-stage-2 --presets react --out-dir dist",
+    "start": "npm run dist && cross-env NODE_ENV=development nodemon --watch lib/server example/hot-reload.js",
+    "dist": "rimraf dist && babel lib --presets=babel-preset-es2015-node6,babel-preset-stage-2,react --out-dir dist",
     "prepublish": "npm run dist",
     "doc:jsdoc": "jsdoc --package package.json --readme README.md --destination doc/jsdoc/ lib/**",
     "doc:coverage": "cross-env NODE_ENV=test nyc --require babel-core/register --reporter=lcov mocha && rimraf .nyc_output",
@@ -44,15 +44,19 @@
       "stage-2",
       "react"
     ],
-    "plugins": [
-      [
-        "css-modules-transform",
-        {
-          "generateScopedName": "[local]",
-          "extractCss": "./dist/styles.css"
-        }
-      ]
-    ]
+    "env": {
+      "development": {
+        "plugins": [
+          [
+            "css-modules-transform",
+            {
+              "generateScopedName": "[local]",
+              "extractCss": "./dist/styles.css"
+            }
+          ]
+        ]
+      }
+    }
   },
   "standard": {
     "env": {
@@ -91,25 +95,27 @@
     "materialize-css": "^0.98.2",
     "prop-types": "^15.5.10",
     "react": "^15.5.4",
-    "react-gridifier": "^0.1.1",
-    "react-materialize": "^1.0.3",
+    "react-gridifier": "^0.1.9",
+    "react-hot-loader": "^3.0.0-beta.7",
+    "react-materialize": "^1.0.4",
     "react-transition-group": "^1.2.0",
     "style-loader": "^0.18.2",
     "webpack": "^2.6.1",
-    "webpack-dev-middleware": "^1.11.0"
+    "webpack-dev-middleware": "^1.11.0",
+    "webpack-hot-middleware": "^2.18.2"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",
     "babel-core": "^6.4.5",
     "babel-eslint": "^6.0.0",
-    "chai": "^4.0.1",
+    "chai": "^4.1.0",
     "colors": "^1.1.2",
     "cross-env": "^1.0.7",
     "enzyme": "^2.8.2",
     "groc": "^0.8.0",
     "ignore-styles": "^5.0.1",
-    "jsdoc": "^3.4.0",
-    "jsdom": "^11.0.0",
+    "jsdoc": "^3.5.1",
+    "jsdom": "^11.1.0",
     "mocha": "^3.4.2",
     "nodemon": "^1.11.0",
     "nyc": "^6.1.1",
@@ -119,7 +125,7 @@
     "rimraf": "^2.5.2",
     "snazzy": "^7.0.0",
     "standard": "^6.0.1",
-    "webpack-dev-server": "^2.4.5"
+    "webpack-dev-server": "^2.5.1"
   },
   "directories": {
     "doc": "./doc",
