@@ -42,7 +42,7 @@ const categories = [
     title: 'Dev tools',
     icon: 'bug_report',
     condition: (process.env.NODE_ENV !== 'production'),
-    className: 'grey pulse'
+    className: 'grey'
   }
 ]
 
@@ -97,8 +97,6 @@ class AddCategoryButtons extends React.Component {
         }
       })
 
-      // TODO: vider (sync) et remplir (async) le contenu de la modal avec la liste des widgets de la category
-
       if (this.props.animationLevel >= 3) {
         const screenHeight = $(window).height()
         const headerTop = (screenHeight * 0.1) + 24
@@ -128,22 +126,30 @@ class AddCategoryButtons extends React.Component {
   }
 
   render () {
-    const { theme, animationLevel } = this.props
+    const { theme, animationLevel, items } = this.props
     const { modal } = this.state
     const waves = animationLevel >= 2 ? 'light' : undefined
     const modalCategory = modal ? categories.find((i) => i.id === modal) : null
+    const modalItems = items[modal] || []
     return (
       <div>
         {modal ? (
           <div id='category-modal' className='modal modal-fixed-footer'>
             <div className='modal-content'>
-              <div className={cx('coloring-header', { [theme.backgrounds.card]: animationLevel < 3 })}>
-                {animationLevel >= 3 ? (<div className={cx('ripple', theme.backgrounds.card)} />) : null}
+              <div className={cx('coloring-header', { [modalCategory.className || theme.backgrounds.card]: animationLevel < 3 })}>
+                {animationLevel >= 3 ? (<div className={cx('ripple', modalCategory.className || theme.backgrounds.card)} />) : null}
                 <div>
-                  <h4><Icon small>{modalCategory.icon}</Icon> &nbsp;{modalCategory.title}</h4>
+                  <h4>
+                    <Icon small>{modalCategory.icon}</Icon>
+                    {modalCategory.title}
+                  </h4>
                 </div>
               </div>
-              <p>A bunch of text</p>
+              <ul>
+                {modalItems.map((item, idx) => (
+                  <li key={idx}>{item.title}</li>
+                ))}
+              </ul>
             </div>
             <div className='modal-footer'>
               <a href='#!' className='modal-action modal-close waves-effect waves-light btn-flat'>Close</a>
@@ -151,14 +157,16 @@ class AddCategoryButtons extends React.Component {
           </div>
         ) : null}
 
-        {animationLevel >= 3 ? (<div id='category-modal-bullet' className={cx('btn-floating', theme.backgrounds.card)} />) : null}
+        {animationLevel >= 3 ? (
+          <div id='category-modal-bullet' className={cx('btn-floating', (modalCategory && modalCategory.className) || theme.backgrounds.card)} />
+        ) : null}
 
         <Button large floating fab='vertical' icon='add_box' waves={waves} className={cx(theme.actions.edition, this.state.clazz)}>
           {categories.reverse().map((value, idx) => (
             value.condition ? (
               <Button key={idx}
                 floating icon={value.icon} waves={waves}
-                className={value.className || theme.actions.secondary}
+                className={cx(value.className || theme.actions.secondary, { pulse: items[value.id].find((i) => i.isNew) })}
                 onClick={this.categorySelect.bind(this, value.id)}
               />
             ) : null
@@ -171,7 +179,12 @@ class AddCategoryButtons extends React.Component {
 
 AddCategoryButtons.propTypes = {
   theme: PropTypes.object.isRequired,
-  animationLevel: PropTypes.number.isRequired
+  animationLevel: PropTypes.number.isRequired,
+  items: PropTypes.object
+}
+
+AddCategoryButtons.defaultTypes = {
+  items: {}
 }
 
 export default AddCategoryButtons

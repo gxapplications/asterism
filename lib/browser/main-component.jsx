@@ -19,15 +19,33 @@ class MainComponent extends React.Component {
     super(props)
     this.state = {
       editMode: false,
-      animationLevel: 3 // 1..3
+      animationLevel: 3, // 1..3 TODO: setting from a setting panel (from localstorage?)
+      addItems: { // TODO: async loading... only when state.editMode turns ON
+        domotics: [],
+        security: [],
+        screening: [],
+        communication: [],
+        information: [],
+        development: [
+          {
+            title: 'Debug log',
+            isNew: true
+          },
+          {
+            title: 'Other old thing'
+          }
+        ]
+      }
     }
 
     this.orderHandler = new OrderHandler(window.localStorage, 'asterism-order-handler')
+    // TODO: add param for defaultOrder from DB at instantiation
+    // TODO: getLocalOrder() and setLocalOrder() must be used in a settings panel to persist to/from DB
   }
 
   render () {
     const { theme } = this.props
-    const { editMode, animationLevel } = this.state
+    const { editMode, animationLevel, addItems } = this.state
     return (
       <div className={cx('asterism', theme.backgrounds.body)}>
         <Navbar fixed brand='&nbsp;&nbsp;⁂&nbsp;&nbsp;' href={null} right
@@ -41,9 +59,9 @@ class MainComponent extends React.Component {
 
         {animationLevel >= 3 ? (
           <TransitionGroup>
-            {editMode ? (<AddCategoryButtons animationLevel={animationLevel} theme={theme} />) : null}
+            {editMode ? (<AddCategoryButtons animationLevel={animationLevel} theme={theme} items={addItems} />) : null}
           </TransitionGroup>
-        ) : (editMode ? (<AddCategoryButtons animationLevel={animationLevel} theme={theme} />) : null)}
+        ) : (editMode ? (<AddCategoryButtons animationLevel={animationLevel} theme={theme} items={addItems} />) : null)}
       </div>
     )
   }

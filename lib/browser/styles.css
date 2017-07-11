@@ -20,6 +20,12 @@
   color: #fff;
 }
 
+#category-modal .coloring-header h4 i {
+  position: relative;
+  top: 3px;
+  margin-right: 15px;
+}
+
 #category-modal .ripple {
   opacity: 1;
   width: 100px;
