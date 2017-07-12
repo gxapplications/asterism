@@ -42,7 +42,7 @@ const categories = [
     title: 'Dev tools',
     icon: 'bug_report',
     condition: (process.env.NODE_ENV !== 'production'),
-    className: 'grey'
+    className: 'purple'
   }
 ]
 
@@ -103,7 +103,7 @@ class AddCategoryButtons extends React.Component {
         const bullet = $('#category-modal-bullet')
         const ripple = $('#category-modal .ripple')
 
-        bullet.show({ queue: true }).css({ top: headerTop, left: '50%', transform: 'scale(2.2)' }).hide({ queue: true, duration: 0 })
+        bullet.show({ queue: true }).css({ top: headerTop, left: '50%', transform: 'scale(1.8)' }).hide({ queue: true, duration: 0 })
         $('#category-modal').modal('open')
 
         $('.fixed-action-btn.vertical.active').closeFAB()
@@ -134,7 +134,7 @@ class AddCategoryButtons extends React.Component {
     return (
       <div>
         {modal ? (
-          <div id='category-modal' className='modal modal-fixed-footer'>
+          <div id='category-modal' className={cx('modal modal-fixed-footer', theme.backgrounds.body)}>
             <div className='modal-content'>
               <div className={cx('coloring-header', { [modalCategory.className || theme.backgrounds.card]: animationLevel < 3 })}>
                 {animationLevel >= 3 ? (<div className={cx('ripple', modalCategory.className || theme.backgrounds.card)} />) : null}
@@ -151,7 +151,7 @@ class AddCategoryButtons extends React.Component {
                 ))}
               </ul>
             </div>
-            <div className='modal-footer'>
+            <div className={cx('modal-footer', theme.backgrounds.body)}>
               <a href='#!' className='modal-action modal-close waves-effect waves-light btn-flat'>Close</a>
             </div>
           </div>
@@ -162,7 +162,7 @@ class AddCategoryButtons extends React.Component {
         ) : null}
 
         <Button large floating fab='vertical' icon='add_box' waves={waves} className={cx(theme.actions.edition, this.state.clazz)}>
-          {categories.reverse().map((value, idx) => (
+          {Array.from(categories).reverse().map((value, idx) => (
             value.condition ? (
               <Button key={idx}
                 floating icon={value.icon} waves={waves}

@@ -10,6 +10,7 @@ import { TransitionGroup } from 'react-transition-group'
 import AddCategoryButtons from './edition/add-category-buttons'
 import defaultMaterialTheme from './default-material-theme'
 import OrderHandler from './order-handler'
+import Settings from './edition/settings'
 
 import 'react-gridifier/dist/styles.css'
 import './styles.css'
@@ -52,7 +53,16 @@ class MainComponent extends React.Component {
           options={{ closeOnClick: true }}
           className={cx({ [theme.backgrounds.card]: !editMode, [theme.backgrounds.editing]: editMode })}
         >
-          <NavItem onClick={this.toggleEditMode.bind(this)}><Icon>edit</Icon><span className='hide-on-large-only'>Edit mode</span></NavItem>
+          {editMode ? (
+            <NavItem href='#settings-modal'>
+              <Icon>settings</Icon>
+              <span className='hide-on-large-only'>Settings</span>
+            </NavItem>
+          ) : null}
+          <NavItem onClick={this.toggleEditMode.bind(this)}>
+            <Icon>edit</Icon>
+            <span className='hide-on-large-only'>{editMode ? 'End edition' : 'Edit mode'}</span>
+          </NavItem>
         </Navbar>
 
         <Gridifier editable={editMode} sortDispersion orderHandler={this.orderHandler} />
@@ -62,6 +72,10 @@ class MainComponent extends React.Component {
             {editMode ? (<AddCategoryButtons animationLevel={animationLevel} theme={theme} items={addItems} />) : null}
           </TransitionGroup>
         ) : (editMode ? (<AddCategoryButtons animationLevel={animationLevel} theme={theme} items={addItems} />) : null)}
+
+        {editMode ? (
+          <Settings animationLevel={animationLevel} theme={theme} />
+        ) : null}
       </div>
     )
   }
