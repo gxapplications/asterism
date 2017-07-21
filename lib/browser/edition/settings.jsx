@@ -66,6 +66,8 @@ class Settings extends React.Component {
     )
   }
 
+  // TODO !2: on screen resize, must reload carousel...
+
   reloadPage () {
     window.location.reload()
   }

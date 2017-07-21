@@ -40,12 +40,11 @@ class MainComponent extends React.Component {
       }
     }
 
-    this.orderHandler = new OrderHandler(props.localStorage, 'order-handler')
-    // TODO !3: add param for defaultOrder from DB at instantiation (used if localStorage has no order yet)
+    this.orderHandler = new OrderHandler(props.localStorage, 'order-handler', props.serverStorage.getItem('order-handler'))
   }
 
   render () {
-    const { theme, localStorage } = this.props
+    const { theme, localStorage, serverStorage } = this.props
     const { editMode, animationLevel, addItems } = this.state
     return (
       <div className={cx('asterism', theme.backgrounds.body)}>
@@ -74,7 +73,7 @@ class MainComponent extends React.Component {
         ) : (editMode ? (<AddCategoryButtons animationLevel={animationLevel} theme={theme} items={addItems} />) : null)}
 
         {editMode ? (
-          <Settings animationLevel={animationLevel} localStorage={localStorage}
+          <Settings animationLevel={animationLevel} localStorage={localStorage} serverStorage={serverStorage}
             orderHandler={this.orderHandler} theme={theme} />
         ) : null}
       </div>
@@ -96,7 +95,7 @@ MainComponent.defaultProps = {
   theme: defaultMaterialTheme,
   localStorage: window.localStorage, // TODO !2: put a middleware to encapsulate window.localStorage...
   // TODO ... (to have one default asterism object instead of multiple keys, and to separate plugins data)
-  serverStorage: defaultServerStorage
+  serverStorage: new defaultServerStorage('asterism')
 }
 
 export default MainComponent
