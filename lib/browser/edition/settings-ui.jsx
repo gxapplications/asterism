@@ -10,26 +10,28 @@ class SettingsUserInterface extends React.Component {
   }
 
   render () {
+    const { localStorage } = this.props
+    const level = parseInt(localStorage.getItem('settings-animation-level') || 3)
     return (
       <div className='carousel-item' href='#ui!'>
         <h2>User interface</h2>
-        TODO: colors to change theme;
+        TODO !2: colors to change theme;
 
         <div className='section left-align'>
           <h5>Animations</h5>
           <p>
             <input name='animationLevel' type='radio' value='3' id='animationLevel3'
-              onClick={this.setAnimationLevel.bind(this, 3)} />
+              onClick={this.setAnimationLevel.bind(this, 3)} checked={level === 3 ? 'checked' : null} />
             <label htmlFor='animationLevel3' className='truncate'>High animation level, my device is strong enough!</label>
           </p>
           <p>
             <input name='animationLevel' type='radio' value='2' id='animationLevel2'
-              onClick={this.setAnimationLevel.bind(this, 2)} />
+              onClick={this.setAnimationLevel.bind(this, 2)} checked={level === 2 ? 'checked' : null} />
             <label htmlFor='animationLevel2' className='truncate'>Medium animation level, need to be fluent.</label>
           </p>
           <p>
             <input className='with-gap' name='animationLevel' type='radio' value='1' id='animationLevel1'
-              onClick={this.setAnimationLevel.bind(this, 1)} />
+              onClick={this.setAnimationLevel.bind(this, 1)} checked={level === 1 ? 'checked' : null} />
             <label htmlFor='animationLevel1' className='truncate'>Low animation level, my device is a dinosaur...</label>
           </p>
         </div>
@@ -38,13 +40,14 @@ class SettingsUserInterface extends React.Component {
   }
 
   setAnimationLevel (level) {
-    // TODO
+    this.props.localStorage.setItem('settings-animation-level', level)
     this.props.showRefreshButton()
   }
 }
 
 SettingsUserInterface.propTypes = {
   theme: PropTypes.object.isRequired,
+  localStorage: PropTypes.object.isRequired,
   showRefreshButton: PropTypes.func.isRequired
 }
 

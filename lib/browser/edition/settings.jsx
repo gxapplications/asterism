@@ -31,7 +31,7 @@ class Settings extends React.Component {
   }
 
   render () {
-    const { theme } = this.props
+    const { theme, localStorage, serverStorage, orderHandler } = this.props
     const { showRefreshButton } = this.state
     return (
       <div id='settings-modal' className={cx('modal', theme.backgrounds.body)}>
@@ -55,8 +55,10 @@ class Settings extends React.Component {
           </div>
 
           <div className='carousel carousel-slider center'>
-            <Display theme={theme} showRefreshButton={() => this.setState({ showRefreshButton: true })} />
-            <UserInterface theme={theme} showRefreshButton={() => this.setState({ showRefreshButton: true })} />
+            <Display theme={theme} orderHandler={orderHandler} serverStorage={serverStorage}
+              showRefreshButton={() => this.setState({ showRefreshButton: true })} />
+            <UserInterface localStorage={localStorage} theme={theme}
+              showRefreshButton={() => this.setState({ showRefreshButton: true })} />
           </div>
 
         </div>
@@ -71,6 +73,9 @@ class Settings extends React.Component {
 
 Settings.propTypes = {
   theme: PropTypes.object.isRequired,
+  localStorage: PropTypes.object.isRequired,
+  serverStorage: PropTypes.object.isRequired,
+  orderHandler: PropTypes.object.isRequired,
   animationLevel: PropTypes.number.isRequired
 }
 

@@ -9,6 +9,7 @@ import { TransitionGroup } from 'react-transition-group'
 
 import AddCategoryButtons from './edition/add-category-buttons'
 import defaultMaterialTheme from './default-material-theme'
+import defaultServerStorage from './default-server-storage'
 import OrderHandler from './order-handler'
 import Settings from './edition/settings'
 
@@ -20,8 +21,8 @@ class MainComponent extends React.Component {
     super(props)
     this.state = {
       editMode: false,
-      animationLevel: 3, // 1..3 TODO: setting from a setting panel (from localstorage?)
-      addItems: { // TODO: async loading... only when state.editMode turns ON
+      animationLevel: parseInt(props.localStorage.getItem('settings-animation-level') || 3), // 1..3
+      addItems: { // TODO !3: async loading... only when state.editMode turns ON
         domotics: [],
         security: [],
         screening: [],
@@ -39,13 +40,12 @@ class MainComponent extends React.Component {
       }
     }
 
-    this.orderHandler = new OrderHandler(window.localStorage, 'asterism-order-handler')
-    // TODO: add param for defaultOrder from DB at instantiation
-    // TODO: getLocalOrder() and setLocalOrder() must be used in a settings panel to persist to/from DB
+    this.orderHandler = new OrderHandler(props.localStorage, 'order-handler')
+    // TODO !3: add param for defaultOrder from DB at instantiation (used if localStorage has no order yet)
   }
 
   render () {
-    const { theme } = this.props
+    const { theme, localStorage } = this.props
     const { editMode, animationLevel, addItems } = this.state
     return (
       <div className={cx('asterism', theme.backgrounds.body)}>
@@ -74,7 +74,8 @@ class MainComponent extends React.Component {
         ) : (editMode ? (<AddCategoryButtons animationLevel={animationLevel} theme={theme} items={addItems} />) : null)}
 
         {editMode ? (
-          <Settings animationLevel={animationLevel} theme={theme} />
+          <Settings animationLevel={animationLevel} localStorage={localStorage}
+            orderHandler={this.orderHandler} theme={theme} />
         ) : null}
       </div>
     )
@@ -86,11 +87,16 @@ class MainComponent extends React.Component {
 }
 
 MainComponent.propTypes = {
-  theme: PropTypes.object.isRequired
+  theme: PropTypes.object.isRequired,
+  localStorage: PropTypes.object.isRequired,
+  serverStorage: PropTypes.object.isRequired
 }
 
 MainComponent.defaultProps = {
-  theme: defaultMaterialTheme
+  theme: defaultMaterialTheme,
+  localStorage: window.localStorage, // TODO !2: put a middleware to encapsulate window.localStorage...
+  // TODO ... (to have one default asterism object instead of multiple keys, and to separate plugins data)
+  serverStorage: defaultServerStorage
 }
 
 export default MainComponent
