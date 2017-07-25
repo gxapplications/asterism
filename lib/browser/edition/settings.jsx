@@ -2,12 +2,23 @@
 
 /*global $ */
 import cx from 'classnames'
+import debounce from 'debounce'
 import PropTypes from 'prop-types'
 import React from 'react'
 import { Icon } from 'react-materialize'
 
 import UserInterface from './settings-ui'
 import Display from './settings-display'
+
+const debouncedResizeHandler = (delay) => debounce(() => {
+  console.log('resized')
+  $('#settings-modal .carousel.carousel-slider').carousel({
+    fullWidth: true,
+    indicators: true,
+    noWrap: true
+  })
+  $(window).one('resize', debouncedResizeHandler(delay))
+}, delay)
 
 class Settings extends React.Component {
   constructor (props) {
@@ -28,6 +39,9 @@ class Settings extends React.Component {
         })
       }
     })
+
+    // debounced onresize event
+    $(window).one('resize', debouncedResizeHandler(1080 / Math.pow(this.props.animationLevel, 2)))
   }
 
   render () {
@@ -65,8 +79,6 @@ class Settings extends React.Component {
       </div>
     )
   }
-
-  // TODO !2: on screen resize, must reload carousel...
 
   reloadPage () {
     window.location.reload()

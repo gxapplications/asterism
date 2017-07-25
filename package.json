@@ -89,6 +89,7 @@
     "classnames": "^2.2.5",
     "colors": "^1.1.2",
     "css-loader": "^0.28.4",
+    "debounce": "^1.0.2",
     "express": "^4.15.3",
     "extract-text-webpack-plugin": "^2.1.2",
     "file-loader": "^0.11.2",

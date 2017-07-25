@@ -9,6 +9,7 @@ import { TransitionGroup } from 'react-transition-group'
 
 import AddCategoryButtons from './edition/add-category-buttons'
 import defaultMaterialTheme from './default-material-theme'
+import DefaultLocalStorage from './default-local-storage'
 import DefaultServerStorage from './default-server-storage'
 import OrderHandler from './order-handler'
 import Settings from './edition/settings'
@@ -93,8 +94,7 @@ MainComponent.propTypes = {
 
 MainComponent.defaultProps = {
   theme: defaultMaterialTheme,
-  localStorage: window.localStorage, // TODO !2: put a middleware to encapsulate window.localStorage...
-  // TODO ... (to have one default asterism object instead of multiple keys, and to separate plugins data)
+  localStorage: new DefaultLocalStorage('asterism'),
   serverStorage: new DefaultServerStorage('asterism')
 }
 

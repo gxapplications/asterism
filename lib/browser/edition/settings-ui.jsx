@@ -15,7 +15,12 @@ class SettingsUserInterface extends React.Component {
     return (
       <div className='carousel-item' href='#ui!'>
         <h2>User interface</h2>
-        TODO !2: colors to change theme;
+
+        <div className='section left-align'>
+          <h5>Theme</h5>
+
+          TODO !0: colors to change theme;
+        </div>
 
         <div className='section left-align'>
           <h5>Animations</h5>
