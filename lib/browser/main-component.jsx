@@ -1,5 +1,6 @@
 'use strict'
 
+/*global $ */
 import cx from 'classnames'
 import PropTypes from 'prop-types'
 import React from 'react'
@@ -8,7 +9,7 @@ import { Navbar, NavItem, Icon } from 'react-materialize'
 import { TransitionGroup } from 'react-transition-group'
 
 import AddCategoryButtons from './edition/add-category-buttons'
-import defaultMaterialTheme from './default-material-theme'
+import DefaultMaterialTheme from './default-material-theme'
 import DefaultLocalStorage from './default-local-storage'
 import DefaultServerStorage from './default-server-storage'
 import OrderHandler from './order-handler'
@@ -16,6 +17,8 @@ import Settings from './edition/settings'
 
 import 'react-gridifier/dist/styles.css'
 import './styles.css'
+
+const localStorage = new DefaultLocalStorage('asterism')
 
 class MainComponent extends React.Component {
   constructor (props) {
@@ -42,6 +45,12 @@ class MainComponent extends React.Component {
     }
 
     this.orderHandler = new OrderHandler(props.localStorage, 'order-handler', props.serverStorage.getItem('order-handler'))
+  }
+
+  componentDidMount () {
+    // dynamic CSS for background color
+    const bgColor = $('div.asterism').css('background-color')
+    $('div.asterism').css('box-shadow', `0 2000px 0 2000px ${bgColor}`)
   }
 
   render () {
@@ -93,8 +102,8 @@ MainComponent.propTypes = {
 }
 
 MainComponent.defaultProps = {
-  theme: defaultMaterialTheme,
-  localStorage: new DefaultLocalStorage('asterism'),
+  theme: new DefaultMaterialTheme(localStorage),
+  localStorage: localStorage,
   serverStorage: new DefaultServerStorage('asterism')
 }
 

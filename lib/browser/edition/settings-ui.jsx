@@ -4,23 +4,13 @@ import PropTypes from 'prop-types'
 import React from 'react'
 
 class SettingsUserInterface extends React.Component {
-  constructor (props) {
-    super(props)
-    this.state = {}
-  }
-
   render () {
     const { localStorage } = this.props
     const level = parseInt(localStorage.getItem('settings-animation-level') || 3)
+
     return (
       <div className='carousel-item' href='#ui!'>
         <h2>User interface</h2>
-
-        <div className='section left-align'>
-          <h5>Theme</h5>
-
-          TODO !0: colors to change theme;
-        </div>
 
         <div className='section left-align'>
           <h5>Animations</h5>

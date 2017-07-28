@@ -7,18 +7,22 @@ import PropTypes from 'prop-types'
 import React from 'react'
 import { Icon } from 'react-materialize'
 
-import UserInterface from './settings-ui'
 import Display from './settings-display'
+import Theme from './settings-theme'
+import UserInterface from './settings-ui'
 
 const debouncedResizeHandler = (delay) => debounce(() => {
-  console.log('resized')
-  $('#settings-modal .carousel.carousel-slider').carousel({
+  const slider = $('#settings-modal .carousel.carousel-slider').first()
+  if (!slider.length) {
+    return
+  }
+  slider.carousel({
     fullWidth: true,
     indicators: true,
     noWrap: true
   })
   $(window).one('resize', debouncedResizeHandler(delay))
-}, delay)
+}, delay + 100)
 
 class Settings extends React.Component {
   constructor (props) {
@@ -26,6 +30,9 @@ class Settings extends React.Component {
     this.state = {
       showRefreshButton: false
     }
+
+    // debounced onresize event
+    $(window).one('resize', debouncedResizeHandler(this, 1080 / Math.pow(this.props.animationLevel, 2)))
   }
 
   componentDidMount () {
@@ -39,9 +46,6 @@ class Settings extends React.Component {
         })
       }
     })
-
-    // debounced onresize event
-    $(window).one('resize', debouncedResizeHandler(1080 / Math.pow(this.props.animationLevel, 2)))
   }
 
   render () {
@@ -70,6 +74,8 @@ class Settings extends React.Component {
 
           <div className='carousel carousel-slider center'>
             <Display theme={theme} orderHandler={orderHandler} serverStorage={serverStorage}
+              showRefreshButton={() => this.setState({ showRefreshButton: true })} />
+            <Theme localStorage={localStorage} theme={theme}
               showRefreshButton={() => this.setState({ showRefreshButton: true })} />
             <UserInterface localStorage={localStorage} theme={theme}
               showRefreshButton={() => this.setState({ showRefreshButton: true })} />
