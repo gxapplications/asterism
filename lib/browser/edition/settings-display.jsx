@@ -1,5 +1,6 @@
 'use strict'
 
+import cx from 'classnames'
 import PropTypes from 'prop-types'
 import React from 'react'
 import { Button, Icon } from 'react-materialize'
@@ -11,6 +12,7 @@ class SettingsDisplay extends React.Component {
   }
 
   render () {
+    const { theme } = this.props
     return (
       <div className='carousel-item' href='#display!'>
         <h2>Components display</h2>
@@ -20,13 +22,13 @@ class SettingsDisplay extends React.Component {
           <p>
             You can save your current components ordering into server, to backup and/or to let your other devices use it.
           </p>
-          <Button waves='light' onClick={this.saveOrder.bind(this)}>
+          <Button waves='light' onClick={this.saveOrder.bind(this)} className={cx('marged', theme.actions.primary)}>
             <Icon left>devices</Icon>
             <Icon left>keyboard_arrow_right</Icon>
             <Icon left>storage</Icon>
             &nbsp; <span className='hide-on-med-and-down'>Save current to server</span><span className='hide-on-large-only'>Save</span>
-          </Button> &nbsp;
-          <Button waves='light' onClick={this.restoreOrder.bind(this)}>
+          </Button>
+          <Button waves='light' onClick={this.restoreOrder.bind(this)} className={cx('marged', theme.actions.primary)}>
             <Icon left>storage</Icon>
             <Icon left>keyboard_arrow_right</Icon>
             <Icon left>devices</Icon>

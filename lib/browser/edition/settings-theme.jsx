@@ -24,8 +24,6 @@ class SettingsTheme extends React.Component {
     const { theme } = this.props
     const { currentColor } = this.state
 
-    // TODO !1: les autres boutons de l'interface d'édition: primary/secondary/inconspicuous
-
     return (
       <div className='carousel-item card' href='#theme!'>
         <h2>Theme</h2>

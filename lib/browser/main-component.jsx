@@ -26,7 +26,7 @@ class MainComponent extends React.Component {
     this.state = {
       editMode: false,
       animationLevel: parseInt(props.localStorage.getItem('settings-animation-level') || 3), // 1..3
-      addItems: { // TODO !3: async loading... only when state.editMode turns ON
+      addItems: { // TODO !1: async loading... only when state.editMode turns ON
         domotics: [],
         security: [],
         screening: [],
