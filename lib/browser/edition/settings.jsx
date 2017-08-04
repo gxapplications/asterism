@@ -1,6 +1,6 @@
 'use strict'
 
-/*global $ */
+/* global $, plugins */
 import cx from 'classnames'
 import debounce from 'debounce'
 import PropTypes from 'prop-types'
@@ -31,6 +31,11 @@ class Settings extends React.Component {
       showRefreshButton: false
     }
 
+    // Plugin settings panels
+    this.pluginSettingsPanels = (process.env.ASTERISM_SETTINGS_PANELS || []).map((toRequire) => {
+      return plugins.settingsPanels[toRequire].default
+    })
+
     // debounced onresize event
     $(window).one('resize', debouncedResizeHandler(this, 1080 / Math.pow(this.props.animationLevel, 2)))
   }
@@ -49,7 +54,7 @@ class Settings extends React.Component {
   }
 
   render () {
-    const { theme, localStorage, serverStorage, orderHandler } = this.props
+    const { theme, localStorage, serverStorage, itemManager } = this.props
     const { showRefreshButton } = this.state
     return (
       <div id='settings-modal' className={cx('modal', theme.backgrounds.body)}>
@@ -73,12 +78,17 @@ class Settings extends React.Component {
           </div>
 
           <div className='carousel carousel-slider center'>
-            <Display theme={theme} orderHandler={orderHandler} serverStorage={serverStorage}
+            <Display theme={theme} itemManager={itemManager} serverStorage={serverStorage}
               showRefreshButton={() => this.setState({ showRefreshButton: true })} />
             <Theme localStorage={localStorage} theme={theme}
               showRefreshButton={() => this.setState({ showRefreshButton: true })} />
             <UserInterface localStorage={localStorage} theme={theme}
               showRefreshButton={() => this.setState({ showRefreshButton: true })} />
+
+            {this.pluginSettingsPanels.map((Panel, idx) => (
+              <Panel key={idx} localStorage={localStorage} theme={theme}
+                showRefreshButton={() => this.setState({ showRefreshButton: true })} />
+            ))}
           </div>
 
         </div>
@@ -95,7 +105,7 @@ Settings.propTypes = {
   theme: PropTypes.object.isRequired,
   localStorage: PropTypes.object.isRequired,
   serverStorage: PropTypes.object.isRequired,
-  orderHandler: PropTypes.object.isRequired,
+  itemManager: PropTypes.object.isRequired,
   animationLevel: PropTypes.number.isRequired
 }
 

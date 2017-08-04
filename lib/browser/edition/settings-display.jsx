@@ -36,27 +36,25 @@ class SettingsDisplay extends React.Component {
           </Button>
         </div>
 
-        TODO !5: use gridifier background colors option ?;
+        TODO !4: use gridifier background colors option ?;
         <button onClick={this.props.showRefreshButton} className='waves-effect waves-light btn-flat'>Test</button>
       </div>
     )
   }
 
   saveOrder () {
-    const order = this.props.orderHandler.getLocalOrder()
-    this.props.serverStorage.setItem('order-handler', order)
+    const order = this.props.itemManager.orderHandler.getLocalOrder()
+    return this.props.serverStorage.setItem('order-handler', order)
   }
 
   restoreOrder () {
-    const order = this.props.serverStorage.getItem('order-handler')
-    this.props.orderHandler.setLocalOrder(order)
-    this.props.orderHandler.restoreOrder()
+    this.props.itemManager.applyServerOrder()
   }
 }
 
 SettingsDisplay.propTypes = {
   theme: PropTypes.object.isRequired,
-  orderHandler: PropTypes.object.isRequired,
+  itemManager: PropTypes.object.isRequired,
   serverStorage: PropTypes.object.isRequired,
   showRefreshButton: PropTypes.func.isRequired
 }

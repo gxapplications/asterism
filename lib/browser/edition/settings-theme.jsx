@@ -1,6 +1,6 @@
 'use strict'
 
-/*global $ */
+/* global $ */
 import cx from 'classnames'
 import objectPath from 'object-path'
 import PropTypes from 'prop-types'
@@ -42,7 +42,7 @@ class SettingsTheme extends React.Component {
         <div className={cx('card-reveal', theme.backgrounds.body)}>
           <span className='card-title'>Choose a color<Icon right>close</Icon></span>
           <div className='center-align circle-picker-container'>
-            <CirclePicker width='340px' circleSize={26} circleSpacing={-2} colors={this.colors}
+            <CirclePicker width={340} circleSize={26} circleSpacing={-2} colors={this.colors}
               color={this.colors[currentColor]} onChangeComplete={this.setColor.bind(this)} />
           </div>
         </div>

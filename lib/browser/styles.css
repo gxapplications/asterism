@@ -6,11 +6,32 @@
   z-index: 998;
 }
 
+.asterism .navbar-fixed ul.hide-on-med-and-down li {
+  padding: 0 1.4rem;
+}
+
+.asterism .navbar-fixed ul.side-nav li {
+  padding: 0.2rem 0.4rem;
+  display: inline-flex;
+  width: 100%;
+}
+
+.asterism .navbar-fixed ul.side-nav li i {
+  padding: 0 0.6rem 0 1rem;
+  height: 64px;
+  line-height: 64px;
+}
+
+.asterism .navbar-fixed ul.side-nav li span {
+  padding: 0.6rem 0.4rem;
+  display: block;
+  width: 100%;
+}
+
 .asterism .modal .coloring-header {
   padding: 23px;
   overflow: hidden;
   position: relative;
-  color: #fff;
 }
 
 .asterism .modal .coloring-header h4 {
@@ -35,6 +56,14 @@
 
 .asterism .btn.marged {
   margin: 0.6em;
+}
+
+.asterism .btn, .asterism .btn-flat, .asterism .btn-floating i {
+  color: inherit;
+}
+
+.asterism .lighter-background {
+  background-color: rgba(255, 255, 255, 0.2);
 }
 
 #category-modal .modal-content {
@@ -71,6 +100,19 @@
     left 0.15s ease-out,
     transform 0.15s linear;
   z-index: 1004;
+}
+
+#category-modal .additional-items-list {
+  border: none;
+  margin: 0.5em;
+}
+
+#category-modal .additional-items-list > .collection-item {
+  border-bottom-color: rgba(0, 0, 0, 0.1);
+}
+
+#category-modal .additional-items-list > a {
+  color: inherit;
 }
 
 #settings-modal .modal-content {

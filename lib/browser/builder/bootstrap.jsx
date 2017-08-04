@@ -10,7 +10,7 @@ const render = (Component) => {
   renderIntoDom(<AppContainer><Component /></AppContainer>, document.getElementById('app'))
 }
 
-render(MainComponent)
+setTimeout(() => render(MainComponent), 10) // just a small delay to ensure all global vars are ready (window.plugins)
 
 if (module.hot) {
   module.hot.accept('../main-component', () => {
