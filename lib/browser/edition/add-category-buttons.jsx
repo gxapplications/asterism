@@ -7,6 +7,7 @@ import React from 'react'
 import { Button, Icon } from 'react-materialize'
 
 import ItemSettingPanel from '../../plugins/item-setting-panel'
+import { thenSleep } from '../tools'
 
 const categories = [
   {
@@ -143,14 +144,20 @@ class AddCategoryButtons extends React.Component {
 
   additionalItemSelect (additionalItem) {
     $('#category-modal').modal('close')
-    const settingOrItem = additionalItem.instantiateNewItem()
-    if (settingOrItem instanceof ItemSettingPanel) {
-      // TODO !3: this is a setting panel, show it (animation from clicked button to setting panel ?)
-    } else {
-      const { item, preferredHeight, preferredWidth, settingsHandler } = settingOrItem
-      this.props.itemManager.addNewItem(item, preferredHeight, preferredWidth, settingsHandler, additionalItem.itemFactory.id)
-      // TODO !3: animation from clicked button to the new item in the grid ?
-    }
+    additionalItem.instantiateNewItem(this.props.itemManager.settingPanelClosed)
+    .then(thenSleep(500)) // wait for modal to close
+    .then((settingOrItem) => {
+      if (settingOrItem instanceof ItemSettingPanel) {
+        // initial setting panel before to render the item
+        this.mainComponent.setState({ itemSettingPanel: settingOrItem })
+        // TODO !4: animation from clicked button to setting panel ?
+      } else {
+        // item can be added directly
+        const { id, item, preferredHeight, preferredWidth, settingPanel } = settingOrItem
+        this.props.itemManager.addNewItem(id, item, preferredHeight, preferredWidth, settingPanel)
+        // TODO !4: animation from clicked button to the new item in the grid ?
+      }
+    })
   }
 
   render () {

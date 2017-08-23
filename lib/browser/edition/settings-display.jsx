@@ -36,7 +36,7 @@ class SettingsDisplay extends React.Component {
           </Button>
         </div>
 
-        TODO !4: use gridifier background colors option ?;
+        TODO !5: use gridifier background colors option ?;
         <button onClick={this.props.showRefreshButton} className='waves-effect waves-light btn-flat'>Test</button>
       </div>
     )

@@ -1,6 +1,6 @@
 {
   "name": "asterism",
-  "version": "0.0.13",
+  "version": "0.0.14",
   "description": "Extensible dashboard platform for domotics",
   "author": "Xavier Gouley <gxapplications@gmail.com>",
   "contributors": [],
@@ -103,7 +103,7 @@
     "prop-types": "^15.5.10",
     "react": "^15.6.1",
     "react-color": "^2.13.4",
-    "react-gridifier": "^0.2.0",
+    "react-gridifier": "^0.2.2",
     "react-hot-loader": "^3.0.0-beta.7",
     "react-materialize": "^1.0.10",
     "react-transition-group": "^1.2.0",
