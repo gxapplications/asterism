@@ -21,7 +21,7 @@ class SettingsTheme extends React.Component {
   }
 
   render () {
-    const { theme } = this.props
+    const { theme, animationLevel } = this.props
     const { currentColor } = this.state
 
     return (
@@ -31,7 +31,8 @@ class SettingsTheme extends React.Component {
           <div className='row'>
             <div className='col s12'>
               {theme.editableElements.map((el, idx) => (
-                <Button waves='light' className={cx('activator marged', objectPath.get(theme, el.key))}
+                <Button waves={animationLevel >= 2 ? 'light' : null}
+                  className={cx('activator marged', objectPath.get(theme, el.key))}
                   key={idx} onClick={this.selectColor.bind(this, el.key)}>
                   {el.label}
                 </Button>
@@ -75,7 +76,8 @@ class SettingsTheme extends React.Component {
 SettingsTheme.propTypes = {
   theme: PropTypes.object.isRequired,
   localStorage: PropTypes.object.isRequired,
-  showRefreshButton: PropTypes.func.isRequired
+  showRefreshButton: PropTypes.func.isRequired,
+  animationLevel: PropTypes.number.isRequired
 }
 
 export default SettingsTheme

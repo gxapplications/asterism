@@ -2,6 +2,7 @@ lib
 test
 example
 var
+doc
 .idea
 .groc.json
 .jshintrc

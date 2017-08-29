@@ -33,7 +33,11 @@ class Settings extends React.Component {
 
     // Plugin settings panels
     this.pluginSettingsPanels = (process.env.ASTERISM_SETTINGS_PANELS || []).map((toRequire) => {
-      return plugins.settingsPanels[toRequire].default
+      return {
+        'Panel': plugins.settingsPanels[toRequire.module].default,
+        'privateSocket': toRequire.privateSocket,
+        'publicSockets': toRequire.publicSockets
+      }
     })
 
     // debounced onresize event
@@ -54,7 +58,7 @@ class Settings extends React.Component {
   }
 
   render () {
-    const { theme, localStorage, serverStorage, itemManager } = this.props
+    const { theme, localStorage, serverStorage, itemManager, animationLevel } = this.props
     const { showRefreshButton } = this.state
     return (
       <div id='settings-modal' className={cx('modal', theme.backgrounds.body)}>
@@ -62,13 +66,13 @@ class Settings extends React.Component {
           <div className={cx('coloring-header', theme.backgrounds.editing)}>
             <div>
               {showRefreshButton
-                ? <button className={cx('right waves-effect waves-light btn', theme.actions.edition)}
+                ? <button className={cx('right btn', animationLevel >= 2 ? 'waves-effect waves-light' : null, theme.actions.edition)}
                   onClick={this.reloadPage.bind(this)}>
                   <span className='hide-on-med-and-down'>Close and reload screen</span>
                   <span className='hide-on-small-only hide-on-large-only'>Close &amp; reload</span>
                   <span className='hide-on-med-and-up'>Close</span>
                 </button>
-                : <a href='#!' className='right modal-action modal-close waves-effect waves-light btn-flat'>Close</a>
+                : <a href='#!' className={cx('right modal-action modal-close btn-flat', animationLevel >= 2 ? 'waves-effect waves-light' : null)}>Close</a>
               }
               <h4>
                 <Icon small>settings</Icon>
@@ -78,16 +82,17 @@ class Settings extends React.Component {
           </div>
 
           <div className='carousel carousel-slider center'>
-            <Display theme={theme} itemManager={itemManager} serverStorage={serverStorage}
+            <Display theme={theme} itemManager={itemManager} serverStorage={serverStorage} animationLevel={animationLevel}
               showRefreshButton={() => this.setState({ showRefreshButton: true })} />
-            <Theme localStorage={localStorage} theme={theme}
+            <Theme localStorage={localStorage} theme={theme} animationLevel={animationLevel}
               showRefreshButton={() => this.setState({ showRefreshButton: true })} />
             <UserInterface localStorage={localStorage} theme={theme}
               showRefreshButton={() => this.setState({ showRefreshButton: true })} />
 
-            {this.pluginSettingsPanels.map((Panel, idx) => (
+            {this.pluginSettingsPanels.map(({ Panel, privateSocket, publicSockets }, idx) => (
               <Panel key={idx} localStorage={localStorage} theme={theme}
-                showRefreshButton={() => this.setState({ showRefreshButton: true })} />
+                showRefreshButton={() => this.setState({ showRefreshButton: true })}
+                privateSocket={privateSocket} publicSockets={publicSockets} />
             ))}
           </div>
 

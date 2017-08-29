@@ -5,8 +5,8 @@ import React from 'react'
 import AdditionalItem from './additional-item'
 
 class BasicItemFactory {
-  constructor ({ localStorage, serverStorage, mainState }) {
-    this.context = { localStorage, serverStorage, mainState }
+  constructor ({ localStorage, serverStorage, mainState, theme, privateSocket }) {
+    this.context = { localStorage, serverStorage, mainState, theme, privateSocket }
     this.items = this.constructor.generateItems(this)
   }
 
@@ -22,7 +22,7 @@ class BasicItemFactory {
 
   instantiateNewItem (additionalItemId, id, settingPanelCallback) {
     return this.saveItem(id, {}, additionalItemId)
-    .then(() => this.items[additionalItemId].newInstance(id, settingPanelCallback))
+    .then(() => this.items[additionalItemId].newInstance(id, settingPanelCallback, this.context))
   }
 
   instantiateItem (id, settingPanelCallback) {
@@ -30,7 +30,7 @@ class BasicItemFactory {
     // OR a promise resolving the same structure,
     // OR throw an error with error.status = 404 if not found (other errors won't be caught).
     return this.context.serverStorage.getItem(id)
-    .then(({ additionalItemId, params }) => this.items[additionalItemId].restoreInstance(id, params, settingPanelCallback))
+    .then(({ additionalItemId, params }) => this.items[additionalItemId].restoreInstance(id, params, settingPanelCallback, this.context))
   }
 
   saveItem (id, params, additionalItemId) {
@@ -45,6 +45,22 @@ class BasicItemFactory {
   removeItem (id) {
     // This is an async event. Do not return a Promise when finished. Can be overridden.
     console.log(`Ok, item #${id} is removed.`)
+  }
+}
+
+class ItemLinker {
+  receiveItemSettingPanel (itemSettingPanel) {
+    this.itemSettingPanel = itemSettingPanel
+    this.linkBoth()
+  }
+  receiveItem (item) {
+    this.item = item
+    this.linkBoth()
+  }
+  linkBoth () {
+    if (this.item && this.itemSettingPanel && this.itemSettingPanel.state.item !== this.item) {
+      this.itemSettingPanel.setState({ item: this.item })
+    }
   }
 }
 
@@ -79,17 +95,18 @@ class ItemTypeBuilder {
       throw new Error('You cannot call newInstance*() multiple times.')
     }
     const typeId = this.id
-    this.newInstance = (itemFactory) => (id, settingPanelCallback) => {
-      const item = <ItemClass id={id} />
-      return {
-        id,
-        item,
-        preferredHeight,
-        preferredWidth,
-        settingPanel: <SettingPanelClass id={id} item={item}
-          save={(newParams) => itemFactory.saveItem(id, newParams, typeId)}
-          settingPanelCallback={settingPanelCallback} />
-      }
+    const settingIcon = this.settingPanelIcon
+    const settingTitle = this.settingPanelTitle || this.title
+    this.newInstance = (itemFactory) => (id, settingPanelCallback, context) => {
+      const itemLinker = new ItemLinker()
+      const item = <ItemClass id={id} context={context} ref={(c) => itemLinker.receiveItem(c)} />
+      const settingPanel = <SettingPanelClass ref={(c) => itemLinker.receiveItemSettingPanel(c)}
+        icon={settingIcon} title={settingTitle}
+        id={id} item={item} context={context}
+        save={(newParams) => itemFactory.saveItem(id, newParams, typeId)}
+        settingPanelCallback={settingPanelCallback} />
+
+      return { id, item, preferredHeight, preferredWidth, settingPanel }
     }
     return this
   }
@@ -99,9 +116,13 @@ class ItemTypeBuilder {
       throw new Error('You cannot call newInstance*() multiple times.')
     }
     const typeId = this.id
-    this.newInstance = (itemFactory) => (id, settingPanelCallback) => <SettingPanelClass id={id}
-      save={(newParams) => itemFactory.saveItem(id, newParams, typeId)} preferredHeight={preferredHeight} preferredWidth={preferredWidth}
-        settingPanelCallback={settingPanelCallback} />
+    const settingIcon = this.settingPanelIcon
+    const settingTitle = this.settingPanelTitle || this.title
+    this.newInstance = (itemFactory) => (id, settingPanelCallback, context) => <SettingPanelClass id={id}
+      icon={settingIcon} title={settingTitle} context={context}
+      save={(newParams) => itemFactory.saveItem(id, newParams, typeId)}
+      preferredHeight={preferredHeight} preferredWidth={preferredWidth}
+      settingPanelCallback={settingPanelCallback} />
     return this
   }
 
@@ -110,15 +131,25 @@ class ItemTypeBuilder {
       throw new Error('You cannot call restoreInstance() multiple times.')
     }
     const typeId = this.id
-    this.restoreInstance = (itemFactory) => (id, params, settingPanelCallback) => {
-      const item = <ItemClass id={id} initialParams={params} />
-      return {
-        item,
-        settingPanel: <SettingPanelClass id={id} initialParams={params} item={item}
-          save={(newParams) => itemFactory.saveItem(id, newParams, typeId)}
-          settingPanelCallback={settingPanelCallback} />
-      }
+    const settingIcon = this.settingPanelIcon
+    const settingTitle = this.settingPanelTitle || this.title
+    this.restoreInstance = (itemFactory) => (id, params, settingPanelCallback, context) => {
+      const itemLinker = new ItemLinker()
+      const item = <ItemClass id={id} initialParams={params} context={context} ref={(c) => itemLinker.receiveItem(c)} />
+      const settingPanel = <SettingPanelClass ref={(c) => itemLinker.receiveItemSettingPanel(c)}
+        icon={settingIcon} title={settingTitle}
+        id={id} initialParams={params} item={item} context={context}
+        save={(newParams) => itemFactory.saveItem(id, newParams, typeId)}
+        settingPanelCallback={settingPanelCallback} />
+
+      return { item, settingPanel }
     }
+    return this
+  }
+
+  settingPanelWithHeader (title, icon) {
+    this.settingPanelTitle = title
+    this.settingPanelIcon = icon
     return this
   }
 
@@ -171,5 +202,7 @@ class ItemFactoryBuilder {
     return itemsInjectorMixin(BaseClass)
   }
 }
+
+ItemFactoryBuilder.ItemLinker = ItemLinker
 
 export default ItemFactoryBuilder

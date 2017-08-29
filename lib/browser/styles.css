@@ -32,6 +32,8 @@
   padding: 23px;
   overflow: hidden;
   position: relative;
+  transition:
+    background-color 0.2s linear;
 }
 
 .asterism .modal .coloring-header h4 {
@@ -64,6 +66,39 @@
 
 .asterism .lighter-background {
   background-color: rgba(255, 255, 255, 0.2);
+}
+
+.asterism .rg-grid-item .rg-item-wrapper.card {
+  text-align: center;
+  vertical-align: middle;
+}
+
+.asterism .rg-grid-item .rg-item-wrapper {
+  display: flex;
+}
+
+.asterism .rg-grid-item.h1 {
+  height: 6rem !important;
+}
+
+.asterism .rg-grid-item.h2 {
+  height: 12rem !important;
+}
+
+.asterism .rg-grid-item.h3 {
+  height: 18rem !important;
+}
+
+.asterism .rg-grid-item.h4 {
+  height: 24rem !important;
+}
+
+.asterism .rg-grid-item.h5 {
+  height: 30rem !important;
+}
+
+.asterism .rg-grid-item.h6 {
+  height: 36rem !important;
 }
 
 #category-modal .modal-content {
@@ -149,3 +184,69 @@
   padding: 1em 0.2em;
 }
 
+#additional-item-rect {
+  position: absolute;
+  display: none;
+  z-index: 1004;
+  top: -100px;
+  left: -100px;
+  width: 10px;
+  height: 10px;
+  background-color: transparent;
+  overflow: hidden;
+  transition:
+    top 0.15s ease-in-out;
+}
+
+#additional-item-rect > div {
+  position: absolute;
+  left: calc(50% - 25px);
+  top: calc(50% - 25px);
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  background-color: #fff;
+  opacity: 0;
+  transform: scale(18);
+  transition:
+    all 0.3s,
+    opacity 0.3s ease-out,
+    transform 0.3s ease-out;
+}
+
+#additional-item-rect > div.shrink {
+  opacity: 1;
+  transform: scale(1);
+}
+
+#additional-item-rect > div > i {
+  margin-left: 13px;
+  margin-top: 11px;
+  color: #fff;
+}
+
+#item-setting-modal .modal-content {
+  padding: 0;
+}
+
+/* Used by item setting panels and items from outside */
+
+.asterism .rg-grid-item .rg-item-wrapper .fluid,
+#item-setting-modal .modal-content .setting-panel .fluid {
+  flex-grow: 1;
+  height: 100%;
+}
+
+.asterism .rg-grid-item .rg-item-wrapper .padded,
+#item-setting-modal .modal-content .setting-panel .padded {
+  padding: 1em;
+}
+
+.asterism .rg-grid-item .rg-item-wrapper .clearing::after,
+#item-setting-modal .modal-content .setting-panel .clearing::after {
+  clear: both;
+  content: ' ';
+  display: block;
+  height: 0;
+  visibility: hidden;
+}

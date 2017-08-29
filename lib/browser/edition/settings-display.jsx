@@ -12,7 +12,9 @@ class SettingsDisplay extends React.Component {
   }
 
   render () {
-    const { theme } = this.props
+    const { theme, animationLevel } = this.props
+    const waves = animationLevel >= 2 ? 'light' : undefined
+
     return (
       <div className='carousel-item' href='#display!'>
         <h2>Components display</h2>
@@ -22,13 +24,13 @@ class SettingsDisplay extends React.Component {
           <p>
             You can save your current components ordering into server, to backup and/or to let your other devices use it.
           </p>
-          <Button waves='light' onClick={this.saveOrder.bind(this)} className={cx('marged', theme.actions.primary)}>
+          <Button waves={waves} onClick={this.saveOrder.bind(this)} className={cx('marged', theme.actions.primary)}>
             <Icon left>devices</Icon>
             <Icon left>keyboard_arrow_right</Icon>
             <Icon left>storage</Icon>
             &nbsp; <span className='hide-on-med-and-down'>Save current to server</span><span className='hide-on-large-only'>Save</span>
           </Button>
-          <Button waves='light' onClick={this.restoreOrder.bind(this)} className={cx('marged', theme.actions.primary)}>
+          <Button waves={waves} onClick={this.restoreOrder.bind(this)} className={cx('marged', theme.actions.primary)}>
             <Icon left>storage</Icon>
             <Icon left>keyboard_arrow_right</Icon>
             <Icon left>devices</Icon>
@@ -36,8 +38,7 @@ class SettingsDisplay extends React.Component {
           </Button>
         </div>
 
-        TODO !5: use gridifier background colors option ?;
-        <button onClick={this.props.showRefreshButton} className='waves-effect waves-light btn-flat'>Test</button>
+        { /* TODO !6: use gridifier background colors option to make colored zones accross items? */ }
       </div>
     )
   }
@@ -56,7 +57,8 @@ SettingsDisplay.propTypes = {
   theme: PropTypes.object.isRequired,
   itemManager: PropTypes.object.isRequired,
   serverStorage: PropTypes.object.isRequired,
-  showRefreshButton: PropTypes.func.isRequired
+  showRefreshButton: PropTypes.func.isRequired,
+  animationLevel: PropTypes.number.isRequired
 }
 
 export default SettingsDisplay

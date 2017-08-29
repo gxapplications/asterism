@@ -6,7 +6,6 @@ import PropTypes from 'prop-types'
 import React from 'react'
 import { Button, Icon } from 'react-materialize'
 
-import ItemSettingPanel from '../../plugins/item-setting-panel'
 import { thenSleep } from '../tools'
 
 const categories = [
@@ -142,21 +141,44 @@ class AddCategoryButtons extends React.Component {
     })
   }
 
-  additionalItemSelect (additionalItem) {
-    $('#category-modal').modal('close')
-    additionalItem.instantiateNewItem(this.props.itemManager.settingPanelClosed)
-    .then(thenSleep(500)) // wait for modal to close
+  additionalItemSelect (additionalItem, event) {
+    const animationFlow = (this.props.animationLevel >= 3)
+      ? this.additionalItemShrinkAnimation($(event.target).closest('a')[0].getBoundingClientRect())
+      : null
+    if (this.props.animationLevel < 3) {
+      $('#category-modal').modal('close')
+    }
+    additionalItem.instantiateNewItem(this.props.itemManager.settingPanelClosed.bind(this.props.itemManager))
+    .then(thenSleep(400)) // wait for modal to close
     .then((settingOrItem) => {
-      if (settingOrItem instanceof ItemSettingPanel) {
+      if (settingOrItem.props && settingOrItem.props.settingPanelCallback) {
         // initial setting panel before to render the item
-        this.mainComponent.setState({ itemSettingPanel: settingOrItem })
-        // TODO !4: animation from clicked button to setting panel ?
+        this.props.itemManager.mainComponent.setState({ itemSettingPanel: settingOrItem, animationFlow })
       } else {
         // item can be added directly
         const { id, item, preferredHeight, preferredWidth, settingPanel } = settingOrItem
-        this.props.itemManager.addNewItem(id, item, preferredHeight, preferredWidth, settingPanel)
-        // TODO !4: animation from clicked button to the new item in the grid ?
+        this.props.itemManager.addNewItem(id, item, preferredHeight, preferredWidth, settingPanel, animationFlow)
       }
+    })
+  }
+
+  additionalItemShrinkAnimation (rectBounds) {
+    const rect = $('#additional-item-rect')
+    const bullet = $('div', rect)
+    return new Promise((resolve) => {
+      rect.css({ top: rectBounds.top, left: rectBounds.left, height: rectBounds.height, width: rectBounds.width, display: 'block' })
+      resolve()
+    })
+    .then(thenSleep(10))
+    .then(() => {
+      bullet.addClass('shrink')
+      const editColor = this.props.theme.palette[this.props.theme.backgrounds.editing] || 'white'
+      bullet.css({ 'background-color': editColor })
+    })
+    .then(thenSleep(40))
+    .then(() => {
+      $('#category-modal').modal('close')
+      return { rect, bullet }
     })
   }
 
@@ -189,7 +211,7 @@ class AddCategoryButtons extends React.Component {
               </div>
               <div className='collection additional-items-list'>
                 {modalCategory.additionalItems.map((item, idx) => (
-                  <a className='collection-item avatar lighter-background waves-effect waves-light' key={idx} href='#'
+                  <a className={cx('collection-item avatar lighter-background', animationLevel >= 2 ? 'waves-effect waves-light-green' : null)} key={idx} href='#'
                     onClick={this.additionalItemSelect.bind(this, item)}>
                     <Icon className='circle'>{item.icon || modalCategory.icon}</Icon>
                     <h4 className='title'>{item.name}</h4>
@@ -200,7 +222,7 @@ class AddCategoryButtons extends React.Component {
               </div>
             </div>
             <div className={cx('modal-footer', theme.backgrounds.body)}>
-              <a href='#!' className='modal-action modal-close waves-effect waves-light btn-flat'>Close</a>
+              <a href='#!' className={cx('modal-action modal-close btn-flat', animationLevel >= 2 ? 'waves-effect waves-light' : null)}>Close</a>
             </div>
           </div>
         ) : null}
@@ -220,6 +242,14 @@ class AddCategoryButtons extends React.Component {
             ) : null
           ))}
         </Button>
+
+        {animationLevel >= 3 ? (
+          <div id='additional-item-rect'>
+            <div>
+              <Icon>timer</Icon>
+            </div>
+          </div>
+        ) : null}
       </div>
     )
   }

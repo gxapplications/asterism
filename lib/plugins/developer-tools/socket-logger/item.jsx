@@ -6,7 +6,12 @@ import Item from '../../item'
 
 class SocketLoggerItem extends Item {
   render () {
-    return <div>RefreshButtonItem for {this.props.id}</div>
+    return (
+      <div className='truncate fluid'>
+        SocketLoggerItem for {this.props.id}
+      </div>
+    )
+    // TODO !3: render logs: log messages from sockets (and others ? from server ? can catch browser console messages ?)
   }
 }
 

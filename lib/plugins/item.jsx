@@ -19,7 +19,8 @@ class Item extends React.Component {
 
 Item.propTypes = {
   id: PropTypes.string.isRequired,
-  initialParams: PropTypes.object
+  initialParams: PropTypes.object,
+  context: PropTypes.object.isRequired
 }
 
 Item.defaultProps = {
