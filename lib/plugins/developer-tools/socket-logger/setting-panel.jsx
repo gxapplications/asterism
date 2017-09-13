@@ -15,7 +15,9 @@ class SocketLoggerSettingPanel extends ItemSettingPanel {
 
     return (
       <div className='clearing padded'>
-        // TODO !2: log level in a dropdown?
+        // TODO !0: log level slider knob: min-level [0-3]:  logLevel = 1 par default
+
+        // TODO !0: also history length slider knob [1-100]:  historyLength = 30 par default
 
         <Button waves={waves} className='right' onClick={this.save.bind(this)}>
           Save &amp; close
@@ -25,7 +27,7 @@ class SocketLoggerSettingPanel extends ItemSettingPanel {
   }
 
   save () {
-    const params = { ...this.state.params } // TODO !2: add value here
+    const params = { ...this.state.params } // TODO !0: add value here
     this.setState({ params })
     this.next(SocketLoggerItem, params)
   }

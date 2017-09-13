@@ -43,7 +43,10 @@ class MainComponent extends React.Component {
           mainState: this.getState.bind(this),
           theme: props.theme,
           privateSocket: this.socketManager.connectPrivateSocket(toRequire.privateSocket),
-          publicSockets: toRequire.publicSockets.map(this.socketManager.connectPublicSocket)
+          publicSockets: toRequire.publicSockets.reduce((acc, namespace) => {
+            acc[namespace] = this.socketManager.connectPublicSocket(namespace)
+            return acc
+          }, {})
         }) // context given here
         factory.id = toRequire.module
         Object.freeze(factory) // protection against hacks
