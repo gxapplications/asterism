@@ -6,6 +6,8 @@ import { Button, Icon } from 'react-materialize'
 
 import Item from '../../item'
 
+// import '../styles.scss'
+
 class RefreshButtonItem extends Item {
   render () {
     const { theme } = this.props.context

@@ -14,6 +14,10 @@ class ItemSettingPanel extends React.Component {
     }
   }
 
+  handleValueChange (field, event) {
+    this.setState({ params: { ...this.state.params, [field]: event.target.value } })
+  }
+
   next (ItemClass, params) {
     const { id, save, preferredHeight, preferredWidth, settingPanelCallback, context } = this.props
     const { item } = this.state

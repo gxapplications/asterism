@@ -79,21 +79,24 @@ class MainComponent extends React.Component {
         const animationFlow = this.state.animationFlow
         animationFlow.then(thenSleep(300)) // wait modal to be at right place
         .then(({ rect, bullet }) => {
+          const bulletIcon = $('i', bullet)
           const header = $('#item-setting-modal .coloring-header')[0]
           const headerBounds = header.getBoundingClientRect()
           rect.css({ top: headerBounds.top, left: headerBounds.left, height: headerBounds.height, width: headerBounds.width })
-          return { rect, bullet, header }
+          bulletIcon.css({ color: 'transparent' })
+          return { rect, bullet, header, bulletIcon }
         })
         .then(thenSleep(200))
-        .then(({ rect, bullet, header }) => {
+        .then(({ rect, bullet, header, bulletIcon }) => {
           bullet.removeClass('shrink')
           $(header).addClass(this.props.theme.backgrounds.editing)
-          return { rect, bullet }
+          return { rect, bullet, bulletIcon }
         })
         .then(thenSleep(500))
-        .then(({ rect, bullet }) => {
+        .then(({ rect, bullet, bulletIcon }) => {
           rect.css({ top: -100, left: -100, height: 10, width: 10, display: 'none' })
           bullet.css({ 'background-color': '#fff' })
+          bulletIcon.css({ color: '#fff' })
           this.setState({ animationFlow: null })
         })
       }
@@ -127,12 +130,12 @@ class MainComponent extends React.Component {
           className={cx({ [theme.backgrounds.card]: !editMode, [theme.backgrounds.editing]: editMode })}
         >
           {editMode ? (
-            <NavItem onClick={this.openSettingsModal.bind(this)} className={cx(animationLevel >= 2 ? 'waves-effect waves-light' : '')}>
+            <NavItem onClick={this.openSettingsModal.bind(this)} href='javascript:void(0)' className={cx(animationLevel >= 2 ? 'waves-effect waves-light' : '')}>
               <Icon>settings</Icon>
               <span className='hide-on-large-only'>Settings</span>
             </NavItem>
           ) : null}
-          <NavItem onClick={this.toggleEditMode.bind(this)} className={cx(animationLevel >= 2 ? 'waves-effect waves-light' : '')}>
+          <NavItem onClick={this.toggleEditMode.bind(this)} href='javascript:void(0)' className={cx(animationLevel >= 2 ? 'waves-effect waves-light' : '')}>
             <Icon>edit</Icon>
             <span className='hide-on-large-only'>{editMode ? 'End edition' : 'Edit mode'}</span>
           </NavItem>
@@ -156,7 +159,7 @@ class MainComponent extends React.Component {
 
         {editMode ? (
           <Settings animationLevel={animationLevel} localStorage={localStorage} serverStorage={serverStorage}
-            itemManager={this.itemManager} theme={theme} />
+            itemManager={this.itemManager} socketManager={this.socketManager} theme={theme} />
         ) : null}
 
         {editMode && itemSettingPanel ? (

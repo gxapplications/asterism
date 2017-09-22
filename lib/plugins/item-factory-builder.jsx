@@ -59,7 +59,7 @@ class ItemLinker {
   }
   linkBoth () {
     if (this.item && this.itemSettingPanel && this.itemSettingPanel.state.item !== this.item) {
-      this.itemSettingPanel.setState({ item: this.item })
+      this.itemSettingPanel.setState({ item: this.item, params: this.item.state.params || this.item.props.initialParams })
     }
   }
 }
