@@ -6,6 +6,13 @@
   z-index: 998;
 }
 
+.asterism .navbar-fixed a.brand-logo {
+    padding-left: 0.4em;
+    padding-right: 0.4em;
+    -webkit-transform: inherit;
+    transform: inherit;
+}
+
 .asterism .navbar-fixed ul.hide-on-med-and-down li a {
   padding: 0 1.4rem;
 }
@@ -118,6 +125,51 @@
   border-radius: 2px;
   -webkit-box-shadow: inset 0 0 1px rgba(0,0,0,.3);
   background-color: #555;
+}
+
+@keyframes asterism-pulse {
+  0% {transform: scale(1);}
+  30% {transform: scale(0.9);}
+  40% {transform: scale(0.85);}
+  80% {transform: scale(1.45);}
+  95% {transform: scale(1.05);}
+  100% {transform: scale(1);}
+}
+.asterism .animation.pulse {
+  animation-name: asterism-pulse;
+  animation-duration: 0.7s;
+  animation-fill-mode: both;
+  animation-iteration-count: 1;
+}
+
+@keyframes asterism-rubberBand {
+  0% {transform: scale(1);}
+  30% {transform: scaleX(1.25) scaleY(0.75);}
+  40% {transform: scaleX(0.75) scaleY(1.25);}
+  60% {transform: scaleX(1.15) scaleY(0.85);}
+  100% {transform: scale(1);}
+}
+.asterism .animation.rubberBand {
+  animation-name: asterism-rubberBand;
+  animation-duration: 1s;
+  animation-fill-mode: both;
+  animation-iteration-count: 1;
+}
+
+@keyframes asterism-wobble {
+  0% {transform: translateX(0%);}
+  15% {transform: translateX(-25%) rotate(-5deg);}
+  30% {transform: translateX(20%) rotate(3deg);}
+  45% {transform: translateX(-15%) rotate(-3deg);}
+  60% {transform: translateX(10%) rotate(2deg);}
+  75% {transform: translateX(-5%) rotate(-1deg);}
+  100% {transform: translateX(0%);}
+}
+.asterism .animation.wobble {
+  animation-name: asterism-wobble;
+  animation-duration: 1s;
+  animation-fill-mode: both;
+  animation-iteration-count: 1;
 }
 
 #category-modal .modal-content {

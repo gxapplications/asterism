@@ -125,7 +125,7 @@ class MainComponent extends React.Component {
     const { editMode, animationLevel, itemFactories, items, itemSettingPanel } = this.state
     return (
       <div className={cx('asterism', theme.backgrounds.body)}>
-        <Navbar fixed brand='&nbsp;&nbsp;⁂&nbsp;&nbsp;' href={null} right
+        <Navbar fixed brand='⁂' href={null} right
           options={{ closeOnClick: true }}
           className={cx({ [theme.backgrounds.card]: !editMode, [theme.backgrounds.editing]: editMode })}
         >
