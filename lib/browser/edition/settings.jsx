@@ -32,13 +32,14 @@ class Settings extends React.Component {
     }
 
     // Plugin settings panels
+    // TODO !1: move them ?
     this.pluginSettingsPanels = (process.env.ASTERISM_SETTINGS_PANELS || []).map((toRequire) => {
       return {
         'Panel': plugins.settingsPanels[toRequire.module].default,
-        'privateSocket': props.socketManager.connectPrivateSocket(toRequire.privateSocket), // TODO !0: tester
+        'privateSocket': props.socketManager.connectPrivateSocket(toRequire.privateSocket),
         'publicSockets': toRequire.publicSockets.reduce((acc, namespace) => {
-            acc[namespace] = props.socketManager.connectPublicSocket(namespace)
-            return acc
+          acc[namespace] = props.socketManager.connectPublicSocket(namespace)
+          return acc
         }, {})
       }
     })

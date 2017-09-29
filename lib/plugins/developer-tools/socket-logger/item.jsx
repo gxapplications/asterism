@@ -83,7 +83,7 @@ class SocketLoggerItem extends Item {
                 trigger={<pre style={{ ...styles.logRow, ...styles.logLevel(context.theme)[log.level] }}>
                   <span style={styles.logRowInset}>
                     [{timestamp}]
-                    <br/>
+                    <br />
                     {log.args[1]}
                   </span>
                 </pre>}>

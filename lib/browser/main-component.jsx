@@ -15,6 +15,7 @@ import DefaultServerStorage from './default-server-storage'
 import ItemManager from './item-manager'
 import Settings from './edition/settings'
 import SocketManager from './socket-manager'
+import SpeechManager from './speech-manager'
 import ItemSetting from './edition/item-setting'
 import { thenSleep } from './tools'
 
@@ -28,6 +29,7 @@ class MainComponent extends React.Component {
     super(props)
 
     this.socketManager = new SocketManager()
+    this.speechManager = new SpeechManager()
 
     // Instantiate orderHandler and initial items for this.state (need to be sync)
     this.itemManager = new ItemManager(props.localStorage, props.serverStorage, this)
@@ -67,11 +69,13 @@ class MainComponent extends React.Component {
     Promise.all(this.itemManager.getAllItems())
     .then(thenSleep(300)) // for cosmetics... can be removed.
     .then((items) => {
+      console.log(`Restoring ${items.length} items in the grid...`)
       this.setState({ items })
     })
   }
 
   componentDidUpdate (prevProps, prevState) {
+    // If an ItemSettingPanel should be displayed
     if (this.state.itemSettingPanel && !prevState.itemSettingPanel) {
       $('#item-setting-modal').modal('open')
 
@@ -100,7 +104,7 @@ class MainComponent extends React.Component {
           this.setState({ animationFlow: null })
         })
       }
-    } else {
+    } else { // If an animation flow should be played
       if (this.state.animationFlow && this.state.animationLevel >= 3) {
         const animationFlow = this.state.animationFlow
         animationFlow.then(({ rect, bullet }) => {
@@ -123,12 +127,15 @@ class MainComponent extends React.Component {
   render () {
     const { theme, localStorage, serverStorage } = this.props
     const { editMode, animationLevel, itemFactories, items, itemSettingPanel } = this.state
+    const SpeechStatus = this.speechManager.getComponent()
     return (
       <div className={cx('asterism', theme.backgrounds.body)}>
         <Navbar fixed brand='⁂' href={null} right
           options={{ closeOnClick: true }}
           className={cx({ [theme.backgrounds.card]: !editMode, [theme.backgrounds.editing]: editMode })}
         >
+          <SpeechStatus animationLevel={animationLevel} />
+          <NavItem divider />
           {editMode ? (
             <NavItem onClick={this.openSettingsModal.bind(this)} href='javascript:void(0)' className={cx(animationLevel >= 2 ? 'waves-effect waves-light' : '')}>
               <Icon>settings</Icon>
@@ -144,7 +151,7 @@ class MainComponent extends React.Component {
         {items.length ? (
           <Gridifier editable={editMode} sortDispersion orderHandler={this.itemManager.orderHandler}
             toggleTime={animationLevel >= 2 ? 500 : 1} coordsChangeTime={animationLevel >= 2 ? 300 : 1}
-            gridResizeDelay={animationLevel >= 2 ? 80 : 160}>
+            gridResizeDelay={animationLevel >= 2 ? 80 : 160} ref={(c) => { this.gridComponent = c }}>
             {items}
           </Gridifier>
         ) : null}

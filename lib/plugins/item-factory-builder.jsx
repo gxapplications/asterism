@@ -22,7 +22,7 @@ class BasicItemFactory {
 
   instantiateNewItem (additionalItemId, id, settingPanelCallback) {
     return this.saveItem(id, {}, additionalItemId)
-    .then(() => this.items[additionalItemId].newInstance(id, settingPanelCallback, this.context))
+    .then(() => this.items[additionalItemId].newInstance(id, settingPanelCallback, this.items[additionalItemId].dimensions, this.context))
   }
 
   instantiateItem (id, settingPanelCallback) {
@@ -30,7 +30,7 @@ class BasicItemFactory {
     // OR a promise resolving the same structure,
     // OR throw an error with error.status = 404 if not found (other errors won't be caught).
     return this.context.serverStorage.getItem(id)
-    .then(({ additionalItemId, params }) => this.items[additionalItemId].restoreInstance(id, params, settingPanelCallback, this.context))
+    .then(({ additionalItemId, params }) => this.items[additionalItemId].restoreInstance(id, params, settingPanelCallback, this.items[additionalItemId].dimensions, this.context))
   }
 
   saveItem (id, params, additionalItemId) {
@@ -97,13 +97,14 @@ class ItemTypeBuilder {
     const typeId = this.id
     const settingIcon = this.settingPanelIcon
     const settingTitle = this.settingPanelTitle || this.title
-    this.newInstance = (itemFactory) => (id, settingPanelCallback, context) => {
+    this.newInstance = (itemFactory) => (id, settingPanelCallback, acceptedDimensions, context) => {
       const itemLinker = new ItemLinker()
-      const item = <ItemClass id={id} context={context} ref={(c) => itemLinker.receiveItem(c)} />
+      const item = <ItemClass id={id} context={context} ref={(c) => itemLinker.receiveItem(c)} acceptedDimensions={acceptedDimensions} />
       const settingPanel = <SettingPanelClass ref={(c) => itemLinker.receiveItemSettingPanel(c)}
         icon={settingIcon} title={settingTitle}
         id={id} item={item} context={context}
         save={(newParams) => itemFactory.saveItem(id, newParams, typeId)}
+        acceptedDimensions={acceptedDimensions}
         settingPanelCallback={settingPanelCallback} />
 
       return { id, item, preferredHeight, preferredWidth, settingPanel }
@@ -118,10 +119,11 @@ class ItemTypeBuilder {
     const typeId = this.id
     const settingIcon = this.settingPanelIcon
     const settingTitle = this.settingPanelTitle || this.title
-    this.newInstance = (itemFactory) => (id, settingPanelCallback, context) => <SettingPanelClass id={id}
+    this.newInstance = (itemFactory) => (id, settingPanelCallback, acceptedDimensions, context) => <SettingPanelClass id={id}
       icon={settingIcon} title={settingTitle} context={context}
       save={(newParams) => itemFactory.saveItem(id, newParams, typeId)}
       preferredHeight={preferredHeight} preferredWidth={preferredWidth}
+      acceptedDimensions={acceptedDimensions}
       settingPanelCallback={settingPanelCallback} />
     return this
   }
@@ -133,13 +135,14 @@ class ItemTypeBuilder {
     const typeId = this.id
     const settingIcon = this.settingPanelIcon
     const settingTitle = this.settingPanelTitle || this.title
-    this.restoreInstance = (itemFactory) => (id, params, settingPanelCallback, context) => {
+    this.restoreInstance = (itemFactory) => (id, params, settingPanelCallback, acceptedDimensions, context) => {
       const itemLinker = new ItemLinker()
-      const item = <ItemClass id={id} initialParams={params} context={context} ref={(c) => itemLinker.receiveItem(c)} />
+      const item = <ItemClass id={id} initialParams={params} context={context} ref={(c) => itemLinker.receiveItem(c)} acceptedDimensions={acceptedDimensions} />
       const settingPanel = <SettingPanelClass ref={(c) => itemLinker.receiveItemSettingPanel(c)}
         icon={settingIcon} title={settingTitle}
         id={id} initialParams={params} item={item} context={context}
         save={(newParams) => itemFactory.saveItem(id, newParams, typeId)}
+        acceptedDimensions={acceptedDimensions}
         settingPanelCallback={settingPanelCallback} />
 
       return { item, settingPanel }

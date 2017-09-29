@@ -19,7 +19,7 @@ class ItemSettingPanel extends React.Component {
   }
 
   next (ItemClass, params) {
-    const { id, save, preferredHeight, preferredWidth, settingPanelCallback, context } = this.props
+    const { id, save, preferredHeight, preferredWidth, settingPanelCallback, acceptedDimensions, context } = this.props
     const { item } = this.state
 
     if (item) {
@@ -36,11 +36,11 @@ class ItemSettingPanel extends React.Component {
       save(params)
       .then(() => {
         const itemLinker = new ItemFactoryBuilder.ItemLinker()
-        const newItem = <ItemClass id={id} initialParams={params} context={context} ref={(c) => itemLinker.receiveItem(c)} />
+        const newItem = <ItemClass id={id} initialParams={params} context={context} ref={(c) => itemLinker.receiveItem(c)} acceptedDimensions={acceptedDimensions} />
         const newSettingPanel = <this.constructor ref={(c) => itemLinker.receiveItemSettingPanel(c)}
           icon={this.props.icon} title={this.props.title}
           id={id} initialParams={params} item={newItem} context={context}
-          save={save} settingPanelCallback={settingPanelCallback} />
+          save={save} acceptedDimensions={acceptedDimensions} settingPanelCallback={settingPanelCallback} />
         return settingPanelCallback({
           id,
           item: newItem,
@@ -62,6 +62,7 @@ ItemSettingPanel.propTypes = {
   save: PropTypes.func.isRequired,
   preferredHeight: PropTypes.number,
   preferredWidth: PropTypes.number,
+  acceptedDimensions: PropTypes.array.isRequired,
   settingPanelCallback: PropTypes.func.isRequired, // should be called without args if props.item is not null, else
   // should return a full new structure : { id,item,preferredHeight,preferredWidth,settingPanel(optional) }
   context: PropTypes.object.isRequired
@@ -73,7 +74,8 @@ ItemSettingPanel.defaultProps = {
   item: null,
   initialParams: {},
   preferredHeight: 1,
-  preferredWidth: 1
+  preferredWidth: 1,
+  acceptedDimensions: [1, 1]
 }
 
 export default ItemSettingPanel

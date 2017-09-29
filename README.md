@@ -1,4 +1,4 @@
-![asterism-logo](https://raw.githubusercontent.com/gxapplications/asterism/master/docs/asterism-text.png)
+![asterism-logo](https://raw.githubusercontent.com/gxapplications/asterism/master/doc/asterism-text.png)
 
 _Extensible dashboard platform for domotics. Made in NodeJS, React and Materialize CSS._
 

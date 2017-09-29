@@ -17,7 +17,7 @@
   padding: 0 1.4rem;
 }
 
-.asterism .navbar-fixed ul.side-nav li {
+.asterism .navbar-fixed ul.side-nav li:not(.divider) {
   width: 100%;
   height: 48px;
 }
@@ -32,9 +32,8 @@
   line-height: 48px;
 }
 
-.asterism .navbar-fixed ul.side-nav li span {
-  display: block;
-  width: 100%;
+.asterism .navbar-fixed ul li.speech-disabled > a > i.material-icons {
+  color: #f44336;
 }
 
 .asterism .modal .coloring-header {
@@ -110,6 +109,10 @@
   height: 36rem !important;
 }
 
+.asterism .rg-settings-handler div.btn:first-child {
+  margin-right: 6px;
+}
+
 .asterism .thin-scrollable::-webkit-scrollbar-track {
   -webkit-box-shadow: inset 0 0 8px rgba(0,0,0,0.4);
   border-radius: 2px;
@@ -125,6 +128,47 @@
   border-radius: 2px;
   -webkit-box-shadow: inset 0 0 1px rgba(0,0,0,.3);
   background-color: #555;
+}
+
+.modal[id^='resizer-'] {
+  width: 154px;
+}
+
+.modal[id^='resizer-'] .modal-footer {
+  background-color: inherit;
+}
+
+.resizer {
+  padding: 0;
+  position: relative;
+}
+
+.resizer .btn-floating.btn-small {
+  width: 26px;
+  height: 26px;
+  line-height: 26px;
+  font-size: 0.8em;
+}
+
+.resizer table tr > td {
+  padding: 0.3rem;
+  width: 34px;
+  height: 34px;
+}
+
+.resizer table.background {
+  position: absolute;
+  left: 0;
+}
+
+.resizer table.background tr > td {
+    padding: 0.1rem;
+}
+
+.resizer table.background tr > td > div {
+  width: 100%;
+  height: 100%;
+  border-radius: 1px;
 }
 
 @keyframes asterism-pulse {

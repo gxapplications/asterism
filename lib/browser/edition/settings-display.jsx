@@ -37,8 +37,6 @@ class SettingsDisplay extends React.Component {
             &nbsp; <span className='hide-on-med-and-down'>Restore from server</span><span className='hide-on-large-only'>Restore</span>
           </Button>
         </div>
-
-        { /* TODO !6: use gridifier background colors option to make colored zones accross items? */ }
       </div>
     )
   }

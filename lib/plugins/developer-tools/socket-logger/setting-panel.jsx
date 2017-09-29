@@ -14,7 +14,7 @@ class SocketLoggerSettingPanel extends ItemSettingPanel {
 
     const waves = animationLevel >= 2 ? 'light' : undefined
 
-    const logLevelLabel = logLevel == 0 ? 'Debug' : (logLevel == 1 ? 'Info' : (logLevel == 2 ? 'Warning' : 'Error'))
+    const logLevelLabel = logLevel == 0 ? 'Debug' : (logLevel == 1 ? 'Info' : (logLevel == 2 ? 'Warning' : 'Error')) // eslint-disable-line eqeqeq
 
     return (
       <div className='clearing padded'>

@@ -4,7 +4,8 @@ package-lock.json
 
 /node_modules
 /dist
-/doc
+/doc/jsdoc
+/doc/coverage
 /var
 
 .idea

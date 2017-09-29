@@ -1,12 +1,11 @@
 {
   "name": "asterism",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "Extensible dashboard platform for domotics",
   "author": "Xavier Gouley <gxapplications@gmail.com>",
   "contributors": [],
   "license": "CC-BY-NC-SA-4.0",
   "scripts": {
-    "start:component": "webpack-dev-server --config example/webpack.config.js --no-info --progress --inline",
     "start:dist": "npm run dist && cross-env NODE_ENV=production node example/dist.js",
     "start": "cross-env NODE_ENV=development nodemon --watch lib/server example/hot-reload.js",
     "start:debug": "cross-env NODE_ENV=development DEBUG=* nodemon --watch lib/server example/hot-reload.js",
@@ -14,7 +13,7 @@
     "prepublishOnly": "npm run dist",
     "doc:jsdoc": "jsdoc --package package.json --readme README.md --destination doc/jsdoc/ lib/plugins/*",
     "doc:coverage": "cross-env NODE_ENV=test nyc --require babel-core/register --reporter=lcov mocha && rimraf .nyc_output",
-    "doc": "rimraf doc && npm run doc:jsdoc && groc && npm run doc:coverage",
+    "doc": "rimraf doc/jsdoc && rimraf doc/coverage && npm run doc:jsdoc && npm run doc:coverage",
     "lint": "standard --verbose | snazzy",
     "test": "npm run dist && cross-env NODE_ENV=test mocha --require ignore-styles",
     "validate": "npm ls"
@@ -51,10 +50,13 @@
           [
             "css-modules-transform",
             {
-              "preprocessCss": "./lib/browser/builder/babel-sass-preprocessor.js",
+              "preprocessCss": "./babel-sass-preprocess.js",
               "generateScopedName": "[local]",
               "extractCss": "./dist/styles.css",
-              "extensions": [".css", ".scss"]
+              "extensions": [
+                ".css",
+                ".scss"
+              ]
             }
           ]
         ]
@@ -90,16 +92,19 @@
     "babel-preset-react-es2015": "^1.3.0",
     "babili-webpack-plugin": "^0.1.2",
     "body-parser": "^1.18.2",
+    "camelopard": "^0.7.1",
     "classnames": "^2.2.5",
     "colors": "^1.1.2",
     "css-loader": "^0.28.4",
     "debounce": "^1.0.2",
     "expose-loader": "^0.7.3",
     "express": "^4.15.3",
+    "express-ipfilter": "^0.3.1",
     "extract-text-webpack-plugin": "^3.0.0",
     "file-loader": "^0.11.2",
     "imports-loader": "^0.7.1",
     "joi": "^10.6.0",
+    "jquery-network-camera": "0.0.3",
     "materialize-css": "^0.98.2",
     "node-sass": "^4.5.3",
     "nosql": "^5.0.3",
@@ -107,7 +112,7 @@
     "prop-types": "^15.5.10",
     "react": "^15.6.1",
     "react-color": "^2.13.4",
-    "react-gridifier": "^0.3.4",
+    "react-gridifier": "^0.4.0",
     "react-hot-loader": "^3.0.0-beta.7",
     "react-materialize": "^1.0.10",
     "react-transition-group": "^1.2.0",
@@ -127,7 +132,6 @@
     "chai": "^4.1.0",
     "cross-env": "^1.0.7",
     "enzyme": "^2.8.2",
-    "groc": "^0.8.0",
     "ignore-styles": "^5.0.1",
     "jsdoc": "^3.5.3",
     "jsdom": "^11.1.0",
