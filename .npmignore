@@ -3,6 +3,7 @@ test
 example
 var
 doc
+assets/development
 .idea
 .jshintrc
 .jshintignore

@@ -1,6 +1,5 @@
 'use strict'
 
-/* global $ */
 import React from 'react'
 
 import Item from '../../item'
@@ -11,7 +10,7 @@ class MjpegCameraItem extends Item {
   render () {
     return (
       <div id='myCamera' className={styles.ipCam}>
-        <object type="image/jpg" data='http://192.168.1.33/videostream.cgi'>
+        <object type='image/jpg' data='http://192.168.1.33/videostream.cgi'>
           <div>
             AAA
           </div>
@@ -24,10 +23,9 @@ class MjpegCameraItem extends Item {
   // https://www.npmjs.com/package/jquery-network-camera
   // https://github.com/fsandx/camelopard
 
-  componentDidMount () {
+  /* componentDidMount () {
     const url = 'http://192.168.1.33/videostream.cgi'
-
-  }
+  } */
 }
 
 export default MjpegCameraItem

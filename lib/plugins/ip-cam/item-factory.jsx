@@ -10,7 +10,7 @@ const builder = new ItemFactoryBuilder()
 .newItemType('motion_jpeg_cam', AdditionalItem.categories.SCREENING)
   .withDescription('Motion-jpeg camera', 'Screening from Motion-jpeg IP camera.')
   .settingPanelWithHeader('Motion-jpeg camera selection', 'videocam') // optional override, but always before *Instance*() calls...
-  .newInstanceFromInitialSetting(2, 2, MjpegCameraSettingPanel)
+  .newInstanceFromInitialSetting(2, 3, MjpegCameraSettingPanel)
   .existingInstance(MjpegCameraItem, MjpegCameraSettingPanel)
   .acceptDimensions([
     { w: 1, h: 2 },
