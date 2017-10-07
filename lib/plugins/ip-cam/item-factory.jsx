@@ -13,9 +13,16 @@ const builder = new ItemFactoryBuilder()
   .newInstanceFromInitialSetting(2, 2, MjpegCameraSettingPanel)
   .existingInstance(MjpegCameraItem, MjpegCameraSettingPanel)
   .acceptDimensions([
-    { w: 1, h: 1 },
-    { w: 2, h: 2 },
-    { w: 3, h: 3 }
+    { w: 1, h: 2 },
+    { w: 1, h: 3 },
+    { w: 2, h: 3 },
+    { w: 2, h: 4 },
+    { w: 2, h: 5 },
+    { w: 2, h: 6 },
+    { w: 3, h: 4 },
+    { w: 3, h: 5 },
+    { w: 3, h: 6 },
+    { w: 3, h: 7 }
   ])
   .build()
 

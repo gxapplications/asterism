@@ -1,6 +1,6 @@
 {
   "name": "asterism",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Extensible dashboard platform for domotics",
   "author": "Xavier Gouley <gxapplications@gmail.com>",
   "contributors": [],
@@ -55,6 +55,7 @@
               "extractCss": "./dist/styles.css",
               "extensions": [
                 ".css",
+                ".sass",
                 ".scss"
               ]
             }
@@ -104,7 +105,6 @@
     "file-loader": "^0.11.2",
     "imports-loader": "^0.7.1",
     "joi": "^10.6.0",
-    "jquery-network-camera": "0.0.3",
     "materialize-css": "^0.98.2",
     "node-sass": "^4.5.3",
     "nosql": "^5.0.3",
@@ -112,7 +112,7 @@
     "prop-types": "^15.5.10",
     "react": "^15.6.1",
     "react-color": "^2.13.4",
-    "react-gridifier": "^0.4.0",
+    "react-gridifier": "^0.4.1",
     "react-hot-loader": "^3.0.0-beta.7",
     "react-materialize": "^1.0.10",
     "react-transition-group": "^1.2.0",

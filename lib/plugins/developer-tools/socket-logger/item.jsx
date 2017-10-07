@@ -8,7 +8,6 @@ import { Button, Icon, Modal } from 'react-materialize'
 import Item from '../../item'
 
 import styles from './styles.css.js'
-// import '../styles.scss'
 
 class SocketLoggerItem extends Item {
   constructor (props) {
