@@ -1,0 +1,572 @@
+.ScenariiEditPanel {
+  height: 100%;
+  position: relative;
+  overflow-y: hidden;
+
+  & > div.row {
+    min-height: 100%;
+    position: relative;
+  }
+
+  & > div.row > div.col {
+    & > ul.tabs {
+      background-color: transparent;
+
+      & .tab a {
+        font-size: 1.6em;
+        color: white;
+        text-transform: none;
+      }
+
+      & .indicator {
+        background-color: white;
+      }
+    }
+  }
+
+  & > div.row > div.col ~ div.col {
+    padding-top: 0.5rem;
+    display: block;
+    overflow-y: auto;
+    position: absolute;
+    bottom: 0;
+    top: 6.3rem;
+  }
+
+  & > div.row > div.col:first-of-type {
+    padding-bottom: 23px !important;
+  }
+
+  & div.collection {
+
+    & .collection-header {
+      padding: 2rem;
+      text-align: center;
+      color: initial;
+
+      & .material-icons {
+        margin: 1rem;
+        vertical-align: sub;
+      }
+    }
+
+    & .collection-item {
+      background-color: rgba(255, 255, 255, 0.3);
+
+      &.avatar {
+        min-height: inherit;
+      }
+    }
+
+    & a.collection-item {
+      color: inherit;
+
+      & span {
+        opacity: 0.7;
+      }
+
+      & span.title {
+        opacity: 1;
+        font-weight: bold;
+      }
+
+      @media only screen and (max-width: 600px) {
+        & .primary-content {
+          min-width: 100%;
+        }
+      }
+
+      & .secondary-content.switch {
+        min-height: 2.6rem;
+        padding-top: 0.2rem;
+        padding-right: 0.7rem;
+
+        & label {
+          vertical-align: -webkit-baseline-middle;
+        }
+      }
+    }
+  }
+
+  & .editForm {
+    position: absolute;
+    width: 100%;
+    overflow-y: auto;
+    left: 0;
+    top: 100%;
+    height: 100%;
+    z-index: 3;
+    display: block;
+    transition: transform 0.6s ease;
+
+    & .title {
+      padding: 0.4rem 1.2rem 0.2rem 1.2rem;
+    }
+  }
+
+  &.editFormOpened {
+    & .editForm {
+      transform: translateY(-100%);
+    }
+  }
+
+  & .card.form.search {
+    position: sticky;
+    top: -0.5rem;
+    z-index: 2;
+    margin: -0.5rem -0.7rem 1rem -0.7rem;
+    padding-top: 0.4rem;
+    border-radius: 0;
+  }
+}
+
+.actions-dropdown-edit-panel, .actions-dropdown-edit-panel .modal-content {
+  padding: 0;
+}
+
+.actions-dropdown-edit-panel .modal-content .coloring-header,
+.actions-dropdown-edit-panel .modal-content .coloring-header + div {
+  padding: 1em;
+}
+
+.actions-dropdown-edit-panel .modal-content .coloring-header h4 {
+  margin: 0;
+}
+
+.levelStateItem {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  border-radius: 2px;
+
+  & .btn {
+    flex-grow: 1;
+    flex-shrink: 1;
+    align-content: center;
+    margin: 0.5rem;
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+
+    & i.material-icons {
+      font-size: 4em;
+      width: -webkit-fill-available;
+    }
+  }
+
+  & div {
+    flex-grow: 1;
+    flex-shrink: 1;
+    align-content: center;
+    align-items: center;
+    display: flex;
+
+    & span {
+      width: 100%;
+      text-align: center;
+      vertical-align: middle;
+
+      & i.material-icons {
+        vertical-align: middle;
+      }
+    }
+  }
+}
+
+.procedurePanel {
+  font-size: 1.5em;
+  padding: 0 !important;
+
+  & ul.script { /* script */
+    padding: 2.8rem 0.2rem 0.01rem 0.4rem;
+    margin: 0;
+    border-left: 2px solid white;
+    border-top: 1px solid transparent;
+    border-right: 1px solid transparent;
+    border-bottom: 1px solid transparent;
+    border-radius: 3px;
+
+    & > li:not(.add) {
+      position: relative;
+      border: 2px solid white;
+      background-color: rgba(242, 242, 242, 0.3);
+      border-radius: 4px;
+      list-style-type: none;
+      margin: 0 0 0.3rem 0;
+      padding: 0.4rem;
+
+      & > .remove.sequence {
+        padding: 0 9px;
+        left: 0;
+        bottom: 0;
+        position: absolute;
+      }
+    }
+
+    & > li.add {
+      display: inline-block;
+      border: 2px dashed #eee;
+      background-color: rgba(242, 242, 242, 0.1);
+      border-radius: 5px;
+      list-style-type: none;
+      margin: 0 0 0.3rem 0;
+      padding: 0.4rem;
+
+      & > i.material-icons {
+        vertical-align: middle;
+        font-size: inherit;
+      }
+    }
+  }
+
+  & > ul.script {
+    padding: 0;
+    border-left: none;
+  }
+
+  & ol { /* sequence */
+    padding-left: 1.8em;
+    position: relative;
+    list-style-type: none;
+
+    &::before {
+      content: '⇰';
+      color: white;
+      position: absolute;
+      font-size: 1.7em;
+      left: 0;
+      top: -0.6rem;
+    }
+
+    & > li:not(.add) {
+      font-size: 0.9em;
+      position: relative;
+
+      &::after {
+        content: '⇩';
+        color: white;
+        position: relative;
+        display: block;
+        font-size: 1.5em;
+        left: -0.8rem;
+      }
+
+      &:nth-last-of-type(3)::after {
+        content: '⬂';
+        left: -0.2rem;
+        height: 0.8em;
+      }
+
+      & > .orderHandler {
+        display: inline-block;
+        position: absolute;
+        left: 0.6rem;
+        top: 0.4rem;
+        z-index: 3;
+      }
+
+      & > .removeAction {
+        display: inline-block;
+        padding: 0 9px;
+        position: absolute;
+        left: 0.2rem;
+        top: 3rem;
+        z-index: 3;
+      }
+
+      & > ul.script ~ .removeAction {
+        left: 4rem;
+        top: 0;
+      }
+
+      & > .globalizeAction:not(.disabled) {
+        display: inline-block;
+        position: absolute;
+        padding: 0 9px;
+        right: 0.2rem;
+        top: 0.2rem;
+      }
+
+      & > .globalizeAction.disabled {
+        z-index: 2;
+        display: block;
+        position: absolute;
+        margin: 0;
+        padding: 0.4em;
+        top: 0;
+        bottom: 2.2em;
+        left: 0;
+        right: 0;
+        text-align: right;
+        background-color: rgba(196, 196, 196, 0.75);
+
+        & i.material-icons {
+          vertical-align: middle;
+        }
+      }
+
+      &:nth-last-of-type(3) > .globalizeAction.disabled {
+        bottom: 1.2em;
+      }
+
+      & > div:first-of-type:not(.orderHandler) { /* Action EditForm root */
+        min-height: 4em;
+        margin: 0 !important;
+        padding-left: 2.4rem;
+        padding-right: 2.4rem;
+
+        & .hide-in-procedure {
+          display: none;
+        }
+      }
+    }
+
+    & > li.add {
+      display: inline-block;
+      margin: 0 0 0 2em;
+      padding: 0.4rem;
+      border: 2px dashed #eee;
+      background-color: rgba(242, 242, 242, 0.1);
+      border-radius: 5px;
+      list-style-type: none;
+      height: 4.8rem;
+
+      &:first-of-type {
+        margin: 0.2rem;
+      }
+
+      &.script {
+        margin: 0 0 0 0.3rem;
+        vertical-align: baseline;
+        line-height: 3.7rem;
+      }
+
+      &.action {
+        padding: 0 0 0.4rem;
+        vertical-align: top;
+
+        & input.select-dropdown {
+          margin-bottom: 0;
+        }
+      }
+
+      & > i.material-icons {
+        vertical-align: middle;
+        font-size: inherit;
+      }
+    }
+  }
+
+  & li.sortable-dragging {
+    & > ul, & > div:not(.orderHandler):first-of-type {
+      border-left-color: rgba(64, 64, 64, 0.2);
+      border-top-color: rgba(64, 64, 64, 0.2) !important;
+      border-right-color: rgba(64, 64, 64, 0.2) !important;
+      border-bottom-color: rgba(64, 64, 64, 0.2) !important;
+      box-shadow: 2px 5px 5px 0 rgba(0, 0, 0, 0.1), 1px 3px 5px 0 rgba(0, 0, 0, 0.5);
+    }
+
+    &::before, &::after {
+      display: none !important;
+    }
+  }
+
+  & li.sortable-placeholder {
+    margin: 0 0 0.4rem 0;
+    background-color: rgba(64, 64, 64, 0.3);
+
+    &::before, &::after {
+      display: none !important;
+    }
+  }
+
+  /* Stops at 4th level script */
+  ul.script > li > ol > li > ul.script > li > ol > li > ul.script > li > ol > li.add.script {
+    display: none;
+  }
+}
+
+.waitPanel, .levelStateChangerPanel, .astral-time-trigger-panel, .level-state-trigger-panel, .time-based-condition-panel,
+.astral-time-condition-panel, .level-state-condition-panel {
+  & .slider {
+    height: 5.4rem;
+    padding-top: 1.6rem;
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+.domoticsSettings {
+  & .location-icon {
+    margin-top: 1.8rem;
+    margin-right: 0.6rem;
+  }
+
+  & table.responsive-table tbody {
+    display: table-row-group;
+
+    & td.top-aligned {
+      vertical-align: top;
+    }
+  }
+
+  & .energyPlanningSlider {
+    width: 14.28%;
+    min-width: 58px;
+  }
+
+  & .energyPlanningSlider > div {
+    height: 330px;
+    margin-left: 6px;
+
+    & .noUi-value-vertical {
+      -webkit-transform: translate3d(0, -50%, 0);
+      transform: translate3d(0, -50%, 0);
+      font-size: 0.7em;
+      padding-left: 17px;
+    }
+
+    & .noUi-origin:nth-of-type(1):not(:last-of-type) > .noUi-handle, .noUi-connect:nth-of-type(2) {
+      background: #2196f3;
+
+      & .noUi-tooltip {
+        background: #2196f3;
+
+        & > span {
+          font-size: 0.7em;
+        }
+      }
+    }
+
+    & .noUi-origin:nth-of-type(3):not(:last-of-type) > .noUi-handle, .noUi-connect:nth-of-type(4) {
+      background: #f44336;
+
+      & .noUi-tooltip {
+        background: #f44336;
+
+        & > span {
+          font-size: 0.7em;
+        }
+      }
+    }
+
+    & .noUi-origin:nth-of-type(5):not(:last-of-type) > .noUi-handle, .noUi-connect:nth-of-type(6) {
+      background: #4caf50;
+
+      & .noUi-tooltip {
+        background: #4caf50;
+
+        & > span {
+          font-size: 0.7em;
+        }
+      }
+    }
+
+    & .noUi-origin:nth-of-type(7):not(:last-of-type) > .noUi-handle, .noUi-connect:nth-of-type(8) {
+      background: #ff5722;
+
+      & .noUi-tooltip {
+        background: #ff5722;
+
+        & > span {
+          font-size: 0.7em;
+        }
+      }
+    }
+
+    & .noUi-origin:nth-of-type(9):not(:last-of-type) > .noUi-handle, .noUi-connect:nth-of-type(10) {
+      background: #673ab7;
+
+      & .noUi-tooltip {
+        background: #673ab7;
+
+        & > span {
+          font-size: 0.7em;
+        }
+      }
+    }
+
+    & .noUi-origin:nth-of-type(11):not(:last-of-type) > .noUi-handle, .noUi-connect:nth-of-type(12) {
+      background: #795548;
+
+      & .noUi-tooltip {
+        background: #795548;
+
+        & > span {
+          font-size: 0.7em;
+        }
+      }
+    }
+
+    & .noUi-origin:last-of-type > .noUi-handle .noUi-tooltip {
+      & > span {
+        opacity: 1;
+        zoom: 2.2;
+        left: 1%;
+        top: -25%;
+      }
+    }
+
+    & .noUi-origin[disabled="true"]:last-of-type > .noUi-handle .noUi-tooltip {
+      & > span {
+        zoom: 0;
+        opacity: 0;
+      }
+    }
+  }
+
+  & .energyPlanningPrices {
+    & td {
+      max-width: 70%;
+
+      & > div {
+        margin-top: 0;
+
+        & input {
+          margin-bottom: 10px;
+        }
+      }
+
+      & > div:nth-of-type(1) {
+        color: #2196f3;
+      }
+      & > div:nth-of-type(2) {
+        color: #f44336;
+      }
+      & > div:nth-of-type(3) {
+        color: #4caf50;
+      }
+      & > div:nth-of-type(4) {
+        color: #ff5722;
+      }
+      & > div:nth-of-type(5) {
+        color: #673ab7;
+      }
+      & > div:nth-of-type(6) {
+        color: #795548;
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 992px) {
+  .domoticsSettings table.responsive-table {
+    & tbody tr td, & thead tr th {
+      min-height: 360px;
+    }
+  }
+}
+
+.grey-knobs {
+  & .noUi-handle {
+    background-color: #757575;
+
+    & .noUi-tooltip {
+      background-color: #757575;
+    }
+  }
+
+  & .noUi-connect {
+    background-color: #757575;
+  }
+}

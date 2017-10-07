@@ -1,16 +1,17 @@
 'use strict'
 
+import cx from 'classnames'
 import React from 'react'
 import { Button, Row } from 'react-materialize'
 
-import ItemSettingPanel from '../../item-setting-panel'
+import { ItemSettingPanel } from 'asterism-plugin-library'
 import SocketLoggerItem from './item'
 
 class SocketLoggerSettingPanel extends ItemSettingPanel {
   render () {
-    const { context } = this.props
+    const { theme, mainState } = this.props.context
     const { logLevel = 1, historyLength = 30 } = this.state.params
-    const { animationLevel } = context.mainState()
+    const { animationLevel } = mainState()
 
     const waves = animationLevel >= 2 ? 'light' : undefined
 
@@ -23,8 +24,8 @@ class SocketLoggerSettingPanel extends ItemSettingPanel {
           <div className='col s12'>
             <h5>Min log level</h5>
             <div className='range-field'>
-              <input type='range' min='0' max='3' ref={(c) => { this._logLevel = c }}
-                value={logLevel} onChange={this.handleValueChange.bind(this, 'logLevel')} />
+              <input type='range' min='0' max='3'
+                value={logLevel} onChange={this.handleEventChange.bind(this, 'logLevel')} />
             </div>
             Will log from {logLevelLabel} level.
           </div>
@@ -34,14 +35,14 @@ class SocketLoggerSettingPanel extends ItemSettingPanel {
           <div className='col s12'>
             <h5>History length</h5>
             <div className='range-field'>
-              <input type='range' min='1' max='100' ref={(c) => { this._historyLength = c }}
-                value={historyLength} onChange={this.handleValueChange.bind(this, 'historyLength')} />
+              <input type='range' min='1' max='100'
+                value={historyLength} onChange={this.handleEventChange.bind(this, 'historyLength')} />
             </div>
             Will keep last {historyLength} messages.
           </div>
         </Row>
 
-        <Button waves={waves} className='right' onClick={this.save.bind(this)}>
+        <Button waves={waves} className={cx('right btn-bottom-sticky', theme.actions.primary)} onClick={this.save.bind(this)}>
           Save &amp; close
         </Button>
       </div>
@@ -49,8 +50,7 @@ class SocketLoggerSettingPanel extends ItemSettingPanel {
   }
 
   save () {
-    const params = { ...this.state.params, logLevel: this._logLevel.value, historyLength: this._historyLength.value }
-    this.next(SocketLoggerItem, params)
+    this.next(SocketLoggerItem, this.state.params)
   }
 }
 

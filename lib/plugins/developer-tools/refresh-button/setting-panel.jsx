@@ -1,16 +1,24 @@
 'use strict'
 
+import cx from 'classnames'
 import React from 'react'
 import { Button, Input, Row } from 'react-materialize'
 
-import ItemSettingPanel from '../../item-setting-panel'
+import { ItemSettingPanel } from 'asterism-plugin-library'
 import RefreshButtonItem from './item'
 
 class RefreshButtonSettingPanel extends ItemSettingPanel {
+  componentWillUpdate (nextProps, nextState) {
+    // Because of react-materialize bad behaviors...
+    if (this.state.params.title !== nextState.params.title) {
+      this._title.setState({ value: nextState.params.title })
+    }
+  }
+
   render () {
-    const { context } = this.props
+    const { theme, mainState } = this.props.context
     const { title = '' } = this.state.params
-    const { animationLevel } = context.mainState
+    const { animationLevel } = mainState()
 
     const waves = animationLevel >= 2 ? 'light' : undefined
 
@@ -18,9 +26,9 @@ class RefreshButtonSettingPanel extends ItemSettingPanel {
       <div className='clearing padded'>
         <Row className='padded card'>
           <Input placeholder='Refresh' s={12} label='Label' ref={(c) => { this._title = c }}
-            value={title} onChange={this.handleValueChange.bind(this, 'title')} />
+            value={title} onChange={this.handleEventChange.bind(this, 'title')} />
         </Row>
-        <Button waves={waves} className='right' onClick={this.save.bind(this)}>
+        <Button waves={waves} className={cx('right btn-bottom-sticky', theme.actions.primary)} onClick={this.save.bind(this)}>
           Save &amp; close
         </Button>
       </div>
@@ -28,8 +36,7 @@ class RefreshButtonSettingPanel extends ItemSettingPanel {
   }
 
   save () {
-    const params = { ...this.state.params, title: this._title.state.value }
-    this.next(RefreshButtonItem, params)
+    this.next(RefreshButtonItem, this.state.params)
   }
 }
 

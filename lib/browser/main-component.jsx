@@ -5,7 +5,7 @@ import cx from 'classnames'
 import PropTypes from 'prop-types'
 import React from 'react'
 import { Gridifier } from 'react-gridifier/dist/materialize'
-import { Navbar, NavItem, Icon } from 'react-materialize'
+import { Icon, Navbar, NavItem } from 'react-materialize'
 import { TransitionGroup } from 'react-transition-group'
 
 import AddCategoryButtons from './edition/add-category-buttons'
@@ -13,14 +13,17 @@ import DefaultMaterialTheme from './default-material-theme'
 import DefaultLocalStorage from './default-local-storage'
 import DefaultServerStorage from './default-server-storage'
 import ItemManager from './item-manager'
+import ItemSetting from './edition/item-setting'
+// import logger from './logger'
+import NotificationManager from './notification-manager'
 import Settings from './edition/settings'
 import SocketManager from './socket-manager'
 import SpeechManager from './speech-manager'
-import ItemSetting from './edition/item-setting'
-import { thenSleep } from './tools'
+import { thenSleep, sleep } from './tools'
 
 import 'react-gridifier/dist/styles.css'
-import './styles.css'
+import './asterism.css'
+import 'asterism-plugin-library/styles.css'
 
 const localStorage = new DefaultLocalStorage('asterism')
 
@@ -28,46 +31,120 @@ class MainComponent extends React.Component {
   constructor (props) {
     super(props)
 
-    this.socketManager = new SocketManager()
-    this.speechManager = new SpeechManager()
+    this.logger = console // logger(this)
+
+    this.notificationManager = new NotificationManager(this, this.logger)
+    this.socketManager = new SocketManager(this.notificationManager, this.logger)
+    this.speechManager = new SpeechManager(this, props.localStorage, this.logger)
 
     // Instantiate orderHandler and initial items for this.state (need to be sync)
     this.itemManager = new ItemManager(props.localStorage, props.serverStorage, this)
 
+    const mainState = this.getState.bind(this)
+    mainState.set = this.setState.bind(this)
+    mainState.openEditPanel = (panelLibName, idx = 0) => {
+      this.openEditPanel(this.state.editPanels.filter(ep => ep.libName === panelLibName)[idx].Panel)
+    }
+    mainState.openSettings = (tabId) => {
+      setTimeout(() => {
+        $('#settings-modal').modal('open')
+        try {
+          const id = $(`#${tabId}`).parent().attr('id')
+          setTimeout(() => {
+            $('#settings-modal ul.tabs').tabs('select_tab', id)
+          }, 400)
+        } catch (error) {
+          console.error(error)
+        }
+      }, this.state.editMode ? 100 : 1200)
+      this.setState({ editMode: true })
+    }
+
+    this.services = (process.env.ASTERISM_SERVICES || []).reduce((map, toRequire) => {
+      if (!toRequire) {
+        return map
+      }
+      const Clazz = plugins.services[toRequire.service].default
+      const instance = new Clazz({
+        getServices: () => map,
+        notificationManager: this.notificationManager,
+        mainState,
+        privateSocket: toRequire.privateSocket ? this.socketManager.connectPrivateSocket(toRequire.privateSocket) : null,
+        publicSockets: toRequire.publicSockets ? toRequire.publicSockets.reduce((acc, namespace) => {
+          acc[namespace] = this.socketManager.connectPublicSocket(namespace)
+          return acc
+        }, {}) : []
+      })
+
+      map[toRequire.libName] = instance
+      return map
+    }, {})
+
     this.state = {
-      editMode: false,
+      editMode: window.document.location.hash === '#edit',
       animationLevel: parseInt(props.localStorage.getItem('settings-animation-level') || 3), // 1..3
       itemFactories: (process.env.ASTERISM_ITEM_FACTORIES || []).map((toRequire) => {
         const Clazz = plugins.itemFactories[toRequire.module].default
         const factory = new Clazz({
-          localStorage: props.localStorage.createSubStorage(toRequire.module),
-          serverStorage: props.serverStorage.createSubStorage(toRequire.module),
-          mainState: this.getState.bind(this),
+          localStorage: props.localStorage.createSubStorage(toRequire.libName),
+          serverStorage: props.serverStorage.createSubStorage(toRequire.libName),
+          mainState,
           theme: props.theme,
-          privateSocket: this.socketManager.connectPrivateSocket(toRequire.privateSocket),
-          publicSockets: toRequire.publicSockets.reduce((acc, namespace) => {
+          privateSocket: toRequire.privateSocket ? this.socketManager.connectPrivateSocket(toRequire.privateSocket) : null,
+          publicSockets: toRequire.publicSockets ? toRequire.publicSockets.reduce((acc, namespace) => {
             acc[namespace] = this.socketManager.connectPublicSocket(namespace)
             return acc
-          }, {})
+          }, {}) : [],
+          services: this.services
         }) // context given here
         factory.id = toRequire.module
         Object.freeze(factory) // protection against hacks
         return factory
       }),
+      editPanels: (process.env.ASTERISM_EDIT_PANELS || []).map((toRequire) => {
+        const Clazz = plugins.editPanels[toRequire.module].default
+        return {
+          libName: toRequire.libName,
+          label: Clazz.label,
+          icon: Clazz.icon,
+          Panel: Clazz,
+          privateSocket: toRequire.privateSocket ? this.socketManager.connectPrivateSocket(toRequire.privateSocket) : null,
+          publicSockets: toRequire.publicSockets ? toRequire.publicSockets.reduce((acc, namespace) => {
+            acc[namespace] = this.socketManager.connectPublicSocket(namespace)
+            return acc
+          }, {}) : []
+        }
+      }),
       items: [],
       itemSettingPanel: null,
-      animationFlow: null
+      EditPanel: null,
+      editPanelButtonHighlight: false,
+      animationFlow: null,
+      notifications: [], // not directly used to render, but to trigger a render() when modified
+      messageModal: null,
+      speechDialog: null
+      // logs: []
     }
   }
 
   componentDidMount () {
     // dynamic CSS for background color
     const bgColor = $('div.asterism').css('background-color')
+    const navbarColor = $('div.asterism .navbar-fixed > nav').css('background-color')
+    const textColor = $('div.asterism').css('color')
     $('div.asterism').css('box-shadow', `0 2000px 0 2000px ${bgColor}`)
-    $('div.asterism .navbar-fixed ul.side-nav').css('background-color', bgColor)
+    $('div.asterism .navbar-fixed ul.side-nav').css('background-color', navbarColor)
+    $('div.asterism .navbar-fixed ul.side-nav').css('color', textColor)
 
-    Promise.all(this.itemManager.getAllItems())
-    .then(thenSleep(300)) // for cosmetics... can be removed.
+    // FIXME: to delete when react-materialize will work... jquery.initialize.min.js must also be deleted!
+    $.initialize('.input-field input', function () {
+      if ($(this).val().length) {
+        $(this).next('label').addClass('active')
+      }
+    })
+
+    sleep(200)
+    .then(() => Promise.all(this.itemManager.getAllItems()))
     .then((items) => {
       console.log(`Restoring ${items.length} items in the grid...`)
       this.setState({ items })
@@ -122,31 +199,93 @@ class MainComponent extends React.Component {
         $('#item-setting-modal .coloring-header').addClass(this.props.theme.backgrounds.editing)
       }
     }
+
+    // If a message modal should be displayed
+    if (this.state.messageModal) {
+      $('#messageModal').modal({
+        dismissible: true,
+        inDuration: this.state.animationLevel >= 2 ? 300 : 0,
+        outDuration: this.state.animationLevel >= 2 ? 300 : 0,
+        complete: () => {
+          this.setState({ messageModal: null })
+        }
+      })
+      $('#messageModal').modal('open')
+    }
+
+    // If an EditPanel should be displayed
+    if (this.state.EditPanel && !prevState.EditPanel) {
+      $('#edit-panel-modal').modal({
+        dismissible: true,
+        startingTop: '2%',
+        endingTop: '6%',
+        opacity: 0.5,
+        inDuration: this.state.animationLevel >= 2 ? 300 : 0,
+        outDuration: this.state.animationLevel >= 2 ? 300 : 0,
+        ready: () => {
+          if (this.state.EditPanel && this.state.EditPanel.onReady) {
+            this.state.EditPanel.onReady()
+          }
+        },
+        complete: () => {
+          this.setState({ EditPanel: null })
+        }
+      })
+      $('#edit-panel-modal').modal('open')
+    }
   }
 
   render () {
     const { theme, localStorage, serverStorage } = this.props
-    const { editMode, animationLevel, itemFactories, items, itemSettingPanel } = this.state
+    const { editMode, animationLevel, itemFactories, editPanels, EditPanel, items, itemSettingPanel, messageModal,
+      speechDialog, editPanelButtonHighlight } = this.state
     const SpeechStatus = this.speechManager.getComponent()
+    const notifications = this.notificationManager.getComponents({ animationLevel, theme })
+    const editPanelContext = EditPanel ? editPanels.find((ep) => ep.Panel === EditPanel) : {}
+
     return (
       <div className={cx('asterism', theme.backgrounds.body)}>
         <Navbar fixed brand='⁂' href={null} right
           options={{ closeOnClick: true }}
-          className={cx({ [theme.backgrounds.card]: !editMode, [theme.backgrounds.editing]: editMode })}
+          className={cx(editMode ? theme.backgrounds.editing : theme.backgrounds.card, animationLevel >= 2 ? 'animated' : null)}
         >
-          <SpeechStatus animationLevel={animationLevel} />
-          <NavItem divider />
+          {editMode ? null : notifications}
+          {editMode ? null : (
+            <SpeechStatus animationLevel={animationLevel} />
+          )}
+          {editMode ? null : (
+            <NavItem divider />
+          )}
+
+          {editMode ? editPanels.map(({ label, icon, Panel }, idx) => (
+            <NavItem key={idx} onClick={this.openEditPanel.bind(this, Panel)} href='javascript:void(0)'
+              className={cx(animationLevel >= 2 ? 'waves-effect waves-light' : '')}>
+              <i className={cx('material-icons', icon)}>{icon}</i>
+              <span className='hide-on-large-only'>{label}</span>
+            </NavItem>
+          )) : null}
+
           {editMode ? (
-            <NavItem onClick={this.openSettingsModal.bind(this)} href='javascript:void(0)' className={cx(animationLevel >= 2 ? 'waves-effect waves-light' : '')}>
+            <NavItem onClick={this.openSettingsModal.bind(this)} href='javascript:void(0)'
+              className={cx(animationLevel >= 2 ? 'waves-effect waves-light' : '')}>
               <Icon>settings</Icon>
               <span className='hide-on-large-only'>Settings</span>
             </NavItem>
           ) : null}
-          <NavItem onClick={this.toggleEditMode.bind(this)} href='javascript:void(0)' className={cx(animationLevel >= 2 ? 'waves-effect waves-light' : '')}>
-            <Icon>edit</Icon>
+          <NavItem onClick={this.toggleEditMode.bind(this)} href='javascript:void(0)'
+            className={cx(animationLevel >= 2 ? 'waves-effect waves-light' : '')}>
+            <Icon>{editMode ? 'check_circle' : 'edit'}</Icon>
             <span className='hide-on-large-only'>{editMode ? 'End edition' : 'Edit mode'}</span>
           </NavItem>
         </Navbar>
+
+        { /* <pre className='logger'>
+          <ul>
+            {logs.map((log, idx) => (
+              <li key={idx}>{log}</li>
+            ))}
+          </ul>
+        </pre> */ }
 
         {items.length ? (
           <Gridifier editable={editMode} sortDispersion orderHandler={this.itemManager.orderHandler}
@@ -174,6 +313,70 @@ class MainComponent extends React.Component {
             icon={itemSettingPanel.props.icon} title={itemSettingPanel.props.title}
             serverStorage={serverStorage} theme={theme}>{itemSettingPanel}</ItemSetting>
         ) : null}
+
+        {editMode && EditPanel ? (
+          <div id='edit-panel-modal' className={cx('modal modal-fixed-footer', theme.backgrounds.body)}>
+            <div className='modal-content'>
+              {EditPanel.hideHeader ? null : (
+                <div className={cx('coloring-header', theme.backgrounds.editing)}>
+                  <h4><i className={cx('material-icons', EditPanel.icon)}>{EditPanel.icon}</i> {EditPanel.label}</h4>
+                </div>
+              )}
+              <EditPanel serverStorage={serverStorage} theme={theme} animationLevel={animationLevel}
+                localStorage={localStorage} services={() => this.services}
+                privateSocket={editPanelContext.privateSocket} publicSockets={editPanelContext.publicSockets}
+                ref={(c) => { this._editPanelInstance = c }} highlightCloseButton={this.highlightCloseButton.bind(this)} />
+            </div>
+            <div className={cx('modal-footer', theme.backgrounds.body)}>
+              <a href='javascript:void(0)' onClick={this.closeEditPanel.bind(this)} className={cx('modal-action btn', {
+                'btn-flat': !editPanelButtonHighlight,
+                [theme.actions.edition]: editPanelButtonHighlight,
+                'waves-effect waves-green': (animationLevel >= 3) && !editPanelButtonHighlight,
+                'waves-effect waves-light': (animationLevel >= 3) && editPanelButtonHighlight
+              })}><Icon left>check</Icon> Ok</a>
+            </div>
+          </div>
+        ) : null}
+
+        {messageModal ? (
+          <div id='messageModal' className='modal'>
+            <div className='modal-content'>
+              <h4><i className={cx('material-icons', messageModal.icon)}>{messageModal.icon}</i> Error</h4>
+              <p>{messageModal.message}</p>
+            </div>
+            <div className='modal-footer'>
+              <a href='#!' className={cx(
+                'modal-action modal-close btn-flat',
+                { 'waves-effect waves-green': animationLevel >= 3 }
+              )}><Icon>check</Icon></a>
+            </div>
+          </div>
+        ) : null}
+
+        {this.speechManager.available ? (
+          <div id='speech-popup' className='hide' onClick={this.speechManager.abortRecognition.bind(this.speechManager)}>
+            <div className='bubble hide'>
+              <Icon className='animation microphone'>mic</Icon>
+            </div>
+            {speechDialog ? (
+              <div id='speech-popup-dialog-container' className='hide'>
+                <div className='dialog hide'>
+                  <div className='content'>
+                    <Icon className='animation microphone'>mic</Icon>
+                    <span className='title'>{speechDialog.question}</span>
+                    <div className='sub-content'>
+                      <ul>
+                        {speechDialog.alternatives.map((alt, idx) => (
+                          <li key={idx}>{alt}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ) : null}
+          </div>
+        ) : null}
       </div>
     )
   }
@@ -186,6 +389,31 @@ class MainComponent extends React.Component {
   openSettingsModal () {
     $('#nav-mobile.side-nav').sideNav('hide')
     $('#settings-modal').modal('open')
+  }
+
+  openEditPanel (Panel) {
+    this.setState({ editMode: true, EditPanel: Panel })
+  }
+
+  closeEditPanel () {
+    this.setState({
+      editPanelButtonHighlight: false
+    })
+
+    if (this._editPanelInstance && !!this._editPanelInstance.handleCloseButton) {
+      return this._editPanelInstance.handleCloseButton()
+      .catch(() => { // rejected = not handled
+        $('#edit-panel-modal').modal('close')
+      })
+    }
+
+    $('#edit-panel-modal').modal('close')
+  }
+
+  highlightCloseButton () {
+    this.setState({
+      editPanelButtonHighlight: true
+    })
   }
 
   getState () {

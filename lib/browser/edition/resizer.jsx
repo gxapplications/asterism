@@ -37,7 +37,10 @@ class Resizer extends React.Component {
     }
 
     return (
-      <Modal id={`resizer-${itemId.substr(-36)}`} header='Size'>
+      <Modal id={`resizer-${itemId.substr(-36)}`} header='Size' modalOptions={{
+        inDuration: animationLevel >= 2 ? 300 : 0,
+        outDuration: animationLevel >= 2 ? 300 : 0
+      }}>
         <div className='resizer'>
           <table className='background'>
             <tbody>
@@ -57,7 +60,7 @@ class Resizer extends React.Component {
                   {[1, 2, 3].map((w) => (
                     <td key={`${w}-${h}`}>
                       <button
-                        className={cx('btn btn-floating btn-small',
+                        className={cx('btn btn-floating btn-small', theme.actions.secondary,
                           animationLevel >= 2 ? 'waves-effect waves-light' : '',
                           { disabled: !this.isDimensionAvailable(w, h) }
                         )}

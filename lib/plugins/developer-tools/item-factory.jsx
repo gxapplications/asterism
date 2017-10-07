@@ -1,7 +1,6 @@
 'use strict'
 
-import AdditionalItem from '../additional-item'
-import ItemFactoryBuilder from '../item-factory-builder'
+import { AdditionalItem, ItemFactoryBuilder } from 'asterism-plugin-library'
 
 import RefreshButtonItem from './refresh-button/item'
 import RefreshButtonSettingPanel from './refresh-button/setting-panel'

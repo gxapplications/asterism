@@ -2,37 +2,19 @@
 
 /* global $, plugins */
 import cx from 'classnames'
-import debounce from 'debounce'
 import PropTypes from 'prop-types'
 import React from 'react'
-import { Icon } from 'react-materialize'
+import { Icon, Tab, Tabs } from 'react-materialize'
 
 import Display from './settings-display'
-import Theme from './settings-theme'
 import UserInterface from './settings-ui'
-
-const debouncedResizeHandler = (delay) => debounce(() => {
-  const slider = $('#settings-modal .carousel.carousel-slider').first()
-  if (!slider.length) {
-    return
-  }
-  slider.carousel({
-    fullWidth: true,
-    indicators: true,
-    noWrap: true
-  })
-  $(window).one('resize', debouncedResizeHandler(delay))
-}, delay + 100)
 
 class Settings extends React.Component {
   constructor (props) {
     super(props)
-    this.state = {
-      showRefreshButton: false
-    }
+    this._activeTabIndex = 0
 
     // Plugin settings panels
-    // TODO !1: move them ?
     this.pluginSettingsPanels = (process.env.ASTERISM_SETTINGS_PANELS || []).map((toRequire) => {
       return {
         'Panel': plugins.settingsPanels[toRequire.module].default,
@@ -40,69 +22,95 @@ class Settings extends React.Component {
         'publicSockets': toRequire.publicSockets.reduce((acc, namespace) => {
           acc[namespace] = props.socketManager.connectPublicSocket(namespace)
           return acc
-        }, {})
+        }, {}),
+        'serverStorage': props.serverStorage.createSubStorage(toRequire.libName)
       }
     })
-
-    // debounced onresize event
-    $(window).one('resize', debouncedResizeHandler(this, 1080 / Math.pow(this.props.animationLevel, 2)))
   }
 
   componentDidMount () {
     $('#settings-modal').modal({
       dismissible: false,
+      opacity: 0.5,
+      inDuration: this.props.animationLevel >= 2 ? 300 : 0,
+      outDuration: this.props.animationLevel >= 2 ? 300 : 0,
+      endingTop: '10%',
       ready: () => {
-        $('#settings-modal .carousel.carousel-slider').carousel({
-          fullWidth: true,
-          indicators: true,
-          noWrap: true
-        })
+        $('#settings-modal .modal-content > div.row > div.col > ul.tabs').tabs({ onShow: (p) => {
+          $(`#settings-modal .modal-content > div.row > div.col > ul.tabs > li.tab > a[href^='#']`).each((idx, el) => {
+            if ($(el).attr('href') === p.selector) {
+              this._activeTabIndex = idx
+            }
+          })
+        } })
+
+        // Select first tab
+        $('#settings-modal .modal-content > div.row > div.col > ul.tabs > li:first > a').click()
       }
     })
   }
 
+  shouldComponentUpdate () {
+    return false
+  }
+
   render () {
     const { theme, localStorage, serverStorage, itemManager, animationLevel } = this.props
-    const { showRefreshButton } = this.state
+
     return (
       <div id='settings-modal' className={cx('modal', theme.backgrounds.body)}>
-        <div className='modal-content'>
+        <div className='modal-content thin-scrollable'>
           <div className={cx('coloring-header', theme.backgrounds.editing)}>
             <div>
-              {showRefreshButton
-                ? <button className={cx('right btn', animationLevel >= 2 ? 'waves-effect waves-light' : null, theme.actions.edition)}
-                  onClick={this.reloadPage.bind(this)}>
-                  <span className='hide-on-med-and-down'>Close and reload screen</span>
-                  <span className='hide-on-small-only hide-on-large-only'>Close &amp; reload</span>
-                  <span className='hide-on-med-and-up'>Close</span>
-                </button>
-                : <a href='#!' className={cx('right modal-action modal-close btn-flat', animationLevel >= 2 ? 'waves-effect waves-light' : null)}>Close</a>
-              }
+              <button id='settings-modal-refresh-button'
+                className={cx(
+                  'right btn hide',
+                  { 'waves-effect waves-light': animationLevel >= 2 },
+                  theme.actions.edition
+                )}
+                onClick={this.reloadPage.bind(this)}>
+                <span className='hide-on-med-and-down'>Close and reload screen</span>
+                <span className='hide-on-small-only hide-on-large-only'>Close &amp; reload</span>
+                <span className='hide-on-med-and-up'>Close</span>
+              </button>
+              <a href='javascript:void(0)' id='settings-modal-close-button'
+                className={cx(
+                  'right modal-action modal-close btn-flat',
+                  { 'waves-effect waves-light': animationLevel >= 2 }
+                )}>Close</a>
               <h4>
                 <Icon small>settings</Icon>
-                Settings
+                <span className='hide-on-small-only'>Settings</span>
               </h4>
             </div>
           </div>
 
-          <div className='carousel carousel-slider center'>
-            <Display theme={theme} itemManager={itemManager} serverStorage={serverStorage} animationLevel={animationLevel}
-              showRefreshButton={() => this.setState({ showRefreshButton: true })} />
-            <Theme localStorage={localStorage} theme={theme} animationLevel={animationLevel}
-              showRefreshButton={() => this.setState({ showRefreshButton: true })} />
-            <UserInterface localStorage={localStorage} theme={theme}
-              showRefreshButton={() => this.setState({ showRefreshButton: true })} />
-
-            {this.pluginSettingsPanels.map(({ Panel, privateSocket, publicSockets }, idx) => (
-              <Panel key={idx} localStorage={localStorage} theme={theme}
-                showRefreshButton={() => this.setState({ showRefreshButton: true })}
-                privateSocket={privateSocket} publicSockets={publicSockets} />
+          <Tabs>
+            <Tab title='Display' active={this._activeTabIndex === 0}>
+              <Display theme={theme} itemManager={itemManager} serverStorage={serverStorage}
+                animationLevel={animationLevel}
+                showRefreshButton={this.showRefreshButton.bind(this)} />
+            </Tab>
+            <Tab title='User interface' active={this._activeTabIndex === 1}>
+              <UserInterface localStorage={localStorage} theme={theme} animationLevel={animationLevel}
+                showRefreshButton={this.showRefreshButton.bind(this)} />
+            </Tab>
+            {this.pluginSettingsPanels.map(({ Panel, privateSocket, publicSockets, serverStorage }, idx) => (
+              <Tab title={Panel.tabName || idx} key={idx + 2} active={this._activeTabIndex === idx + 2}>
+                <Panel localStorage={localStorage} theme={theme} animationLevel={animationLevel}
+                  serverStorage={serverStorage} showRefreshButton={this.showRefreshButton.bind(this)}
+                  privateSocket={privateSocket} publicSockets={publicSockets} />
+              </Tab>
             ))}
-          </div>
-
+          </Tabs>
         </div>
       </div>
     )
+  }
+
+  showRefreshButton () {
+    $('#settings-modal-refresh-button').removeClass('hide')
+    $('#settings-modal-close-button').addClass('hide')
   }
 
   reloadPage () {

@@ -4,18 +4,19 @@ import cx from 'classnames'
 import React from 'react'
 import { Button, Icon } from 'react-materialize'
 
-import Item from '../../item'
-
-// import '../styles.scss'
+import { Item } from 'asterism-plugin-library'
 
 class RefreshButtonItem extends Item {
   render () {
-    const { theme } = this.props.context
+    const { mainState, theme } = this.props.context
+    const animationLevel = mainState().animationLevel
     const { title = 'Refresh' } = this.state.params
 
     return (
-      <Button waves='light' className={cx(theme.actions.edition, 'truncate fluid')} onClick={this.click.bind(this)}>
-        {title}<Icon left>refresh</Icon>
+      <Button waves={animationLevel >= 2 ? 'light' : null}
+        className={cx(theme.actions.edition, 'truncate fluid')} onClick={this.click.bind(this)}
+      >
+        <Icon left>refresh</Icon>{title}
       </Button>
     )
   }

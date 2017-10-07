@@ -1,0 +1,91 @@
+@font-face {
+    font-family: 'Material Icons';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Material Icons'),
+    local('MaterialIcons-Regular'),
+    url(MaterialIcons-Regular.woff2) format('woff2'),
+    url(MaterialIcons-Regular.woff) format('woff'),
+    url(MaterialIcons-Regular.ttf) format('truetype');
+}
+
+.material-icons {
+    font-family: 'Material Icons';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px;  /* Preferred icon size */
+    display: inline-block;
+    line-height: 1;
+    text-transform: none;
+    letter-spacing: normal;
+    word-wrap: normal;
+    white-space: nowrap;
+    direction: ltr;
+
+    /* Support for all WebKit browsers. */
+    -webkit-font-smoothing: antialiased;
+    /* Support for Safari and Chrome. */
+    text-rendering: optimizeLegibility;
+
+    /* Support for Firefox. */
+    -moz-osx-font-smoothing: grayscale;
+
+    /* Support for IE. */
+    font-feature-settings: 'liga';
+}
+
+/* When Google wants to insert missing icons, then we can remove this part and associated .svg files */
+.material-icons.battery_20 {
+    width: 1em;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 100%;
+    overflow: hidden;
+    background-image: url('/assets/missing-icons/battery_20.svg');
+    color: transparent !important;
+}
+.material-icons.battery_30 {
+    width: 1em;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 100%;
+    overflow: hidden;
+    background-image: url('/assets/missing-icons/battery_30.svg');
+    color: transparent !important;
+}
+.material-icons.battery_50 {
+    width: 1em;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 100%;
+    overflow: hidden;
+    background-image: url('/assets/missing-icons/battery_50.svg');
+    color: transparent !important;
+}
+.material-icons.battery_60 {
+    width: 1em;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 100%;
+    overflow: hidden;
+    background-image: url('/assets/missing-icons/battery_60.svg');
+    color: transparent !important;
+}
+.material-icons.battery_80 {
+    width: 1em;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 100%;
+    overflow: hidden;
+    background-image: url('/assets/missing-icons/battery_80.svg');
+    color: transparent !important;
+}
+.material-icons.battery_90 {
+    width: 1em;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 100%;
+    overflow: hidden;
+    background-image: url('/assets/missing-icons/battery_90.svg');
+    color: transparent !important;
+}
