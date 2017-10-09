@@ -5,7 +5,7 @@ import debounce from 'debounce'
 import React from 'react'
 import { Button, Icon, Modal } from 'react-materialize'
 
-import Item from '../../item'
+import { Item } from 'asterism-plugin-library'
 
 import styles from './styles.css.js'
 
@@ -64,22 +64,29 @@ class SocketLoggerItem extends Item {
 
   render () {
     const { logs, needRefresh } = this.state
-    const { context } = this.props
+    const { mainState, theme } = this.props.context
+    const { animationLevel } = mainState()
     return needRefresh ? (
-      <Button waves='light' className={cx(context.theme.actions.edition, 'truncate fluid')} onClick={this.refreshPage.bind(this)}>
+      <Button waves={animationLevel >= 2 ? 'light' : null}
+        className={cx(theme.actions.edition, 'truncate fluid')}
+        onClick={this.refreshPage.bind(this)}
+      >
         Need a refresh<Icon left>refresh</Icon>
       </Button>
     ) : (
-      <div className={cx(context.theme.actions.edition, 'fluid')} style={styles.container}>
+      <div className={cx(theme.actions.edition, 'fluid')} style={styles.container}>
         <div className='thin-scrollable' style={styles.logScroller}>
           {logs.map((log, idx) => {
             let timestamp = new Date()
             timestamp.setTime(log.args[0])
             timestamp = timestamp.toLocaleString()
             return (
-              <Modal key={idx}
-                header={timestamp}
-                trigger={<pre style={{ ...styles.logRow, ...styles.logLevel(context.theme)[log.level] }}>
+              <Modal key={idx} header={timestamp}
+                modalOptions={{
+                  inDuration: animationLevel >= 2 ? 300 : 0,
+                  outDuration: animationLevel >= 2 ? 300 : 0
+                }}
+                trigger={<pre style={{ ...styles.logRow, ...styles.logLevel(theme)[log.level] }}>
                   <span style={styles.logRowInset}>
                     [{timestamp}]
                     <br />

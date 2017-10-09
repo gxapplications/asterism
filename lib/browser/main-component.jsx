@@ -5,7 +5,7 @@ import cx from 'classnames'
 import PropTypes from 'prop-types'
 import React from 'react'
 import { Gridifier } from 'react-gridifier/dist/materialize'
-import { Navbar, NavItem, Icon } from 'react-materialize'
+import { Icon, Navbar, NavItem } from 'react-materialize'
 import { TransitionGroup } from 'react-transition-group'
 
 import AddCategoryButtons from './edition/add-category-buttons'
@@ -128,13 +128,16 @@ class MainComponent extends React.Component {
     const { theme, localStorage, serverStorage } = this.props
     const { editMode, animationLevel, itemFactories, items, itemSettingPanel } = this.state
     const SpeechStatus = this.speechManager.getComponent()
+
     return (
       <div className={cx('asterism', theme.backgrounds.body)}>
         <Navbar fixed brand='⁂' href={null} right
           options={{ closeOnClick: true }}
           className={cx({ [theme.backgrounds.card]: !editMode, [theme.backgrounds.editing]: editMode })}
         >
-          <SpeechStatus animationLevel={animationLevel} />
+          {editMode ? null : (
+            <SpeechStatus animationLevel={animationLevel} />
+          )}
           <NavItem divider />
           {editMode ? (
             <NavItem onClick={this.openSettingsModal.bind(this)} href='javascript:void(0)' className={cx(animationLevel >= 2 ? 'waves-effect waves-light' : '')}>
@@ -143,7 +146,7 @@ class MainComponent extends React.Component {
             </NavItem>
           ) : null}
           <NavItem onClick={this.toggleEditMode.bind(this)} href='javascript:void(0)' className={cx(animationLevel >= 2 ? 'waves-effect waves-light' : '')}>
-            <Icon>edit</Icon>
+            <Icon>{editMode ? 'check_circle' : 'edit'}</Icon>
             <span className='hide-on-large-only'>{editMode ? 'End edition' : 'Edit mode'}</span>
           </NavItem>
         </Navbar>

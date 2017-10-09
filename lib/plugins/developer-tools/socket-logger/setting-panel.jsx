@@ -1,16 +1,17 @@
 'use strict'
 
+import cx from 'classnames'
 import React from 'react'
 import { Button, Row } from 'react-materialize'
 
-import ItemSettingPanel from '../../item-setting-panel'
+import { ItemSettingPanel } from 'asterism-plugin-library'
 import SocketLoggerItem from './item'
 
 class SocketLoggerSettingPanel extends ItemSettingPanel {
   render () {
-    const { context } = this.props
+    const { theme, mainState } = this.props.context
     const { logLevel = 1, historyLength = 30 } = this.state.params
-    const { animationLevel } = context.mainState()
+    const { animationLevel } = mainState()
 
     const waves = animationLevel >= 2 ? 'light' : undefined
 
@@ -41,7 +42,7 @@ class SocketLoggerSettingPanel extends ItemSettingPanel {
           </div>
         </Row>
 
-        <Button waves={waves} className='right' onClick={this.save.bind(this)}>
+        <Button waves={waves} className={cx('right', theme.actions.primary)} onClick={this.save.bind(this)}>
           Save &amp; close
         </Button>
       </div>

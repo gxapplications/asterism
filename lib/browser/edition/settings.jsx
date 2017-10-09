@@ -32,7 +32,7 @@ class Settings extends React.Component {
     }
 
     // Plugin settings panels
-    // TODO !1: move them ?
+    // TODO !0: no caroussel, but left side tabs ?
     this.pluginSettingsPanels = (process.env.ASTERISM_SETTINGS_PANELS || []).map((toRequire) => {
       return {
         'Panel': plugins.settingsPanels[toRequire.module].default,

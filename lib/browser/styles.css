@@ -131,7 +131,7 @@
 }
 
 .modal[id^='resizer-'] {
-  width: 154px;
+  width: 184px;
 }
 
 .modal[id^='resizer-'] .modal-footer {
@@ -144,16 +144,16 @@
 }
 
 .resizer .btn-floating.btn-small {
-  width: 26px;
-  height: 26px;
-  line-height: 26px;
-  font-size: 0.8em;
+  width: 36px;
+  height: 36px;
+  line-height: 36px;
+  font-size: 0.9em;
 }
 
 .resizer table tr > td {
   padding: 0.3rem;
-  width: 34px;
-  height: 34px;
+  width: 44px;
+  height: 44px;
 }
 
 .resizer table.background {

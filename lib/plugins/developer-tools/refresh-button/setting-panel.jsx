@@ -1,16 +1,17 @@
 'use strict'
 
+import cx from 'classnames'
 import React from 'react'
 import { Button, Input, Row } from 'react-materialize'
 
-import ItemSettingPanel from '../../item-setting-panel'
+import { ItemSettingPanel } from 'asterism-plugin-library'
 import RefreshButtonItem from './item'
 
 class RefreshButtonSettingPanel extends ItemSettingPanel {
   render () {
-    const { context } = this.props
+    const { theme, mainState } = this.props.context
     const { title = '' } = this.state.params
-    const { animationLevel } = context.mainState
+    const { animationLevel } = mainState()
 
     const waves = animationLevel >= 2 ? 'light' : undefined
 
@@ -20,7 +21,7 @@ class RefreshButtonSettingPanel extends ItemSettingPanel {
           <Input placeholder='Refresh' s={12} label='Label' ref={(c) => { this._title = c }}
             value={title} onChange={this.handleValueChange.bind(this, 'title')} />
         </Row>
-        <Button waves={waves} className='right' onClick={this.save.bind(this)}>
+        <Button waves={waves} className={cx('right', theme.actions.primary)} onClick={this.save.bind(this)}>
           Save &amp; close
         </Button>
       </div>
