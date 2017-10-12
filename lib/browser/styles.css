@@ -267,34 +267,50 @@
 
 #settings-modal .modal-content {
   padding: 0;
+  height: 70vh;
 }
 
-#settings-modal .carousel {
+#settings-modal .modal-content > .row > .col.s12 > .tabs {
+  background-color: transparent;
+}
+
+#settings-modal .modal-content > .row > .col.s12 > .tabs .tab a {
+  color: black;
+}
+
+#settings-modal .modal-content > .row > .col.s12 > .tabs .indicator {
+  background-color: black;
+}
+
+#settings-modal .modal-content > .tabs-content {
+  height: calc(70vh - 150px) !important;
   width: 100%;
-  height: calc(70vh - 86px) !important;
 }
 
-#settings-modal .carousel .carousel-item {
-  min-height: calc(70vh - 86px) !important;
-  padding-top: 24px;
+#settings-modal .modal-content > .row {
+  height: calc(70vh - 135px) !important;
 }
 
-#settings-modal .carousel ul.indicators {
-  bottom: inherit;
-  top: -18px;
-  z-index: -1;
+#settings-modal .modal-content > .row > .col.s12 {
+  padding: 0 !important;
+  height: 100%;
+  position: relative;
+  overflow: auto;
 }
 
-#settings-modal .carousel .carousel-fixed-item.with-indicators {
-  bottom: 16px;
+#settings-modal .modal-content > .row > .col.s12:first-child {
+  height: 3.6rem;
 }
 
-#settings-modal .carousel .carousel-item.card {
+#settings-modal .card {
   background: none !important;
-  margin-top: 0 !important;
+  margin: 0 !important;
+  height: 100%;
+  border: none;
+  box-shadow: none;
 }
 
-#settings-modal .carousel .carousel-item.card .card-reveal .circle-picker-container {
+#settings-modal .card .card-reveal .circle-picker-container {
   display: inline-flex !important;
   padding: 1em 0.2em;
 }

@@ -5,7 +5,7 @@ import cx from 'classnames'
 import debounce from 'debounce'
 import PropTypes from 'prop-types'
 import React from 'react'
-import { Icon } from 'react-materialize'
+import { Icon, Tab, Tabs } from 'react-materialize'
 
 import Display from './settings-display'
 import Theme from './settings-theme'
@@ -32,7 +32,6 @@ class Settings extends React.Component {
     }
 
     // Plugin settings panels
-    // TODO !0: no caroussel, but left side tabs ?
     this.pluginSettingsPanels = (process.env.ASTERISM_SETTINGS_PANELS || []).map((toRequire) => {
       return {
         'Panel': plugins.settingsPanels[toRequire.module].default,
@@ -64,6 +63,7 @@ class Settings extends React.Component {
   render () {
     const { theme, localStorage, serverStorage, itemManager, animationLevel } = this.props
     const { showRefreshButton } = this.state
+    // TODO !0: fix black colors for tabs -> dyn theme, fix active tab when rerender, style of scrollbar
     return (
       <div id='settings-modal' className={cx('modal', theme.backgrounds.body)}>
         <div className='modal-content'>
@@ -85,21 +85,27 @@ class Settings extends React.Component {
             </div>
           </div>
 
-          <div className='carousel carousel-slider center'>
-            <Display theme={theme} itemManager={itemManager} serverStorage={serverStorage} animationLevel={animationLevel}
-              showRefreshButton={() => this.setState({ showRefreshButton: true })} />
-            <Theme localStorage={localStorage} theme={theme} animationLevel={animationLevel}
-              showRefreshButton={() => this.setState({ showRefreshButton: true })} />
-            <UserInterface localStorage={localStorage} theme={theme}
-              showRefreshButton={() => this.setState({ showRefreshButton: true })} />
-
+          <Tabs className='center'>
+            <Tab title='Display'>
+              <Display theme={theme} itemManager={itemManager} serverStorage={serverStorage} animationLevel={animationLevel}
+                showRefreshButton={() => this.setState({ showRefreshButton: true })} />
+            </Tab>
+            <Tab title='Theme'>
+              <Theme localStorage={localStorage} theme={theme} animationLevel={animationLevel}
+                showRefreshButton={() => this.setState({ showRefreshButton: true })} />
+            </Tab>
+            <Tab title='User interface'>
+              <UserInterface localStorage={localStorage} theme={theme}
+                showRefreshButton={() => this.setState({ showRefreshButton: true })} />
+            </Tab>
             {this.pluginSettingsPanels.map(({ Panel, privateSocket, publicSockets }, idx) => (
-              <Panel key={idx} localStorage={localStorage} theme={theme}
-                showRefreshButton={() => this.setState({ showRefreshButton: true })}
-                privateSocket={privateSocket} publicSockets={publicSockets} />
+              <Tab title={idx} key={idx}>
+                <Panel localStorage={localStorage} theme={theme}
+                  showRefreshButton={() => this.setState({ showRefreshButton: true })}
+                  privateSocket={privateSocket} publicSockets={publicSockets} />
+              </Tab>
             ))}
-          </div>
-
+          </Tabs>
         </div>
       </div>
     )

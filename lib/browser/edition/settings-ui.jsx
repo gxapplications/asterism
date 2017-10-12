@@ -9,9 +9,7 @@ class SettingsUserInterface extends React.Component {
     const level = parseInt(localStorage.getItem('settings-animation-level') || 3)
 
     return (
-      <div className='carousel-item' href='#ui!'>
-        <h2>User interface</h2>
-
+      <div>
         <div className='section left-align'>
           <h5>Animations</h5>
           <p>

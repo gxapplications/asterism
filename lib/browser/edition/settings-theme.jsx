@@ -25,8 +25,7 @@ class SettingsTheme extends React.Component {
     const { currentColor } = this.state
 
     return (
-      <div className='carousel-item card' href='#theme!'>
-        <h2>Theme</h2>
+      <div className='card'>
         <div className='section left-align'>
           <div className='row'>
             <div className='col s12'>

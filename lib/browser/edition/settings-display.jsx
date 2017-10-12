@@ -16,9 +16,7 @@ class SettingsDisplay extends React.Component {
     const waves = animationLevel >= 2 ? 'light' : undefined
 
     return (
-      <div className='carousel-item' href='#display!'>
-        <h2>Components display</h2>
-
+      <div>
         <div className='section left-align'>
           <h5>Components ordering</h5>
           <p>
