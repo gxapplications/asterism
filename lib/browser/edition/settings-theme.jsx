@@ -27,16 +27,15 @@ class SettingsTheme extends React.Component {
     return (
       <div className='card'>
         <div className='section left-align'>
+          <h5>Elements' palette</h5>
           <div className='row'>
-            <div className='col s12'>
-              {theme.editableElements.map((el, idx) => (
-                <Button waves={animationLevel >= 2 ? 'light' : null}
-                  className={cx('activator marged', objectPath.get(theme, el.key))}
-                  key={idx} onClick={this.selectColor.bind(this, el.key)}>
-                  {el.label}
-                </Button>
-              ))}
-            </div>
+            {theme.editableElements.map((el, idx) => (
+              <Button waves={animationLevel >= 2 ? 'light' : null}
+                className={cx('activator marged col s12 m5', objectPath.get(theme, el.key))}
+                key={idx} onClick={this.selectColor.bind(this, el.key)}>
+                {el.label}
+              </Button>
+            ))}
           </div>
         </div>
         <div className={cx('card-reveal', theme.backgrounds.body)}>

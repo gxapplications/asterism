@@ -214,9 +214,9 @@ class AddCategoryButtons extends React.Component {
                   <a className={cx('collection-item avatar lighter-background', animationLevel >= 2 ? 'waves-effect waves-light-green' : null)} key={idx} href='#'
                     onClick={this.additionalItemSelect.bind(this, item)}>
                     <Icon className='circle'>{item.icon || modalCategory.icon}</Icon>
-                    <h4 className='title'>{item.name}</h4>
-                    <p>{item.description}</p>
-                    <div className='secondary-content'><Icon circle>insert_chart</Icon> TODO</div>
+                    <span className='title truncate'>{item.name}</span>
+                    <p className='truncate'>{item.description}</p>
+                    { /* <div className='secondary-content'><Icon circle>insert_chart</Icon> TODO</div> */ }
                   </a>
                 ))}
               </div>

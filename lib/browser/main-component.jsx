@@ -34,15 +34,18 @@ class MainComponent extends React.Component {
     // Instantiate orderHandler and initial items for this.state (need to be sync)
     this.itemManager = new ItemManager(props.localStorage, props.serverStorage, this)
 
+    const mainState = this.getState.bind(this)
+    mainState.set = this.setState.bind(this)
+
     this.state = {
       editMode: false,
       animationLevel: parseInt(props.localStorage.getItem('settings-animation-level') || 3), // 1..3
       itemFactories: (process.env.ASTERISM_ITEM_FACTORIES || []).map((toRequire) => {
         const Clazz = plugins.itemFactories[toRequire.module].default
         const factory = new Clazz({
-          localStorage: props.localStorage.createSubStorage(toRequire.module),
-          serverStorage: props.serverStorage.createSubStorage(toRequire.module),
-          mainState: this.getState.bind(this),
+          localStorage: props.localStorage.createSubStorage(toRequire.libName),
+          serverStorage: props.serverStorage.createSubStorage(toRequire.libName),
+          mainState,
           theme: props.theme,
           privateSocket: this.socketManager.connectPrivateSocket(toRequire.privateSocket),
           publicSockets: toRequire.publicSockets.reduce((acc, namespace) => {
@@ -63,8 +66,10 @@ class MainComponent extends React.Component {
   componentDidMount () {
     // dynamic CSS for background color
     const bgColor = $('div.asterism').css('background-color')
+    const textColor = $('div.asterism').css('color')
     $('div.asterism').css('box-shadow', `0 2000px 0 2000px ${bgColor}`)
     $('div.asterism .navbar-fixed ul.side-nav').css('background-color', bgColor)
+    $('div.asterism .navbar-fixed ul.side-nav').css('color', textColor)
 
     Promise.all(this.itemManager.getAllItems())
     .then(thenSleep(300)) // for cosmetics... can be removed.
@@ -138,7 +143,9 @@ class MainComponent extends React.Component {
           {editMode ? null : (
             <SpeechStatus animationLevel={animationLevel} />
           )}
-          <NavItem divider />
+          {editMode ? null : (
+            <NavItem divider />
+          )}
           {editMode ? (
             <NavItem onClick={this.openSettingsModal.bind(this)} href='javascript:void(0)' className={cx(animationLevel >= 2 ? 'waves-effect waves-light' : '')}>
               <Icon>settings</Icon>

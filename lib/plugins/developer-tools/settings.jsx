@@ -11,9 +11,10 @@ class DeveloperToolsSettings extends React.Component {
 
   render () {
     return (
-      <div className='carousel-item' href='#devtools!'>
-        <h2>Developer tools</h2>
-
+      <div>
+        <div className='section left-align'>
+          <h5>... in construction!</h5>
+        </div>
       </div>
     )
   }
@@ -21,7 +22,10 @@ class DeveloperToolsSettings extends React.Component {
 
 DeveloperToolsSettings.propTypes = {
   theme: PropTypes.object.isRequired,
+  animationLevel: PropTypes.number.isRequired,
   showRefreshButton: PropTypes.func.isRequired
 }
+
+DeveloperToolsSettings.tabName = 'Dev tools'
 
 export default DeveloperToolsSettings
