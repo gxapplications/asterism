@@ -13,10 +13,11 @@ import DefaultMaterialTheme from './default-material-theme'
 import DefaultLocalStorage from './default-local-storage'
 import DefaultServerStorage from './default-server-storage'
 import ItemManager from './item-manager'
+import ItemSetting from './edition/item-setting'
+import NotificationManager from './notification-manager'
 import Settings from './edition/settings'
 import SocketManager from './socket-manager'
 import SpeechManager from './speech-manager'
-import ItemSetting from './edition/item-setting'
 import { thenSleep } from './tools'
 
 import 'react-gridifier/dist/styles.css'
@@ -28,7 +29,8 @@ class MainComponent extends React.Component {
   constructor (props) {
     super(props)
 
-    this.socketManager = new SocketManager()
+    this.notificationManager = new NotificationManager(this)
+    this.socketManager = new SocketManager(this.notificationManager)
     this.speechManager = new SpeechManager()
 
     // Instantiate orderHandler and initial items for this.state (need to be sync)
@@ -59,7 +61,8 @@ class MainComponent extends React.Component {
       }),
       items: [],
       itemSettingPanel: null,
-      animationFlow: null
+      animationFlow: null,
+      notifications: [] // not directly used to render, but to trigger a render() when modified
     }
   }
 
@@ -133,6 +136,7 @@ class MainComponent extends React.Component {
     const { theme, localStorage, serverStorage } = this.props
     const { editMode, animationLevel, itemFactories, items, itemSettingPanel } = this.state
     const SpeechStatus = this.speechManager.getComponent()
+    const notifications = this.notificationManager.getComponents({ animationLevel, theme })
 
     return (
       <div className={cx('asterism', theme.backgrounds.body)}>
@@ -140,6 +144,7 @@ class MainComponent extends React.Component {
           options={{ closeOnClick: true }}
           className={cx({ [theme.backgrounds.card]: !editMode, [theme.backgrounds.editing]: editMode })}
         >
+          {editMode ? null : notifications}
           {editMode ? null : (
             <SpeechStatus animationLevel={animationLevel} />
           )}

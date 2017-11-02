@@ -27,6 +27,10 @@
   height: 48px;
 }
 
+.asterism .navbar-fixed ul.side-nav li.notification-item {
+  width: fit-content;
+}
+
 .asterism .navbar-fixed ul.side-nav li > a {
     padding: 0 0 0 0.4rem;
 }

@@ -17,7 +17,11 @@ export default class SpeechManager {
   getComponent () {
     const available = this.speechAvailable
     return ({ animationLevel }) => (
-      <NavItem className={cx(available && animationLevel >= 2 ? 'waves-effect waves-light' : '', { 'speech-disabled': !available })}
+      <NavItem className={cx(
+          'notification-item',
+          available && animationLevel >= 2 ? 'waves-effect waves-light' : '',
+          { 'speech-disabled': !available }
+        )}
         href='javascript:void(0)' onClick={() => { if (available) { this.speech() } }}
       >
         <Icon>{available ? 'mic' : 'mic_off'}</Icon>
