@@ -14,6 +14,7 @@ import DefaultLocalStorage from './default-local-storage'
 import DefaultServerStorage from './default-server-storage'
 import ItemManager from './item-manager'
 import ItemSetting from './edition/item-setting'
+import logger from './logger'
 import NotificationManager from './notification-manager'
 import Settings from './edition/settings'
 import SocketManager from './socket-manager'
@@ -29,9 +30,11 @@ class MainComponent extends React.Component {
   constructor (props) {
     super(props)
 
-    this.notificationManager = new NotificationManager(this)
-    this.socketManager = new SocketManager(this.notificationManager)
-    this.speechManager = new SpeechManager()
+    this.logger = logger(this) // FIXME: to disable, one day...
+
+    this.notificationManager = new NotificationManager(this, this.logger)
+    this.socketManager = new SocketManager(this.notificationManager, this.logger)
+    this.speechManager = new SpeechManager(this, props.localStorage, this.logger)
 
     // Instantiate orderHandler and initial items for this.state (need to be sync)
     this.itemManager = new ItemManager(props.localStorage, props.serverStorage, this)
@@ -62,7 +65,10 @@ class MainComponent extends React.Component {
       items: [],
       itemSettingPanel: null,
       animationFlow: null,
-      notifications: [] // not directly used to render, but to trigger a render() when modified
+      notifications: [], // not directly used to render, but to trigger a render() when modified
+      messageModal: null,
+      speechDialog: null,
+      logs: []
     }
   }
 
@@ -130,11 +136,21 @@ class MainComponent extends React.Component {
         $('#item-setting-modal .coloring-header').addClass(this.props.theme.backgrounds.editing)
       }
     }
+
+    if (this.state.messageModal) {
+      $('#messageModal').modal({
+        dismissible: true,
+        complete: () => {
+          this.setState({ messageModal: null })
+        }
+      })
+      $('#messageModal').modal('open')
+    }
   }
 
   render () {
     const { theme, localStorage, serverStorage } = this.props
-    const { editMode, animationLevel, itemFactories, items, itemSettingPanel } = this.state
+    const { editMode, animationLevel, itemFactories, items, itemSettingPanel, messageModal, speechDialog, logs } = this.state
     const SpeechStatus = this.speechManager.getComponent()
     const notifications = this.notificationManager.getComponents({ animationLevel, theme })
 
@@ -163,6 +179,14 @@ class MainComponent extends React.Component {
           </NavItem>
         </Navbar>
 
+        <pre className='logger'>
+          <ul>
+            {logs.map((log, idx) => (
+              <li key={idx}>{log}</li>
+            ))}
+          </ul>
+        </pre>
+
         {items.length ? (
           <Gridifier editable={editMode} sortDispersion orderHandler={this.itemManager.orderHandler}
             toggleTime={animationLevel >= 2 ? 500 : 1} coordsChangeTime={animationLevel >= 2 ? 300 : 1}
@@ -189,9 +213,46 @@ class MainComponent extends React.Component {
             icon={itemSettingPanel.props.icon} title={itemSettingPanel.props.title}
             serverStorage={serverStorage} theme={theme}>{itemSettingPanel}</ItemSetting>
         ) : null}
+
+        {messageModal ? (
+          <div id='messageModal' className='modal'>
+            <div className='modal-content'>
+              <h4><Icon>{messageModal.icon}</Icon> Error</h4>
+              <p>{messageModal.message}</p>
+            </div>
+            <div className='modal-footer'>
+              <a href='#!' className='modal-action modal-close waves-effect waves-green btn-flat'><Icon>check</Icon></a>
+            </div>
+          </div>
+        ) : null}
+
+        {this.speechManager.available ? (
+          <div id='speech-popup' className='hide' onClick={this.speechManager.abortRecognition.bind(this.speechManager)}>
+            <div className='bubble hide'>
+              <Icon className='animation microphone'>mic</Icon>
+            </div>
+            {speechDialog ? (
+              <div id='speech-popup-dialog-container' className='hide'>
+                <div className='dialog hide'>
+                  <div className='content'>
+                    <Icon className='animation microphone'>mic</Icon>
+                    <span className='title'>{speechDialog.question}</span>
+                    <div className='sub-content'>
+                      <ul>
+                        {speechDialog.alternatives.map((alt, idx) => (
+                          <li key={idx}>{alt}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ) : null}
+          </div>
+        ) : null}
       </div>
     )
-  }
+  } // TODO !0: mise en page des alternatives, dans {speechDialog}
 
   toggleEditMode () {
     $('#nav-mobile.side-nav').sideNav('hide')

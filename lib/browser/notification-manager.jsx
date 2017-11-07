@@ -14,8 +14,9 @@ const _translateCss = (css, theme) => {
 }
 
 export default class NotificationManager {
-  constructor (mainComponent) {
+  constructor (mainComponent, logger) {
     this.mainComponent = mainComponent
+    this.logger = logger
     this.navItems = []
   }
 
@@ -53,7 +54,7 @@ export default class NotificationManager {
             this.callback(item.id, (serverResult) => {
               if (serverResult.success) {
                 let item = this.navItems.find((i) => i.id === message.id) || {}
-                item.feedback = 'animation rubberBand'
+                item.feedback = 'animation rubberBand80'
                 this.mainComponent.setState({ notifications: this.navItems })
                 setTimeout(() => {
                   let item = this.navItems.find((i) => i.id === message.id) || {}
@@ -61,8 +62,8 @@ export default class NotificationManager {
                   this.mainComponent.setState({ notifications: this.navItems })
                 }, 2000)
               } else if (serverResult.error) {
-                console.log(serverResult.error)
-                // TODO !1: if (serverResult.success === false) display serverResult.error in a modal ?
+                this.logger.error(serverResult.error)
+                this.mainComponent.setState({ messageModal: { message: serverResult.error, icon: message.icon } })
               }
             })
           }
@@ -71,7 +72,7 @@ export default class NotificationManager {
           this.navItems = this.navItems.filter((i) => i.id !== message.id) || {}
           break
         default:
-          console.error('Notification update: Unknown command!')
+          this.logger.error('Notification update: Unknown command!')
       }
     })
     this.mainComponent.setState({ notifications: this.navItems })

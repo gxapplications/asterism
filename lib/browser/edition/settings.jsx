@@ -7,16 +7,11 @@ import React from 'react'
 import { Icon, Tab, Tabs } from 'react-materialize'
 
 import Display from './settings-display'
-import Theme from './settings-theme'
 import UserInterface from './settings-ui'
 
 class Settings extends React.Component {
   constructor (props) {
     super(props)
-    this.state = {
-      showRefreshButton: false
-    }
-
     this._activeTabIndex = 0
 
     // Plugin settings panels
@@ -53,22 +48,28 @@ class Settings extends React.Component {
 
   render () {
     const { theme, localStorage, serverStorage, itemManager, animationLevel } = this.props
-    const { showRefreshButton } = this.state
 
     return (
       <div id='settings-modal' className={cx('modal', theme.backgrounds.body)}>
         <div className='modal-content thin-scrollable'>
           <div className={cx('coloring-header', theme.backgrounds.editing)}>
             <div>
-              {showRefreshButton
-                ? <button className={cx('right btn', animationLevel >= 2 ? 'waves-effect waves-light' : null, theme.actions.edition)}
-                  onClick={this.reloadPage.bind(this)}>
-                  <span className='hide-on-med-and-down'>Close and reload screen</span>
-                  <span className='hide-on-small-only hide-on-large-only'>Close &amp; reload</span>
-                  <span className='hide-on-med-and-up'>Close</span>
-                </button>
-                : <a href='#!' className={cx('right modal-action modal-close btn-flat', animationLevel >= 2 ? 'waves-effect waves-light' : null)}>Close</a>
-              }
+              <button id='settings-modal-refresh-button'
+                className={cx(
+                  'right btn hide',
+                  { 'waves-effect waves-light': animationLevel >= 2 },
+                  theme.actions.edition
+                )}
+                onClick={this.reloadPage.bind(this)}>
+                <span className='hide-on-med-and-down'>Close and reload screen</span>
+                <span className='hide-on-small-only hide-on-large-only'>Close &amp; reload</span>
+                <span className='hide-on-med-and-up'>Close</span>
+              </button>
+              <a href='#!' id='settings-modal-close-button'
+                className={cx(
+                  'right modal-action modal-close btn-flat',
+                  { 'waves-effect waves-light': animationLevel >= 2 }
+                )}>Close</a>
               <h4>
                 <Icon small>settings</Icon>
                 <span className='hide-on-small-only'>Settings</span>
@@ -80,20 +81,16 @@ class Settings extends React.Component {
             <Tab title='Display' active={this._activeTabIndex === 0}>
               <Display theme={theme} itemManager={itemManager} serverStorage={serverStorage}
                 animationLevel={animationLevel}
-                showRefreshButton={() => this.setState({ showRefreshButton: true })} />
+                showRefreshButton={this.showRefreshButton.bind(this)} />
             </Tab>
-            <Tab title='Theme' active={this._activeTabIndex === 1}>
-              <Theme localStorage={localStorage} theme={theme} animationLevel={animationLevel}
-                showRefreshButton={() => this.setState({ showRefreshButton: true })} />
-            </Tab>
-            <Tab title='User interface' active={this._activeTabIndex === 2}>
+            <Tab title='User interface' active={this._activeTabIndex === 1}>
               <UserInterface localStorage={localStorage} theme={theme} animationLevel={animationLevel}
-                showRefreshButton={() => this.setState({ showRefreshButton: true })} />
+                showRefreshButton={this.showRefreshButton.bind(this)} />
             </Tab>
             {this.pluginSettingsPanels.map(({ Panel, privateSocket, publicSockets, serverStorage }, idx) => (
-              <Tab title={Panel.tabName || idx} key={idx + 3} active={this._activeTabIndex === idx + 3}>
+              <Tab title={Panel.tabName || idx} key={idx + 2} active={this._activeTabIndex === idx + 2}>
                 <Panel localStorage={localStorage} theme={theme} animationLevel={animationLevel}
-                  serverStorage={serverStorage} showRefreshButton={() => this.setState({ showRefreshButton: true })}
+                  serverStorage={serverStorage} showRefreshButton={this.showRefreshButton.bind(this)}
                   privateSocket={privateSocket} publicSockets={publicSockets} />
               </Tab>
             ))}
@@ -101,6 +98,11 @@ class Settings extends React.Component {
         </div>
       </div>
     )
+  }
+
+  showRefreshButton () {
+    $('#settings-modal-refresh-button').removeClass('hide')
+    $('#settings-modal-close-button').addClass('hide')
   }
 
   reloadPage () {

@@ -1,6 +1,6 @@
 {
   "name": "asterism",
-  "version": "0.7.1",
+  "version": "0.7.20",
   "description": "Extensible & dynamic dashboard platform",
   "author": "Xavier Gouley <gxapplications@gmail.com>",
   "contributors": [],
@@ -11,6 +11,7 @@
     "start:debug": "cross-env NODE_ENV=development DEBUG=* nodemon --watch lib/server example/hot-reload.js",
     "dist": "rimraf dist && babel lib --out-dir dist",
     "prepublishOnly": "npm run dist",
+    "gen:cert": "./generate-certificates.sh",
     "lint": "standard --verbose | snazzy",
     "test": "npm run dist && cross-env NODE_ENV=test mocha --require ignore-styles",
     "validate": "npm ls"
@@ -75,6 +76,7 @@
     "test"
   ],
   "dependencies": {
+    "annyang": "^2.6.0",
     "asterism-plugin-library": ">= 1.2.0",
     "babel-loader": "7.1.x",
     "babel-plugin-css-modules-transform": "1.2.x",
