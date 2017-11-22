@@ -216,7 +216,7 @@ class AddCategoryButtons extends React.Component {
                     <Icon className='circle'>{item.icon || modalCategory.icon}</Icon>
                     <span className='title truncate'>{item.name}</span>
                     <p className='truncate'>{item.description}</p>
-                    { /* <div className='secondary-content'><Icon circle>insert_chart</Icon> TODO</div> */ }
+                    { /* <div className='secondary-content'><Icon circle>insert_chart</Icon>When needed... To do.</div> */ }
                   </a>
                 ))}
               </div>

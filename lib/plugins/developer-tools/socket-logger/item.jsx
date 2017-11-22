@@ -32,24 +32,24 @@ class SocketLoggerItem extends Item {
       }
       this.debouncer()
     }
-    switch (logLevel) {
-      case 0:
+    switch (`${logLevel}`) {
+      case '0':
         socket.on('log', (args) => {
           stackToLog({ level: 0, args })
         })
         // fall through
-      case 1:
+      case '1':
         socket.on('info', (args) => {
           stackToLog({ level: 1, args })
         })
         // fall through
-      case 2:
+      case '2':
       default:
         socket.on('warn', (args) => {
           stackToLog({ level: 2, args })
         })
         // fall through
-      case 3:
+      case '3':
         socket.on('error', (args) => {
           stackToLog({ level: 3, args })
         })

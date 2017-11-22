@@ -76,7 +76,7 @@ class SettingsUserInterface extends React.Component {
             <br />
             {continuousRecognition ? (
               <span>
-                TODO !3: list with up to 3 tuples: [ language, 'OK google keyword for this language' ]
+                TODO !4: list with up to 3 tuples: [ language, 'OK google keyword for this language' ]
               </span>
             ) : <br /> }
             <br />

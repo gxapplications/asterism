@@ -133,10 +133,12 @@ export default class SpeechManager {
     annyang.addCallback('errorPermissionBlocked', () => {
       this.logger.error('Annyang errorPermissionBlocked')
       this.speak(errors.errorPermissionBlocked[this.voice.lang])
+      this.available = false
     })
     annyang.addCallback('errorPermissionDenied', () => {
       this.logger.error('Annyang errorPermissionDenied')
       this.speak(errors.errorPermissionDenied[this.voice.lang])
+      this.available = false
     })
 
     return annyang

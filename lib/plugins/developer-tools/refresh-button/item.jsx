@@ -16,7 +16,7 @@ class RefreshButtonItem extends Item {
       <Button waves={animationLevel >= 2 ? 'light' : null}
         className={cx(theme.actions.edition, 'truncate fluid')} onClick={this.click.bind(this)}
       >
-        {title}<Icon left>refresh</Icon>
+        <Icon left>refresh</Icon>{title}
       </Button>
     )
   }

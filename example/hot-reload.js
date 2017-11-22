@@ -5,6 +5,8 @@ require('colors')
 
 const server = require('../lib').server
 
+server.use(require('../lib/plugins/scenarii'))
+server.use(require('../lib/plugins/navigation-tools'))
 server.use(require('../lib/plugins/developer-tools'))
 
 if (process.env.ASTERISM_PLUGINS) {

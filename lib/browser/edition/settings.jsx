@@ -31,6 +31,10 @@ class Settings extends React.Component {
   componentDidMount () {
     $('#settings-modal').modal({
       dismissible: false,
+      opacity: 0.5,
+      inDuration: this.props.animationLevel >= 2 ? 300 : 0,
+      outDuration: this.props.animationLevel >= 2 ? 300 : 0,
+      endingTop: '10%',
       ready: () => {
         $('#settings-modal .modal-content > div.row > div.col > ul.tabs').tabs({ onShow: (p) => {
           $(`#settings-modal .modal-content > div.row > div.col > ul.tabs > li.tab > a[href^='#']`).each((idx, el) => {

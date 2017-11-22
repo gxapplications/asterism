@@ -43,7 +43,7 @@ class SettingsDisplay extends React.Component {
 
   saveOrder () {
     const order = this.props.itemManager.orderHandler.getLocalOrder()
-    return this.props.serverStorage.setItem('order-handler', order)
+    return this.props.serverStorage.setItemForPath('order-handler', order)
   }
 
   restoreOrder () {
