@@ -2,7 +2,7 @@
 
 import cx from 'classnames'
 import React from 'react'
-import { Icon, NavItem } from 'react-materialize'
+import { NavItem } from 'react-materialize'
 
 const _translateCss = (css, theme) => {
   switch (css) {
@@ -33,7 +33,7 @@ export default class NotificationManager {
       let animation = []
       switch (message.command) {
         case 'highlight':
-          animation.push('animation wobble')
+          animation.push('animation wobble-scaled-80')
           setTimeout(() => {
             let item = this.navItems.find((i) => i.id === message.id) || {}
             delete item.animation
@@ -91,7 +91,7 @@ export default class NotificationManager {
         )}
         href='javascript:void(0)' onClick={item.onClick}
       >
-        <Icon>{item.icon}</Icon>
+        <i className={cx('material-icons', item.icon)}>{item.icon}</i>
       </NavItem>
     ))
   }

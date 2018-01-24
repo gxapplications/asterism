@@ -42,42 +42,24 @@ class MainComponent extends React.Component {
 
     const mainState = this.getState.bind(this)
     mainState.set = this.setState.bind(this)
-
-    this.state = {
-      editMode: false,
-      animationLevel: parseInt(props.localStorage.getItem('settings-animation-level') || 3), // 1..3
-      itemFactories: (process.env.ASTERISM_ITEM_FACTORIES || []).map((toRequire) => {
-        const Clazz = plugins.itemFactories[toRequire.module].default
-        const factory = new Clazz({
-          localStorage: props.localStorage.createSubStorage(toRequire.libName),
-          serverStorage: props.serverStorage.createSubStorage(toRequire.libName),
-          mainState,
-          theme: props.theme,
-          privateSocket: toRequire.privateSocket ? this.socketManager.connectPrivateSocket(toRequire.privateSocket) : null,
-          publicSockets: toRequire.publicSockets ? toRequire.publicSockets.reduce((acc, namespace) => {
-            acc[namespace] = this.socketManager.connectPublicSocket(namespace)
-            return acc
-          }, {}) : []
-        }) // context given here
-        factory.id = toRequire.module
-        Object.freeze(factory) // protection against hacks
-        return factory
-      }),
-      editPanels: (process.env.ASTERISM_EDIT_PANELS || []).map((toRequire) => {
-        const Clazz = plugins.editPanels[toRequire.module].default
-        return { label: Clazz.label, icon: Clazz.icon, Panel: Clazz }
-      }),
-      items: [],
-      itemSettingPanel: null,
-      EditPanel: null,
-      animationFlow: null,
-      notifications: [], // not directly used to render, but to trigger a render() when modified
-      messageModal: null,
-      speechDialog: null,
-      logs: []
+    mainState.openEditPanel = (panelLibName, idx = 0) => {
+      this.openEditPanel(this.state.editPanels.filter(ep => ep.libName === panelLibName)[idx].Panel)
+    }
+    mainState.openSettings = (tabId) => {
+      setTimeout(() => {
+        $('#settings-modal').modal('open')
+        try {
+          const id = $(`#${tabId}`).parent().attr('id')
+          setTimeout(() => {
+            $('#settings-modal ul.tabs').tabs('select_tab', id)
+          }, 400)
+        } catch (error) {
+          console.error(error)
+        }
+      }, this.state.editMode ? 100 : 1200)
+      this.setState({ editMode: true })
     }
 
-    // TODO !1: should order services by their dependencies to other services ! (and stop at cyclic deps)
     this.services = (process.env.ASTERISM_SERVICES || []).reduce((map, toRequire) => {
       const Clazz = plugins.services[toRequire.service].default
       const instance = new Clazz({
@@ -94,6 +76,51 @@ class MainComponent extends React.Component {
       map[toRequire.libName] = instance
       return map
     }, {})
+
+    this.state = {
+      editMode: false,
+      animationLevel: parseInt(props.localStorage.getItem('settings-animation-level') || 3), // 1..3
+      itemFactories: (process.env.ASTERISM_ITEM_FACTORIES || []).map((toRequire) => {
+        const Clazz = plugins.itemFactories[toRequire.module].default
+        const factory = new Clazz({
+          localStorage: props.localStorage.createSubStorage(toRequire.libName),
+          serverStorage: props.serverStorage.createSubStorage(toRequire.libName),
+          mainState,
+          theme: props.theme,
+          privateSocket: toRequire.privateSocket ? this.socketManager.connectPrivateSocket(toRequire.privateSocket) : null,
+          publicSockets: toRequire.publicSockets ? toRequire.publicSockets.reduce((acc, namespace) => {
+            acc[namespace] = this.socketManager.connectPublicSocket(namespace)
+            return acc
+          }, {}) : [],
+          services: this.services
+        }) // context given here
+        factory.id = toRequire.module
+        Object.freeze(factory) // protection against hacks
+        return factory
+      }),
+      editPanels: (process.env.ASTERISM_EDIT_PANELS || []).map((toRequire) => {
+        const Clazz = plugins.editPanels[toRequire.module].default
+        return {
+          libName: toRequire.libName,
+          label: Clazz.label,
+          icon: Clazz.icon,
+          Panel: Clazz,
+          privateSocket: toRequire.privateSocket ? this.socketManager.connectPrivateSocket(toRequire.privateSocket) : null,
+          publicSockets: toRequire.publicSockets ? toRequire.publicSockets.reduce((acc, namespace) => {
+            acc[namespace] = this.socketManager.connectPublicSocket(namespace)
+            return acc
+          }, {}) : []
+        }
+      }),
+      items: [],
+      itemSettingPanel: null,
+      EditPanel: null,
+      animationFlow: null,
+      notifications: [], // not directly used to render, but to trigger a render() when modified
+      messageModal: null,
+      speechDialog: null,
+      logs: []
+    }
   }
 
   componentDidMount () {
@@ -202,6 +229,7 @@ class MainComponent extends React.Component {
       speechDialog, logs } = this.state
     const SpeechStatus = this.speechManager.getComponent()
     const notifications = this.notificationManager.getComponents({ animationLevel, theme })
+    const editPanelContext = EditPanel ? editPanels.find((ep) => ep.Panel === EditPanel) : {}
 
     return (
       <div className={cx('asterism', theme.backgrounds.body)}>
@@ -218,8 +246,9 @@ class MainComponent extends React.Component {
           )}
 
           {editMode ? editPanels.map(({ label, icon, Panel }, idx) => (
-            <NavItem key={idx} onClick={this.openEditPanel.bind(this, Panel)} href='javascript:void(0)'>
-              <Icon>{icon}</Icon>
+            <NavItem key={idx} onClick={this.openEditPanel.bind(this, Panel)} href='javascript:void(0)'
+              className={cx(animationLevel >= 2 ? 'waves-effect waves-light' : '')}>
+              <i className={cx('material-icons', icon)}>{icon}</i>
               <span className='hide-on-large-only'>{label}</span>
             </NavItem>
           )) : null}
@@ -277,10 +306,14 @@ class MainComponent extends React.Component {
           <div id='edit-panel-modal' className={cx('modal modal-fixed-footer', theme.backgrounds.body)}>
             <div className='modal-content'>
               {EditPanel.hideHeader ? null : (
-                <h4><Icon>{EditPanel.icon}</Icon> {EditPanel.label}</h4>
+                <div className={cx('coloring-header', theme.backgrounds.editing)}>
+                  <h4><i className={cx('material-icons', EditPanel.icon)}>{EditPanel.icon}</i> {EditPanel.label}</h4>
+                </div>
               )}
               <EditPanel serverStorage={serverStorage} theme={theme} animationLevel={animationLevel}
-                localStorage={localStorage} services={() => this.services} ref={(c) => { this._editPanelInstance = c }} />
+                localStorage={localStorage} services={() => this.services}
+                privateSocket={editPanelContext.privateSocket} publicSockets={editPanelContext.publicSockets}
+                ref={(c) => { this._editPanelInstance = c }} />
             </div>
             <div className={cx('modal-footer', theme.backgrounds.body)}>
               <a href='#!' onClick={this.closeEditPanel.bind(this)} className={cx(
@@ -294,7 +327,7 @@ class MainComponent extends React.Component {
         {messageModal ? (
           <div id='messageModal' className='modal'>
             <div className='modal-content'>
-              <h4><Icon>{messageModal.icon}</Icon> Error</h4>
+              <h4><i className={cx('material-icons', messageModal.icon)}>{messageModal.icon}</i> Error</h4>
               <p>{messageModal.message}</p>
             </div>
             <div className='modal-footer'>
@@ -345,7 +378,7 @@ class MainComponent extends React.Component {
   }
 
   openEditPanel (Panel) {
-    this.setState({ EditPanel: Panel })
+    this.setState({ editMode: true, EditPanel: Panel })
   }
 
   closeEditPanel () {

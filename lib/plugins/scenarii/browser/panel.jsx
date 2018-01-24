@@ -4,7 +4,7 @@
 import cx from 'classnames'
 import PropTypes from 'prop-types'
 import React from 'react'
-import { Icon, Tab, Tabs } from 'react-materialize'
+import { Icon, Modal, Tab, Tabs } from 'react-materialize'
 
 import PanelList from './panel-list'
 
@@ -24,11 +24,19 @@ class ScenariiEditPanel extends React.Component {
     }
   }
 
+  componentDidMount () {
+    $('#scenarii-edit-panel.coloring-header-tabs div.row > div.col:first-of-type').addClass(this.props.theme.backgrounds.editing)
+  }
+
+  shouldComponentUpdate (nextState) {
+    return (this.state.EditForm !== nextState.EditForm && this.state.currentTab !== nextState.currentTab)
+  }
+
   render () {
     const { theme, animationLevel } = this.props
     const { EditForm, currentTab } = this.state
     return (
-      <div id='scenarii-edit-panel' className={cx(styles.ScenariiEditPanel, { 'editFormOpened': !!EditForm })}>
+      <div id='scenarii-edit-panel' className={cx(styles.ScenariiEditPanel, { 'editFormOpened': !!EditForm }, 'coloring-header-tabs')}>
         <Tabs onChange={this.tabChanged.bind(this)}>
           <Tab title={(<span><Icon>offline_pin</Icon> <span className='hide-on-small-only'>Scenarii</span></span>)} active={currentTab === 0}>
             <div ref={(c) => { this._tabs[0] = c }}>Scenarii, to do...</div>
@@ -39,6 +47,7 @@ class ScenariiEditPanel extends React.Component {
               getTypes={this.scenariiService.getConditionTypes.bind(this.scenariiService)}
               createInstance={this.scenariiService.createConditionInstance.bind(this.scenariiService)}
               deleteInstance={this.scenariiService.deleteConditionInstance.bind(this.scenariiService)}
+              testInstance={this.scenariiService.testConditionInstance.bind(this.scenariiService)}
               applyEditForm={this.applyEditForm.bind(this)}
               ref={(c) => { this._tabs[1] = c }}>
               <div className='collection-header'>
@@ -54,7 +63,7 @@ class ScenariiEditPanel extends React.Component {
               getTypes={this.scenariiService.getActionTypes.bind(this.scenariiService)}
               createInstance={this.scenariiService.createActionInstance.bind(this.scenariiService)}
               deleteInstance={this.scenariiService.deleteActionInstance.bind(this.scenariiService)}
-              testInstance={this.scenariiService.testActionInstance.bind(this.scenariiService)}
+              testInstance={this.scenariiService.executeActionInstance.bind(this.scenariiService)}
               applyEditForm={this.applyEditForm.bind(this)}
               ref={(c) => { this._tabs[2] = c }}>
               <div className='collection-header'>
@@ -88,6 +97,11 @@ class ScenariiEditPanel extends React.Component {
             />
           ) : null}
         </div>
+
+        <Modal id='scenarii-persistence-error-modal'
+          header='Persistence error'>
+          <p>No message</p>
+        </Modal>
       </div>
     )
   }
@@ -106,8 +120,8 @@ class ScenariiEditPanel extends React.Component {
   saveInstance (instance) {
     return instance.save()
     .catch((error) => {
-      console.log(error.message, '#####')
-      // TODO !0: manage error: display it in modal message ?
+      $('#scenarii-persistence-error-modal p').html(error.message)
+      $('#scenarii-persistence-error-modal').modal('open')
     })
     .then(() => {
       this._tabs.forEach((tab) => !!tab && tab.forceUpdate && tab.forceUpdate())

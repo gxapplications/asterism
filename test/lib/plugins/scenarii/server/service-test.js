@@ -35,7 +35,6 @@ describe('Plugin scenarii - server service', function () {
     return this.service.createActionInstance('base-procedure')
     .then((newProcedureAction) => {
       expect(newProcedureAction).to.be.an.instanceof(ServerProcedure)
-      expect(newProcedureAction).to.be.frozen
       expect(newProcedureAction.data).to.be.an.instanceof(Object)
       expect(newProcedureAction.instanceId).to.be.not.null
     })
@@ -50,7 +49,6 @@ describe('Plugin scenarii - server service', function () {
         expect(newProcedureAction.constructor).to.equal(procedure.constructor)
         expect(newProcedureAction.data).to.deep.equal(procedure.data)
         expect(newProcedureAction.instanceId).to.equal(procedure.instanceId)
-        expect(procedure).to.be.frozen
       })
     })
   })

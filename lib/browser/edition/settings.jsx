@@ -50,6 +50,10 @@ class Settings extends React.Component {
     })
   }
 
+  shouldComponentUpdate () {
+    return false
+  }
+
   render () {
     const { theme, localStorage, serverStorage, itemManager, animationLevel } = this.props
 

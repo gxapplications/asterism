@@ -1,5 +1,6 @@
 'use strict'
 
+/* global $ */
 import cx from 'classnames'
 import PropTypes from 'prop-types'
 import React from 'react'
@@ -61,9 +62,13 @@ class PanelList extends React.Component {
               if (this.state.deleteConfirm === instance) {
                 clearTimeout(this._deleteTimer)
                 this.props.deleteInstance(instance)
-                    .then(() => {
-                      this.forceUpdate()
-                    })
+                .catch((error) => {
+                  $('#scenarii-persistence-error-modal p').html(error.message)
+                  $('#scenarii-persistence-error-modal').modal('open')
+                })
+                .then(() => {
+                  this.forceUpdate()
+                })
                 this.setState({ deleteConfirm: null })
               } else {
                 this.setState({ deleteConfirm: instance })
@@ -75,14 +80,44 @@ class PanelList extends React.Component {
                 }, 3000)
               }
             },
+            testing: null, // null: not testing, undefined: testing, true: tested and succeed, false: tested and failed
             onTest: this.props.testInstance ? (event) => {
               event.stopPropagation()
-              // TODO !0: UI reaction (btn colored during action)
+
+              this.setState({ instances: this.state.instances.map((i) => {
+                if (i.instance === instance) {
+                  i.testing = undefined
+                }
+                return i
+              }) })
+
               this.props.testInstance(instance)
-              .then(() => {
-                // TODO !0: UI reaction (resolved => then remove color)
+              .catch(() => false)
+              .then((success) => {
+                if (this._mounted) {
+                  this.setState({
+                    instances: this.state.instances.map((i) => {
+                      if (i.instance === instance) {
+                        i.testing = success
+                      }
+                      return i
+                    })
+                  })
+
+                  setTimeout(() => {
+                    if (this._mounted) {
+                      this.setState({
+                        instances: this.state.instances.map((i) => {
+                          if (i.instance === instance) {
+                            i.testing = null
+                          }
+                          return i
+                        })
+                      })
+                    }
+                  }, 2000)
+                }
               })
-              // TODO !0: error in the catch to manage
             } : null
           }))
         })
@@ -97,6 +132,9 @@ class PanelList extends React.Component {
     const waves = animationLevel >= 2 ? 'waves-effect waves-light' : undefined
     const deleteWaves = animationLevel >= 2 ? 'btn-flat waves-effect waves-red' : 'btn-flat'
     const deleteWavesConfirm = (animationLevel >= 2 ? 'btn waves-effect waves-light' : 'btn') + ` ${theme.actions.negative}`
+    const testingWaves = (animationLevel >= 2 ? 'btn waves-effect waves-light' : 'btn') + ` ${theme.actions.inconspicuous}`
+    const testingWavesPositive = (animationLevel >= 2 ? 'btn waves-effect waves-light' : 'btn') + ` ${theme.feedbacks.success}`
+    const testingWavesNegative = (animationLevel >= 2 ? 'btn waves-effect waves-light' : 'btn') + ` ${theme.feedbacks.error}`
 
     if (types.length === 0 && instances.length === 0) {
       return (<div />)
@@ -105,7 +143,7 @@ class PanelList extends React.Component {
     return (
       <div className={cx('collection', { 'with-header': instances.length === 0 })}>
         {instances.length === 0 ? this.props.children : null}
-        {instances.map(({ instance, onClick, onDelete, onTest }, idx) => (
+        {instances.map(({ instance, onClick, onDelete, onTest, testing }, idx) => (
           <a key={instance.instanceId} href='javascript:void(0)' onClick={onClick}
             className={cx('collection-item', waves)}>
             <div href='javascript:void(0)' onClick={onDelete}
@@ -114,7 +152,10 @@ class PanelList extends React.Component {
             </div>
             {onTest ? (
               <div href='javascript:void(0)' onClick={onTest}
-                className={cx('secondary-content btn-flat', waves)}>
+                className={cx(
+                  'secondary-content',
+                  testing === true ? testingWavesPositive : (testing === false ? testingWavesNegative : (testing === undefined ? testingWaves : `btn-flat ${waves}`))
+                )}>
                 <i className='material-icons'>play_arrow</i>
               </div>
             ) : null}

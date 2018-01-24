@@ -60,17 +60,21 @@
 }
 
 .asterism .navbar-fixed ul.side-nav li i {
-  padding: 0 0.6rem 0 1rem;
+  margin: 0 1rem 0 0.6rem;
   height: 48px;
   line-height: 48px;
 }
 
-.asterism .modal .coloring-header {
+.asterism .modal .coloring-header, .asterism .modal .coloring-header-tabs > div.row > div.col:first-of-type {
   padding: 23px;
   overflow: hidden;
   position: relative;
   transition:
     background-color 0.2s linear;
+}
+
+.asterism .modal .coloring-header-tabs > div.row > div.col:first-of-type {
+  padding-bottom: 17px;
 }
 
 .asterism .modal .coloring-header h4 {
@@ -465,6 +469,22 @@
   animation-iteration-count: 1;
 }
 
+@keyframes asterism-wobble-scaled-80 {
+  0% {transform: translateX(0%) scale(0.8);}
+  15% {transform: translateX(-25%) scale(0.8) rotate(-5deg);}
+  30% {transform: translateX(20%) scale(0.8) rotate(3deg);}
+  45% {transform: translateX(-15%) scale(0.8) rotate(-3deg);}
+  60% {transform: translateX(10%) scale(0.8) rotate(2deg);}
+  75% {transform: translateX(-5%) scale(0.8) rotate(-1deg);}
+  100% {transform: translateX(0%) scale(0.8);}
+}
+.asterism .animation.wobble-scaled-80 {
+  animation-name: asterism-wobble-scaled-80;
+  animation-duration: 1s;
+  animation-fill-mode: both;
+  animation-iteration-count: 1;
+}
+
 @keyframes asterism-viber {
   0% {transform: scale(1);}
   10% {transform: scale(0.9);}
@@ -540,7 +560,7 @@
 
 #settings-modal {
   max-height: 80%;
-
+  overflow: hidden;
 }
 
 #settings-modal .modal-content {
@@ -583,6 +603,10 @@
   height: calc(100% - 12px);
   border: none;
   box-shadow: none;
+}
+
+#settings-modal .modal-content .card.form {
+  background-color: rgba(255, 255, 255, 0.3) !important;
 }
 
 #settings-modal .card .card-reveal {
@@ -673,11 +697,22 @@
     color 0.3s ease-out;
 }
 
+#item-setting-modal {
+  overflow: hidden;
+}
+
 #item-setting-modal .modal-content {
   padding: 0;
 }
+#item-setting-modal .modal-content .coloring-header {
+  height: 15vh;
+}
 
-#item-setting-modal .modal-content .card {
+#item-setting-modal .modal-content .setting-panel {
+  overflow: auto;
+  height: 55vh;
+}
+#item-setting-modal .collection .collection-item, #item-setting-modal .modal-content .card {
   background-color: rgba(255, 255, 255, 0.3);
 }
 
@@ -701,6 +736,14 @@
     height: 92%;
     max-height: 92%;
   }
+}
+
+#edit-panel-modal .modal-content {
+  padding: 0;
+}
+
+#edit-panel-modal .collection .collection-item {
+  background-color: rgba(255, 255, 255, 0.3);
 }
 
 /* Used by item setting panels and items from outside */

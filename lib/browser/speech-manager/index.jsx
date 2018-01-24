@@ -230,6 +230,7 @@ export default class SpeechManager {
           </span>
         ) : null}
         <Icon>{this.available ? 'mic' : 'mic_off'}</Icon>
+        <span className='hide-on-large-only'>Speak to control</span>
       </NavItem>
     )
   }

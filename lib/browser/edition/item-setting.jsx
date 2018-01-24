@@ -32,7 +32,7 @@ class ItemSetting extends React.Component {
             </div>
           </div>
 
-          <div className='center setting-panel'>
+          <div className='center setting-panel thin-scrollable'>
             {children}
           </div>
         </div>

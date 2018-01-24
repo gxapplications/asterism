@@ -33,4 +33,4 @@ _Extensible & dynamic dashboard platform. Made in NodeJS, React and Materialize 
 _asterism_ is for now in beta stage, for several months.
 Please come back in few months to see v1.0 release. Thank you!
 
-:copyright: 2017-2018 GXApplications. [ [License](https://github.com/gxapplications/asterism/blob/master/LICENSE.md) ]
+:copyright: 2017-2018 GXApplications. [ [Roadmap/Milestones](https://github.com/gxapplications/asterism/milestones?direction=asc&sort=due_date&state=open) | [License](https://github.com/gxapplications/asterism/blob/master/LICENSE.md) ]

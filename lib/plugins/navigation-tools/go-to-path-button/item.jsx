@@ -9,7 +9,7 @@ import { Item } from 'asterism-plugin-library'
 class GoToPathButtonItem extends Item {
   render () {
     const { mainState, theme } = this.props.context
-    const animationLevel = mainState().animationLevel
+    const { animationLevel } = mainState()
     const { title = '', path = '/example/of/another-path', icon = 'link', color = 'primary' } = this.state.params
 
     return (

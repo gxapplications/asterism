@@ -7,22 +7,24 @@
     min-height: 100%;
   }
 
-  & > div.row > div.col > ul.tabs {
-    background-color: transparent;
+  & > div.row > div.col {
+    & > ul.tabs {
+      background-color: transparent;
 
-    & .tab a {
-      font-size: 1.8em;
-      color: white;
-      text-transform: none;
-    }
+      & .tab a {
+        font-size: 1.8em;
+        color: white;
+        text-transform: none;
+      }
 
-    & .indicator {
-      background-color: white;
+      & .indicator {
+        background-color: white;
+      }
     }
   }
 
   & > div.row > div.col ~ div.col {
-    padding-top: 1.8rem;
+    padding-top: 0.5rem;
   }
 
   & div.collection {
@@ -77,4 +79,8 @@
       transform: translateY(-100%);
     }
   }
+}
+
+.actions-dropdown-edit-panel {
+  padding: 1em;
 }
