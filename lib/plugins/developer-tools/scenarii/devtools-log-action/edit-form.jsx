@@ -36,4 +36,6 @@ DevtoolsLogActionEditForm.propTypes = {
   scenariiService: PropTypes.object.isRequired
 }
 
+DevtoolsLogActionEditForm.label = 'Simple log action'
+
 export default DevtoolsLogActionEditForm

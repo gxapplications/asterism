@@ -126,9 +126,10 @@ class MainComponent extends React.Component {
   componentDidMount () {
     // dynamic CSS for background color
     const bgColor = $('div.asterism').css('background-color')
+    const navbarColor = $('div.asterism .navbar-fixed > nav').css('background-color')
     const textColor = $('div.asterism').css('color')
     $('div.asterism').css('box-shadow', `0 2000px 0 2000px ${bgColor}`)
-    $('div.asterism .navbar-fixed ul.side-nav').css('background-color', bgColor)
+    $('div.asterism .navbar-fixed ul.side-nav').css('background-color', navbarColor)
     $('div.asterism .navbar-fixed ul.side-nav').css('color', textColor)
 
     sleep(200)

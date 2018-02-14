@@ -24,8 +24,8 @@ class SocketLoggerSettingPanel extends ItemSettingPanel {
           <div className='col s12'>
             <h5>Min log level</h5>
             <div className='range-field'>
-              <input type='range' min='0' max='3' ref={(c) => { this._logLevel = c }}
-                value={logLevel} onChange={this.handleValueChange.bind(this, 'logLevel')} />
+              <input type='range' min='0' max='3'
+                value={logLevel} onChange={this.handleEventChange.bind(this, 'logLevel')} />
             </div>
             Will log from {logLevelLabel} level.
           </div>
@@ -35,8 +35,8 @@ class SocketLoggerSettingPanel extends ItemSettingPanel {
           <div className='col s12'>
             <h5>History length</h5>
             <div className='range-field'>
-              <input type='range' min='1' max='100' ref={(c) => { this._historyLength = c }}
-                value={historyLength} onChange={this.handleValueChange.bind(this, 'historyLength')} />
+              <input type='range' min='1' max='100'
+                value={historyLength} onChange={this.handleEventChange.bind(this, 'historyLength')} />
             </div>
             Will keep last {historyLength} messages.
           </div>
@@ -50,8 +50,7 @@ class SocketLoggerSettingPanel extends ItemSettingPanel {
   }
 
   save () {
-    const params = { ...this.state.params, logLevel: this._logLevel.value, historyLength: this._historyLength.value }
-    this.next(SocketLoggerItem, params)
+    this.next(SocketLoggerItem, this.state.params)
   }
 }
 

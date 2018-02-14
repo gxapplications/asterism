@@ -24,4 +24,6 @@ BrowserProcedureEditForm.propTypes = {
   scenariiService: PropTypes.object.isRequired
 }
 
+BrowserProcedureEditForm.label = 'Basic procedure'
+
 export default BrowserProcedureEditForm

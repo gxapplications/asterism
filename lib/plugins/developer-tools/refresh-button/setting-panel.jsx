@@ -8,6 +8,13 @@ import { ItemSettingPanel } from 'asterism-plugin-library'
 import RefreshButtonItem from './item'
 
 class RefreshButtonSettingPanel extends ItemSettingPanel {
+  componentWillUpdate (nextProps, nextState) {
+    // Because of react-materialize bad behaviors...
+    if (this.state.params.title !== nextState.params.title) {
+      this._title.setState({ value: nextState.params.title })
+    }
+  }
+
   render () {
     const { theme, mainState } = this.props.context
     const { title = '' } = this.state.params
@@ -19,7 +26,7 @@ class RefreshButtonSettingPanel extends ItemSettingPanel {
       <div className='clearing padded'>
         <Row className='padded card'>
           <Input placeholder='Refresh' s={12} label='Label' ref={(c) => { this._title = c }}
-            value={title} onChange={this.handleValueChange.bind(this, 'title')} />
+            value={title} onChange={this.handleEventChange.bind(this, 'title')} />
         </Row>
         <Button waves={waves} className={cx('right', theme.actions.primary)} onClick={this.save.bind(this)}>
           Save &amp; close
@@ -29,8 +36,7 @@ class RefreshButtonSettingPanel extends ItemSettingPanel {
   }
 
   save () {
-    const params = { ...this.state.params, title: this._title.state.value }
-    this.next(RefreshButtonItem, params)
+    this.next(RefreshButtonItem, this.state.params)
   }
 }
 
