@@ -45,12 +45,7 @@ class ActionsDropdown extends React.Component {
   componentDidUpdate () {
     if (this.state.creatingInstance) {
       $(`#actions-dropdown-modal-${this.props.dropdownId}`).detach().appendTo('#app')
-      $(`#actions-dropdown-modal-${this.props.dropdownId}`).modal({
-        dismissible: false,
-        complete: () => {
-          $(`#actions-dropdown-modal-${this.props.dropdownId}`).detach().appendTo(`#actions-dropdown-modal-anchor-${this.props.dropdownId}`)
-        }
-      })
+      $(`#actions-dropdown-modal-${this.props.dropdownId}`).modal({ dismissible: false })
       $(`#actions-dropdown-modal-${this.props.dropdownId}`).modal('open')
     }
   }
@@ -61,7 +56,6 @@ class ActionsDropdown extends React.Component {
 
     const EditForm = (creatingInstance && creatingInstance.EditForm) || null
 
-    // TODO !1: put a header on the editForm?
     return (
       <div id={`actions-dropdown-modal-anchor-${dropdownId}`}>
         <Input s={12} label='Action' type='select' icon='error' onChange={this.valueChanged.bind(this)} value={currentId}>
@@ -75,10 +69,15 @@ class ActionsDropdown extends React.Component {
         {creatingInstance ? (
           <div id={`actions-dropdown-modal-${dropdownId}`} className={cx('modal modal-fixed-footer actions-dropdown-edit-panel', theme.backgrounds.body)}>
             <div className='modal-content'>
-              <EditForm ref={(c) => { this._editFormInstance = c }}
-                instance={creatingInstance} scenariiService={scenariiService}
-                theme={theme} animationLevel={animationLevel}
-              />
+              <div className={cx('coloring-header', theme.backgrounds.editing)}>
+                <h4>{EditForm.label || 'Action configuration'}</h4>
+              </div>
+              <div>
+                <EditForm ref={(c) => { this._editFormInstance = c }}
+                  instance={creatingInstance} scenariiService={scenariiService}
+                  theme={theme} animationLevel={animationLevel}
+                />
+              </div>
             </div>
             <div className={cx('modal-footer', theme.backgrounds.body)}>
               <a href='#!' onClick={this.confirmNewInstance.bind(this, creatingInstance)} className={cx(
@@ -112,19 +111,20 @@ class ActionsDropdown extends React.Component {
     this.props.scenariiService.setActionInstance(creatingInstance)
     .then(() => {
       const instances = [...this.state.instances, creatingInstance]
-      this.setState({ instances, currentId: creatingInstance.instanceId })
-      this.props.onChange(creatingInstance.instanceId)
       $(`#actions-dropdown-modal-${this.props.dropdownId}`).modal('close')
+      $(`#actions-dropdown-modal-${this.props.dropdownId}`).detach().appendTo(`#actions-dropdown-modal-anchor-${this.props.dropdownId}`)
+      this.setState({ instances, currentId: creatingInstance.instanceId, creatingInstance: null })
+      this.props.onChange(creatingInstance.instanceId)
     })
   }
 
   cancelNewInstance (creatingInstance) {
     $(`#actions-dropdown-modal-${this.props.dropdownId}`).modal('close')
+    $(`#actions-dropdown-modal-${this.props.dropdownId}`).detach().appendTo(`#actions-dropdown-modal-anchor-${this.props.dropdownId}`)
     setTimeout(() => {
       this.setState({
         creatingInstance: null
       })
-      // TODO !0: select back precedent dropdown element: test if auto
     }, 250)
     this._editFormInstance = null
   }

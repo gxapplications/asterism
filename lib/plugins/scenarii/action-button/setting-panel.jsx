@@ -12,8 +12,18 @@ import ActionsDropdown from '../browser/actions-dropdown'
 class ActionButtonSettingPanel extends ItemSettingPanel {
   constructor (props) {
     super(props)
-    console.log('####1 constructor panel, props:', props, ', state: ', this.state)
     this.scenariiService = this.props.context.services['asterism-scenarii']
+  }
+
+  componentWillUpdate (nextProps, nextState) {
+    // Because of react-materialize bad behaviors...
+    if (this.state.params.title !== nextState.params.title) {
+      this._title.setState({ value: nextState.params.title })
+    }
+
+    if (this.state.params.action !== nextState.params.action) {
+      this._action.setState({ currentId: nextState.params.action })
+    }
   }
 
   render () {
@@ -23,23 +33,24 @@ class ActionButtonSettingPanel extends ItemSettingPanel {
 
     const waves = animationLevel >= 2 ? 'light' : undefined
 
-    console.log('####2 will render, state:', this.state)
-    // TODO !0: dropdown not updated after a first change then a second modal opening
     return (
       <div id='actionButtonSettingDiv' className='clearing padded'>
         <Row className='padded card'>
-          <ActionsDropdown defaultActionId={action} onChange={this.changeActionId.bind(this)}
-            theme={theme} animationLevel={animationLevel} scenariiService={this.scenariiService} />
+          <ActionsDropdown defaultActionId={action} onChange={this.handleValueChange.bind(this, 'action')}
+            ref={(c) => { this._action = c }} theme={theme} animationLevel={animationLevel}
+            scenariiService={this.scenariiService} />
 
           <Input s={12} label='Label' ref={(c) => { this._title = c }} className='iconPicker'
-            value={title} onChange={this.handleValueChange.bind(this, 'title')}>
+            value={title} onChange={this.handleEventChange.bind(this, 'title')}>
             <div>
-              <IconPicker theme={theme} animationLevel={animationLevel} defaultIcon={icon} onChange={this.changeIcon.bind(this)} />
+              <IconPicker theme={theme} animationLevel={animationLevel} defaultIcon={icon}
+                onChange={this.handleValueChange.bind(this, 'icon')} />
             </div>
           </Input>
         </Row>
 
-        <ActionColorSwitch theme={theme} animationLevel={animationLevel} defaultColor={color} onChange={this.changeColor.bind(this)} />
+        <ActionColorSwitch theme={theme} animationLevel={animationLevel} defaultColor={color}
+          onChange={this.handleValueChange.bind(this, 'color')} />
 
         <Button waves={waves} className={cx('right', theme.actions.primary)} onClick={this.save.bind(this)}>
           Save &amp; close
@@ -48,22 +59,8 @@ class ActionButtonSettingPanel extends ItemSettingPanel {
     )
   }
 
-  changeColor (color) {
-    this.setState({ params: { ...this.state.params, color } })
-  }
-
-  changeIcon (icon) {
-    this.setState({ params: { ...this.state.params, icon } })
-  }
-
-  changeActionId (actionId) {
-    this.setState({ params: { ...this.state.params, action: actionId } })
-  }
-
   save () {
-    const params = { ...this.state.params, title: this._title.state.value }
-    console.log('####3 save, params:', params)
-    this.next(ActionButtonItem, params)
+    this.next(ActionButtonItem, this.state.params)
   }
 }
 

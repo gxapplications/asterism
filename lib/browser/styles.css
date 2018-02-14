@@ -33,6 +33,19 @@
   transform: inherit;
 }
 
+@keyframes asterism-missing-air {
+  0% {color: inherit; transform: scale(1);}
+  66% {color: inherit; transform: scale(1);}
+  100% {color: red; transform: scale(1.5);}
+}
+
+.asterism .navbar-fixed a.brand-logo.missing-air {
+  animation-name: asterism-missing-air;
+  animation-duration: 14s;
+  animation-fill-mode: both;
+  animation-iteration-count: 1;
+}
+
 .asterism .navbar-fixed li.notification-item {
   border-radius: 50%;
   transform: scale(0.8);

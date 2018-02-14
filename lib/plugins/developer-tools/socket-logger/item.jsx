@@ -20,10 +20,8 @@ class SocketLoggerItem extends Item {
       this.setState({ logs: logsBuffer })
     }, 100, false)
 
-    this.state = {
-      logs: [],
-      needRefresh: false
-    }
+    this.state.logs = []
+    this.state.needRefresh = false
 
     const stackToLog = (log) => {
       logsBuffer.unshift(log)
@@ -59,7 +57,7 @@ class SocketLoggerItem extends Item {
   receiveNewParams (params) {
     // this item cannot handle dynamic params change: will flag itself has 'to refresh'
     console.log('The Socket Logger item need a page refresh to take new params into account.')
-    this.setState({ needRefresh: true })
+    this.setState({ params, needRefresh: true })
   }
 
   render () {

@@ -72,6 +72,7 @@ export default class SpeechManager {
         if (this.justStarted) {
           // too short, maybe blocked...
           this.logger.warn('Annyang stops too quickly. Mic may be blocked.')
+          this.available = false
           this.speak(errors[this.voice.lang])
           $('#speech-popup .bubble').addClass('red-text')
           this.resultAnimating = setTimeout(() => {

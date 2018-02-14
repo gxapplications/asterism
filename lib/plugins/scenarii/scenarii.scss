@@ -81,6 +81,15 @@
   }
 }
 
-.actions-dropdown-edit-panel {
+.actions-dropdown-edit-panel, .actions-dropdown-edit-panel .modal-content {
+  padding: 0;
+}
+
+.actions-dropdown-edit-panel .modal-content .coloring-header,
+.actions-dropdown-edit-panel .modal-content .coloring-header + div {
   padding: 1em;
+}
+
+.actions-dropdown-edit-panel .modal-content .coloring-header h4 {
+  margin: 0;
 }
