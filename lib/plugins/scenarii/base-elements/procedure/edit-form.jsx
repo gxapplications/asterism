@@ -7,7 +7,7 @@ import { Input, Row } from 'react-materialize'
 class BrowserProcedureEditForm extends React.Component {
   render () {
     const { instance } = this.props
-    // TODO !2: form to do
+    // TODO !1: Do the action basic-procedure
     return (
       <Row>
         <Input placeholder='Give a name to quickly identify your action' s={12} label='Name'
