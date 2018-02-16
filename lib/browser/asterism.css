@@ -753,6 +753,7 @@
 
 #edit-panel-modal .modal-content {
   padding: 0;
+  overflow-y: hidden;
 }
 
 #edit-panel-modal .collection .collection-item {

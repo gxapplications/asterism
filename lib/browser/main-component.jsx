@@ -22,7 +22,7 @@ import SpeechManager from './speech-manager'
 import { thenSleep, sleep } from './tools'
 
 import 'react-gridifier/dist/styles.css'
-import './styles.css'
+import './asterism.css'
 import 'asterism-plugin-library/styles.css'
 
 const localStorage = new DefaultLocalStorage('asterism')
