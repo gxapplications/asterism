@@ -4,10 +4,11 @@ import cx from 'classnames'
 import React from 'react'
 import { Button, Input, Row } from 'react-materialize'
 
-import { ItemSettingPanel, IconPicker, ActionColorSwitch } from 'asterism-plugin-library'
+import { ItemSettingPanel, IconPicker, ActionColorSwitch, Scenarii } from 'asterism-plugin-library'
 
 import ActionButtonItem from './item'
-import ActionsDropdown from '../browser/actions-dropdown'
+
+const { ActionsDropdown } = Scenarii
 
 class ActionButtonSettingPanel extends ItemSettingPanel {
   constructor (props) {
