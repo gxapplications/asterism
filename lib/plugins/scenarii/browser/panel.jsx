@@ -33,10 +33,10 @@ class ScenariiEditPanel extends React.Component {
   }
 
   render () {
-    const { theme, animationLevel } = this.props
+    const { theme, animationLevel, services } = this.props
     const { EditForm, currentTab } = this.state
     return (
-      <div id='scenarii-edit-panel' className={cx(styles.ScenariiEditPanel, { 'editFormOpened': !!EditForm }, 'coloring-header-tabs')}>
+      <div id='scenarii-edit-panel' className={cx(styles.ScenariiEditPanel, { 'editFormOpened': !!EditForm }, 'coloring-header-tabs thin-scrollable')}>
         <Tabs onChange={this.tabChanged.bind(this)}>
           <Tab title={(<span><Icon>offline_pin</Icon> <span className='hide-on-small-only'>Scenarii</span></span>)} active={currentTab === 0}>
             <div ref={(c) => { this._tabs[0] = c }}>Scenarii, to do...</div>
@@ -92,7 +92,7 @@ class ScenariiEditPanel extends React.Component {
         <div className={cx('editForm', theme.backgrounds.body)}>
           {EditForm ? (
             <EditForm ref={(c) => { this._editFormInstance = c }}
-              instance={this._editInstance} scenariiService={this.scenariiService}
+              instance={this._editInstance} services={services}
               theme={theme} animationLevel={animationLevel}
             />
           ) : null}

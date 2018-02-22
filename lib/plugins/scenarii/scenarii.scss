@@ -5,6 +5,7 @@
 
   & > div.row {
     min-height: 100%;
+    position: relative;
   }
 
   & > div.row > div.col {
@@ -25,6 +26,11 @@
 
   & > div.row > div.col ~ div.col {
     padding-top: 0.5rem;
+    display: block;
+    overflow-y: auto;
+    position: absolute;
+    bottom: 0;
+    top: 6.3rem;
   }
 
   & div.collection {

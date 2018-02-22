@@ -1,6 +1,6 @@
 {
   "name": "asterism",
-  "version": "0.12.6",
+  "version": "0.13.2",
   "description": "Extensible & dynamic dashboard platform",
   "author": "Xavier Gouley <gxapplications@gmail.com>",
   "contributors": [],
@@ -38,10 +38,10 @@
   },
   "babel": {
     "presets": [
-      "node7",
-      "es2017-node7/webpack2",
-      "react-es2015"
+      "env",
+      "react"
     ],
+    "plugins": ["transform-object-rest-spread"],
     "env": {
       "development": {
         "plugins": [
@@ -81,12 +81,12 @@
   ],
   "dependencies": {
     "annyang": "^2.6.0",
-    "asterism-plugin-library": ">= 1.7.11",
+    "asterism-plugin-library": ">= 1.8.0",
     "babel-loader": "7.1.x",
     "babel-plugin-css-modules-transform": "1.2.x",
-    "babel-preset-es2017-node7": "0.5.x",
-    "babel-preset-node7": "1.5.x",
-    "babel-preset-react-es2015": "1.3.x",
+    "babel-plugin-transform-object-rest-spread": "6.23.x",
+    "babel-preset-env": "1.6.x",
+    "babel-preset-react": "6.24.x",
     "babili-webpack-plugin": "0.1.x",
     "body-parser": "1.x",
     "camelopard": "0.7.x",
