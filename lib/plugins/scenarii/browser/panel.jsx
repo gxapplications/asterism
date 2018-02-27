@@ -88,6 +88,21 @@ class ScenariiEditPanel extends React.Component {
               </div>
             </PanelList>
           </Tab>
+          <Tab title={(<span><Icon>monetization_on</Icon> <span className='hide-on-med-and-down'>States</span></span>)} active={currentTab === 4}>
+            <PanelList theme={theme} animationLevel={animationLevel}
+              getInstances={this.scenariiService.getStateInstances.bind(this.scenariiService)}
+              getTypes={this.scenariiService.getStateTypes.bind(this.scenariiService)}
+              createInstance={this.scenariiService.createStateInstance.bind(this.scenariiService)}
+              deleteInstance={this.scenariiService.deleteStateInstance.bind(this.scenariiService)}
+              applyEditForm={this.applyEditForm.bind(this)}
+              ref={(c) => { this._tabs[4] = c }}>
+              <div className='collection-header'>
+                <Icon>lightbulb_outline</Icon>
+                No state yet. You can add one choosing an state type below.<br />
+                A state is like a variable that can be changed by actions. When a state changes, it sends an event for other elements.
+              </div>
+            </PanelList>
+          </Tab>
         </Tabs>
         <div className={cx('editForm', theme.backgrounds.body)}>
           {EditForm ? (
@@ -109,9 +124,6 @@ class ScenariiEditPanel extends React.Component {
   tabChanged (href) {
     $(`#scenarii-edit-panel > div.row > div.col > ul.tabs > li.tab > a[href^='#']`).each((idx, el) => {
       if ($(el).attr('href') === `#tab_${href}`) {
-        /* if (this._tabs[idx].forceUpdate) {
-          this._tabs[idx].forceUpdate()
-        } */
         this.setState({ currentTab: idx })
       }
     })

@@ -19,6 +19,8 @@ const builder = new ItemFactoryBuilder()
   ])
   .build()
 
+// TODO !1: level-state control item?
+
 class ScenariiItemFactory extends builder.build() {
   // more custom functions here if needed...
 }
