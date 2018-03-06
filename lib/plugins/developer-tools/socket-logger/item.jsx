@@ -64,6 +64,7 @@ class SocketLoggerItem extends Item {
     const { logs, needRefresh } = this.state
     const { mainState, theme } = this.props.context
     const { animationLevel } = mainState()
+
     return needRefresh ? (
       <Button waves={animationLevel >= 2 ? 'light' : null}
         className={cx(theme.actions.edition, 'truncate fluid')}

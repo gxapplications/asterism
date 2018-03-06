@@ -124,8 +124,7 @@ class BrowserLevelStateEditForm extends React.Component {
 BrowserLevelStateEditForm.propTypes = {
   theme: PropTypes.object.isRequired,
   animationLevel: PropTypes.number.isRequired,
-  instance: PropTypes.object.isRequired,
-  services: PropTypes.func.isRequired
+  instance: PropTypes.object.isRequired
 }
 
 BrowserLevelStateEditForm.label = 'Level state'

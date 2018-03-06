@@ -12,7 +12,8 @@ server.use(require('../lib/plugins/developer-tools'))
 if (process.env.ASTERISM_PLUGINS) {
   process.env.ASTERISM_PLUGINS.split(',').forEach((plugin) => {
     try {
-      server.use(require(`${plugin}`))
+      console.log(`Loading plugin at path ${require.resolve(plugin)}`.green)
+      server.use(require(plugin))
     } catch (error) {
       console.log(`The plugin ${plugin} cannot be found as dependency. Did you miss a npm link for it?`.red)
       console.error(error)

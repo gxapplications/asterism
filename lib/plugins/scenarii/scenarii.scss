@@ -99,3 +99,43 @@
 .actions-dropdown-edit-panel .modal-content .coloring-header h4 {
   margin: 0;
 }
+
+.levelStateItem {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+
+  & .btn {
+
+    flex-grow: 1;
+    flex-shrink: 1;
+    align-content: center;
+    margin: 0.5rem;
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+
+    & i.material-icons {
+      font-size: 4em;
+      width: -webkit-fill-available;
+    }
+  }
+
+  & div {
+    flex-grow: 1;
+    flex-shrink: 1;
+    align-content: center;
+    align-items: center;
+    display: flex;
+
+    & span {
+      width: 100%;
+      text-align: center;
+      vertical-align: middle;
+
+      & i.material-icons {
+        vertical-align: middle;
+      }
+    }
+  }
+}

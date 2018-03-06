@@ -64,9 +64,8 @@ class BrowserLevelStateChangerEditForm extends React.Component {
     )
   }
 
-  levelStateChanged (event) {
-    const newLevelStateId = event.currentTarget.value
-    this.props.instance.data.levelStateId = newLevelStateId
+  levelStateChanged (value) {
+    this.props.instance.data.levelStateId = value
     this.nameChange()
   }
 
