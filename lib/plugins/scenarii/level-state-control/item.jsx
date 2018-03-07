@@ -6,23 +6,34 @@ import { Button, Icon } from 'react-materialize'
 
 import { Item } from 'asterism-plugin-library'
 
-// TODO !0: item
 class LevelStateControlItem extends Item {
   constructor (props) {
     super(props)
 
     this.scenariiService = this.props.context.services['asterism-scenarii']
+
+    this.state.levelState = null
+    this.state.stateListenerId = null
+    this.state.currentLevel = 0
   }
 
   componentDidMount () {
     if (this.state.params.levelState) {
       this.scenariiService.getStateInstance(this.state.params.levelState)
-        .then((levelState) => {
-          this.setState({ levelState })
+      .then((levelState) => {
+        this.setState({
+          levelState,
+          currentLevel: levelState.data.state,
+          stateListenerId: this.scenariiService.addStateListener(levelState, this.updateLevel.bind(this))
         })
+      })
     }
+  }
 
-    // TODO !0: add a listener, when state change from server, must update here!
+  componentWillUnmount () {
+    if (this.state.stateListenerId) {
+      this.scenariiService.removeStateListener(this.state.levelState, this.state.stateListenerId)
+    }
   }
 
   render () {
@@ -35,20 +46,19 @@ class LevelStateControlItem extends Item {
     const btnLessColor = (levelState) ? `${levelState.data.colors[levelState.data.state - 2]}-text` : 'white-text'
     const stateColor = (levelState) ? levelState.data.colors[levelState.data.state - 1] : 'black'
 
-    // TODO !0: disable btn if limit reached x2
     return levelState ? (
       <div className={cx(stateColor, 'fluid levelStateItem')}>
-        <Button waves={animationLevel >= 2 ? 'light' : null}
-          className={cx(theme.actions[color], 'truncate')} onClick={this.click.bind(this)}>
+        <Button waves={animationLevel >= 2 ? 'light' : null} disabled={levelState.data.state >= levelState.data.max}
+          className={cx(theme.actions[color], 'truncate')} onClick={this.click.bind(this, 1)}>
           <Icon className={btnMoreColor}>keyboard_arrow_up</Icon>
         </Button>
 
         <div>
-          <span><Icon>{icon}</Icon> {title || 'TODO'}</span>
+          <span><Icon>{icon}</Icon> {title || 'TODO'} ({levelState.data.state})</span>
         </div>
 
-        <Button waves={animationLevel >= 2 ? 'light' : null}
-          className={cx(theme.actions[color], 'truncate')} onClick={this.click.bind(this)}>
+        <Button waves={animationLevel >= 2 ? 'light' : null} disabled={levelState.data.state <= 1}
+          className={cx(theme.actions[color], 'truncate')} onClick={this.click.bind(this, -1)}>
           <Icon className={btnLessColor}>keyboard_arrow_down</Icon>
         </Button>
       </div>
@@ -57,8 +67,14 @@ class LevelStateControlItem extends Item {
     )
   }
 
-  click () {
+  updateLevel (level, levelState) {
+    // TODO !0
+    console.log('###1', level, levelState)
+  }
 
+  click (delta) {
+    // TODO !0
+    console.log('###2', delta)
   }
 }
 

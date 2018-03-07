@@ -24,7 +24,7 @@ const builder = new ItemFactoryBuilder()
 .newItemType('level_state_control', AdditionalItem.categories.DOMOTICS)
   .withDescription('Level state control', 'A control to change level state')
   .settingPanelWithHeader('Level state control settings', 'touch_app') // optional override, but always before *Instance*() calls...
-  .newInstanceFromInitialSetting(1, 2, LevelStateControlSettingPanel)
+  .newInstanceFromInitialSetting(3, 1, LevelStateControlSettingPanel)
   .existingInstance(LevelStateControlItem, LevelStateControlSettingPanel)
   .acceptDimensions([
     { w: 1, h: 2 },

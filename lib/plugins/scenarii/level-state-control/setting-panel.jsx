@@ -27,6 +27,8 @@ class LevelStateControlSettingPanel extends ItemSettingPanel {
     }
   }
 
+  // TODO !1: choose first state if none in params (creation case).
+
   render () {
     const { theme, mainState } = this.props.context
     const { title = '', color = 'primary', icon = 'error', levelState = '' } = this.state.params
