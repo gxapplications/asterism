@@ -15,13 +15,16 @@ class LevelStateControlItem extends Item {
     this.state.levelState = null
     this.state.stateListenerId = null
     this.state.currentLevel = 0
+
+    this.receiveNewParams(this.state.params)
   }
 
-  componentDidMount () {
-    if (this.state.params.levelState) {
-      this.scenariiService.getStateInstance(this.state.params.levelState)
+  receiveNewParams (params) {
+    if (params.levelState) {
+      this.scenariiService.getStateInstance(params.levelState)
       .then((levelState) => {
         this.setState({
+          params,
           levelState,
           currentLevel: levelState.data.state,
           stateListenerId: this.scenariiService.addStateListener(levelState, this.updateLevel.bind(this))
@@ -39,8 +42,8 @@ class LevelStateControlItem extends Item {
   render () {
     const { mainState, theme } = this.props.context
     const { animationLevel } = mainState()
-    const { title = '', icon = 'error', color = 'primary' } = this.state.params
-    const { levelState } = this.state
+    const { title = '', icon = 'error', color = 'inconspicuous' } = this.state.params
+    const { levelState, currentLevel } = this.state
 
     const btnMoreColor = (levelState) ? `${levelState.data.colors[levelState.data.state]}-text` : 'white-text'
     const btnLessColor = (levelState) ? `${levelState.data.colors[levelState.data.state - 2]}-text` : 'white-text'
@@ -48,16 +51,16 @@ class LevelStateControlItem extends Item {
 
     return levelState ? (
       <div className={cx(stateColor, 'fluid levelStateItem')}>
-        <Button waves={animationLevel >= 2 ? 'light' : null} disabled={levelState.data.state >= levelState.data.max}
+        <Button waves={animationLevel >= 2 ? 'light' : null} disabled={currentLevel >= levelState.data.max}
           className={cx(theme.actions[color], 'truncate')} onClick={this.click.bind(this, 1)}>
           <Icon className={btnMoreColor}>keyboard_arrow_up</Icon>
         </Button>
 
         <div>
-          <span><Icon>{icon}</Icon> {title || 'TODO'} ({levelState.data.state})</span>
+          <span><Icon>{icon}</Icon> {title || levelState.data.name} ({currentLevel})</span>
         </div>
 
-        <Button waves={animationLevel >= 2 ? 'light' : null} disabled={levelState.data.state <= 1}
+        <Button waves={animationLevel >= 2 ? 'light' : null} disabled={currentLevel <= 1}
           className={cx(theme.actions[color], 'truncate')} onClick={this.click.bind(this, -1)}>
           <Icon className={btnLessColor}>keyboard_arrow_down</Icon>
         </Button>
@@ -68,13 +71,15 @@ class LevelStateControlItem extends Item {
   }
 
   updateLevel (level, levelState) {
-    // TODO !0
-    console.log('###1', level, levelState)
+    this.setState({
+      levelState,
+      currentLevel: level
+    })
   }
 
   click (delta) {
-    // TODO !0
-    console.log('###2', delta)
+    this.state.levelState.data.state = this.state.currentLevel + delta
+    this.scenariiService.setStateInstance(this.state.levelState)
   }
 }
 

@@ -139,3 +139,126 @@
     }
   }
 }
+
+.procedurePanel {
+  font-size: 1.5em;
+  padding: 0 !important;
+
+  & ul { /* script */
+    padding: 0.2rem 0 0.01rem 0.4rem;
+    margin: 0;
+    border-left: 2px solid white;
+
+    & > li:not(.add) {
+      position: relative;
+      border: 2px solid white;
+      background-color: rgba(242, 242, 242, 0.3);
+      border-radius: 4px;
+      list-style-type: none;
+      margin: 0 0 0.3rem 0;
+      padding: 0.4rem;
+
+      & > .remove.sequence {
+        padding: 0 9px;
+        left: 0;
+        bottom: 0;
+        position: absolute;
+      }
+    }
+
+    & > li.add {
+      display: inline-block;
+      border: 2px dashed #eee;
+      background-color: rgba(242, 242, 242, 0.1);
+      border-radius: 5px;
+      list-style-type: none;
+      margin: 0 0 0.3rem 0;
+      padding: 0.4rem;
+
+      & > i.material-icons {
+        vertical-align: middle;
+        font-size: inherit;
+      }
+    }
+  }
+
+  & > ul {
+    padding: 0;
+    border-left: none;
+  }
+
+  & ol { /* sequence */
+    padding-left: 1.8em;
+    position: relative;
+
+    & > li:not(.add) {
+      font-size: 0.9em;
+      position: relative;
+
+      &:first-of-type::before {
+        content: '⇰';
+        color: white;
+        position: absolute;
+        font-size: 1.7em;
+        left: -1.1em;
+      }
+
+      &::after {
+        content: '⇩';
+        color: white;
+        position: relative;
+        display: block;
+        font-size: 1.5em;
+        left: -0.8rem;
+      }
+
+      &:nth-last-of-type(3)::after {
+        content: '⬂';
+        left: -0.2rem;
+        height: 0.8em;
+      }
+
+      & > .orderHandler {
+        display: inline-block;
+        position: absolute;
+        left: -1.6em;
+        top: calc(50% - 2rem);
+      }
+    }
+
+    & > li.add {
+      display: inline-block;
+      margin: 0 0 0 2em;
+      padding: 0.4rem;
+      border: 2px dashed #eee;
+      background-color: rgba(242, 242, 242, 0.1);
+      border-radius: 5px;
+      list-style-type: none;
+
+      &:first-of-type::before {
+        content: '⇰';
+        transform: rotate(45);
+        color: white;
+        font-size: 1.5em;
+        position: absolute;
+        left: 1.4em;
+        top: -0.2em;
+        transform: rotate(25deg);
+      }
+
+      &.script {
+        margin: 0 0 0 0.3rem;
+      }
+
+      & > i.material-icons {
+        vertical-align: middle;
+        font-size: inherit;
+      }
+    }
+  }
+
+  /* Stops at 4th level script */
+  ul > li > ol > li > ul > li > ol > li > ul > li > ol > li.add.script {
+    display: none;
+  }
+}

@@ -14,13 +14,15 @@ class ActionButtonItem extends Item {
     this.state.actionExecuting = false // if undefined: maybe still running, but consider not... (timeout preceding)
 
     this.scenariiService = this.props.context.services['asterism-scenarii']
+
+    this.receiveNewParams(this.state.params)
   }
 
-  componentDidMount () {
-    if (this.state.params.action) {
-      this.scenariiService.getActionInstance(this.state.params.action)
+  receiveNewParams (params) {
+    if (params.action) {
+      this.scenariiService.getActionInstance(params.action)
       .then((action) => {
-        this.setState({ action })
+        this.setState({ params, action })
       })
     }
   }

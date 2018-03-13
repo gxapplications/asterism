@@ -146,7 +146,7 @@ class PanelList extends React.Component {
         {instances.map(({ instance, onClick, onDelete, onTest, testing }, idx) => instance ? (
           <a key={instance.instanceId} href='javascript:void(0)' onClick={onClick}
             className={cx('collection-item', waves)}>
-            <div href='javascript:void(0)' onClick={onDelete}
+            <div onClick={onDelete}
               className={cx('secondary-content', (deleteConfirm === instance) ? deleteWavesConfirm : deleteWaves)}>
               <i className='material-icons'>delete</i>
             </div>
