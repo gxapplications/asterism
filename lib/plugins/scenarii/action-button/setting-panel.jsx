@@ -11,11 +11,6 @@ import ActionButtonItem from './item'
 const { ActionsDropdown } = Scenarii
 
 class ActionButtonSettingPanel extends ItemSettingPanel {
-  constructor (props) {
-    super(props)
-    this.scenariiService = this.props.context.services['asterism-scenarii']
-  }
-
   componentWillUpdate (nextProps, nextState) {
     // Because of react-materialize bad behaviors...
     if (this.state.params.title !== nextState.params.title) {
@@ -39,7 +34,7 @@ class ActionButtonSettingPanel extends ItemSettingPanel {
         <Row className='padded card'>
           <ActionsDropdown defaultActionId={action} onChange={this.handleValueChange.bind(this, 'action')}
             ref={(c) => { this._action = c }} theme={theme} animationLevel={animationLevel}
-            scenariiService={this.scenariiService} />
+            services={() => this.props.context.services} />
 
           <Input s={12} label='Label' ref={(c) => { this._title = c }} className='iconPicker'
             value={title} onChange={this.handleEventChange.bind(this, 'title')}>

@@ -234,6 +234,7 @@
       background-color: rgba(242, 242, 242, 0.1);
       border-radius: 5px;
       list-style-type: none;
+      height: 4.8rem;
 
       &:first-of-type::before {
         content: '⇰';
@@ -248,6 +249,17 @@
 
       &.script {
         margin: 0 0 0 0.3rem;
+        vertical-align: baseline;
+        line-height: 3.7rem;
+      }
+
+      &.action {
+        padding: 0 0 0.4rem;
+        vertical-align: top;
+
+        & input.select-dropdown {
+          margin-bottom: 0;
+        }
       }
 
       & > i.material-icons {

@@ -25,13 +25,13 @@ class BrowserLevelStateChangerEditForm extends React.Component {
   }
 
   render () {
-    const { instance, animationLevel, theme } = this.props
+    const { instance, animationLevel, theme, services } = this.props
 
     return (
       <Row className='section card form'>
         <div className='col s12 m9'>
           <StatesDropdown defaultStateId={instance.data.levelStateId} onChange={this.levelStateChanged.bind(this)}
-            theme={theme} animationLevel={animationLevel} scenariiService={this.scenariiService} />
+            theme={theme} animationLevel={animationLevel} services={services} />
         </div>
 
         <Input s={12} m={3} label='Operation' type='select' icon='swap_vert' onChange={this.operationChanged.bind(this)}

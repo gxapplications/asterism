@@ -39,7 +39,7 @@ class LevelStateControlSettingPanel extends ItemSettingPanel {
         <Row className='padded card'>
           <StatesDropdown defaultStateId={levelState} onChange={this.stateChange.bind(this)}
             ref={(c) => { this._levelState = c }} theme={theme} animationLevel={animationLevel}
-            scenariiService={this.scenariiService} />
+            services={() => this.props.context.services} />
 
           <Input s={12} label='Label' ref={(c) => { this._title = c }} className='iconPicker'
             value={title} onChange={this.handleEventChange.bind(this, 'title')}>

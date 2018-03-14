@@ -6,6 +6,10 @@ import React from 'react'
 import { Input, Row } from 'react-materialize'
 import uuid from 'uuid'
 
+import { Scenarii } from 'asterism-plugin-library'
+
+const { ActionsDropdown } = Scenarii
+
 class BrowserProcedureEditForm extends React.Component {
   constructor (props) {
     super(props)
@@ -57,6 +61,7 @@ class BrowserProcedureEditForm extends React.Component {
   }
 
   renderSequence (sequence, key) {
+    const { theme, animationLevel, instance, services } = this.props
     const { deleteSequenceConfirm } = this.state
     const waves = this.props.animationLevel >= 2 ? 'waves-effect waves-light' : undefined
     const deleteWaves = this.props.animationLevel >= 2 ? 'btn-flat waves-effect waves-red' : 'btn-flat'
@@ -98,7 +103,7 @@ class BrowserProcedureEditForm extends React.Component {
                     <li className={cx('add sequence', waves)} onClick={() => {}}><i className='material-icons'>add</i>Add a parallelized sequence</li>
                   </ul>
                 </li>
-                <li className='add action'>ADD a new action // TODO !0</li>
+                <li className='add action'>ADD a new action</li>
                 <li className='add script'><i className='material-icons'>add</i>Add a script</li>
               </ol>
             </li>
@@ -114,7 +119,7 @@ class BrowserProcedureEditForm extends React.Component {
                 <i className='material-icons'>delete</i>
               </div>
               <ol>
-                <li className='add action'>ADD a new action // TODO !0</li>
+                <li className='add action'>ADD a new action</li>
                 <li className='add script'><i className='material-icons'>add</i>Add a script</li>
               </ol>
             </li>
@@ -123,7 +128,11 @@ class BrowserProcedureEditForm extends React.Component {
         </li>
 
         {scriptsOrActions.length < 32 ? (
-          <li className={cx('add action', waves)}>ADD a new action // TODO !0: actions dropdown</li>
+          <li className='add action'>
+            <ActionsDropdown onChange={this.addAction.bind(this, sequence, key)} theme={theme} animationLevel={animationLevel}
+              services={services} parentIdForNewInstance={instance.instanceId}
+              icon={null} label='Add a script' dropdownId={uuid.v4()} />
+          </li>
         ) : null}
         {scriptsOrActions.length < 32 ? (
           <li className={cx('add script', waves)} onClick={this.addScript.bind(this, sequence)}><i className='material-icons'>add</i>Add a script</li>
@@ -132,13 +141,18 @@ class BrowserProcedureEditForm extends React.Component {
     )
   }
 
+  addAction (sequence, key, what) {
+    // TODO !0
+    console.log('#####', sequence, key, what)
+  }
+
   renderAction (actionId) {
     // TODO !0: call action edit-form, and add a "delete" button in the corner...
     return `Action #${actionId}`
   }
 
   deleteAction (actionId) {
-    // TODO !0
+    // TODO !0: remove from instance.data, but also if action has instance ID as parentId, then remove from DB.
   }
 
   addScript (sequence) {
@@ -146,7 +160,8 @@ class BrowserProcedureEditForm extends React.Component {
   }
 
   deleteScript (sequence, script) {
-    // TODO !1
+    // TODO !1: confirm feature
+    // TODO !1: warning, cascading delete, make all in the right order...
   }
 
   addSequence (script) {
@@ -155,7 +170,7 @@ class BrowserProcedureEditForm extends React.Component {
 
   deleteSequence (script, sequence, index) {
     // TODO !2: confirm feature
-    // TODO !2: do the job
+    // TODO !2: do the job: warning, cascading delete, make all in the right order...
   }
 
   reorderSequence () {
