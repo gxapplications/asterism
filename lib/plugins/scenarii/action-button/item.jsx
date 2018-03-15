@@ -24,6 +24,7 @@ class ActionButtonItem extends Item {
       .then((action) => {
         this.setState({ params, action })
       })
+      .catch(console.error)
     }
   }
 

@@ -11,7 +11,8 @@ describe('Plugin scenarii - procedure schema', function () {
     const procedureData = {
       script: {
         'a': []
-      }
+      },
+      name: 'pouet'
     }
     return Joi.validate(procedureData, schema)
   })
@@ -53,7 +54,8 @@ describe('Plugin scenarii - procedure schema', function () {
           uuid.v4()
         ],
         'i': [ uuid.v4() ]
-      }
+      },
+      name: 'pouet'
     }
     return Joi.validate(procedureData, schema)
   })
