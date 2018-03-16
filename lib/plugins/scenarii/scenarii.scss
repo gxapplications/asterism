@@ -144,10 +144,14 @@
   font-size: 1.5em;
   padding: 0 !important;
 
-  & ul { /* script */
-    padding: 0.2rem 0 0.01rem 0.4rem;
+  & ul.script { /* script */
+    padding: 2.8rem 0.2rem 0.01rem 0.4rem;
     margin: 0;
     border-left: 2px solid white;
+    border-top: 1px solid transparent;
+    border-right: 1px solid transparent;
+    border-bottom: 1px solid transparent;
+    border-radius: 3px;
 
     & > li:not(.add) {
       position: relative;
@@ -182,7 +186,7 @@
     }
   }
 
-  & > ul {
+  & > ul.script {
     padding: 0;
     border-left: none;
   }
@@ -191,17 +195,18 @@
     padding-left: 1.8em;
     position: relative;
 
+    &::before {
+      content: '⇰';
+      color: white;
+      position: absolute;
+      font-size: 1.7em;
+      left: 0;
+      top: -0.6rem;
+    }
+
     & > li:not(.add) {
       font-size: 0.9em;
       position: relative;
-
-      &:first-of-type::before {
-        content: '⇰';
-        color: white;
-        position: absolute;
-        font-size: 1.7em;
-        left: -1.1em;
-      }
 
       &::after {
         content: '⇩';
@@ -221,27 +226,60 @@
       & > .orderHandler {
         display: inline-block;
         position: absolute;
-        left: 0.2rem;
-        top: 0.2rem;
+        left: 0.6rem;
+        top: 0.4rem;
+        z-index: 3;
       }
 
       & > .removeAction {
         display: inline-block;
+        padding: 0 9px;
         position: absolute;
         left: 0.2rem;
         top: 3rem;
+        z-index: 3;
       }
 
-      & > .globalizeAction {
+      & > ul.script ~ .removeAction {
+        left: 4rem;
+        top: 0;
+      }
+
+      & > .globalizeAction:not(.disabled) {
         display: inline-block;
         position: absolute;
+        padding: 0 9px;
         right: 0.2rem;
         top: 0.2rem;
       }
 
-      & > div:last-of-type {
+      & > .globalizeAction.disabled {
+        z-index: 2;
+        display: block;
+        position: absolute;
+        margin: 0;
+        padding: 0.4em;
+        top: 0;
+        bottom: 2.2em;
+        left: 0;
+        right: 0;
+        text-align: right;
+        background-color: rgba(128, 128, 128, 0.4);
+
+        & i.material-icons {
+          vertical-align: middle;
+        }
+      }
+
+      & > div:first-of-type:not(.orderHandler) { /* Action EditForm root */
         min-height: 4em;
-        border: 1px solid blue;
+        margin: 0 !important;
+        padding-left: 2.4rem;
+        padding-right: 2.4rem;
+
+        & .hide-in-procedure {
+          display: none;
+        }
       }
     }
 
@@ -255,14 +293,8 @@
       list-style-type: none;
       height: 4.8rem;
 
-      &:first-of-type::before {
-        content: '⇰';
-        color: white;
-        font-size: 1.5em;
-        position: absolute;
-        left: 1.4em;
-        top: -0.2em;
-        transform: rotate(25deg);
+      &:first-of-type {
+        margin: 0.2rem;
       }
 
       &.script {
@@ -287,8 +319,31 @@
     }
   }
 
+  & li.sortable-dragging {
+    & > ul, & > div:not(.orderHandler):first-of-type {
+      border-left-color: rgba(64, 64, 64, 0.2);
+      border-top-color: rgba(64, 64, 64, 0.2) !important;
+      border-right-color: rgba(64, 64, 64, 0.2) !important;
+      border-bottom-color: rgba(64, 64, 64, 0.2) !important;
+      box-shadow: 2px 5px 5px 0 rgba(0, 0, 0, 0.1), 1px 3px 5px 0 rgba(0, 0, 0, 0.5);
+    }
+
+    &::before, &::after {
+      display: none !important;
+    }
+  }
+
+  & li.sortable-placeholder {
+    margin: 0 0 0.4rem 0;
+    background-color: rgba(64, 64, 64, 0.3);
+
+    &::before, &::after {
+      display: none !important;
+    }
+  }
+
   /* Stops at 4th level script */
-  ul > li > ol > li > ul > li > ol > li > ul > li > ol > li.add.script {
+  ul.script > li > ol > li > ul.script > li > ol > li > ul.script > li > ol > li.add.script {
     display: none;
   }
 }

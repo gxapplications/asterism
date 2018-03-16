@@ -130,7 +130,8 @@ class ScenariiEditPanel extends React.Component {
   }
 
   saveInstance (instance) {
-    return instance.save()
+    const save = (instance.presave) ? instance.presave(this.props.services).then(() => instance.save()) : instance.save()
+    return save
     .catch((error) => {
       $('#scenarii-persistence-error-modal p').html(error.message)
       $('#scenarii-persistence-error-modal').modal('open')

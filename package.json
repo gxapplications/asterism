@@ -1,6 +1,6 @@
 {
   "name": "asterism",
-  "version": "0.15.4",
+  "version": "0.15.9",
   "description": "Extensible & dynamic dashboard platform",
   "author": "Xavier Gouley <gxapplications@gmail.com>",
   "contributors": [],
@@ -42,7 +42,9 @@
       "env",
       "react"
     ],
-    "plugins": ["transform-object-rest-spread"],
+    "plugins": [
+      "transform-object-rest-spread"
+    ],
     "env": {
       "development": {
         "plugins": [
@@ -82,7 +84,7 @@
   ],
   "dependencies": {
     "annyang": "^2.6.0",
-    "asterism-plugin-library": ">= 1.10.1",
+    "asterism-plugin-library": ">= 1.10.7",
     "babel-loader": "7.1.4",
     "babel-plugin-css-modules-transform": "1.5.0",
     "babel-plugin-transform-object-rest-spread": "6.23.x",
@@ -101,6 +103,7 @@
     "extract-text-webpack-plugin": "3.x",
     "felicity": "2.4.x",
     "file-loader": "0.11.x",
+    "html5sortable": "0.8.x",
     "imports-loader": "0.7.x",
     "joi": "13.x",
     "joi-browser": "13.x",
@@ -111,7 +114,7 @@
     "prop-types": "15.6.x",
     "react": "15.6.x",
     "react-color": "2.13.x",
-    "react-gridifier": ">= 0.4.2",
+    "react-gridifier": "^0.4.2",
     "react-hot-loader": "3.1.x",
     "react-materialize": "1.0.x",
     "react-transition-group": "1.2.x",

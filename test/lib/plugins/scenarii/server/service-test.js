@@ -64,9 +64,11 @@ describe('Plugin scenarii - server service', function () {
         .then((result) => {
           expect(result).to.be.true
           return this.service.getActionInstance(procedure.instanceId)
+          .then((action) => {
+            expect(action).to.be.null
+            done()
+          })
         })
-        .then(() => done(new Error()))
-        .catch(() => done())
       })
     })
   })
