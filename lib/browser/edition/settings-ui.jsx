@@ -62,7 +62,7 @@ class SettingsUserInterface extends React.Component {
         <div className='section left-align'>
           <h5>Speech and speak</h5>
           <div className='section card form'>
-            <Input s={12} name='continuousRecognition' type='switch' defaultChecked={continuousRecognition}
+            <Input s={12} name='continuousRecognition' type='switch' checked={continuousRecognition}
               onChange={this.changeContinuousRecognition.bind(this)}
               onLabel='Continuous recognition with keyword' offLabel='When mic button pressed' />
             <br />

@@ -2,7 +2,10 @@
 
 _Extensible & dynamic dashboard platform. Made in NodeJS, React and Materialize CSS._
 
+_[Roadmap/Milestones available here](https://github.com/gxapplications/asterism/milestones?direction=asc&sort=due_date&state=open)_
+
 ### _asterism_ is an application to let you build your dashboard to control/monitor everything you want as long as there is a module for that.
+### The main application is [_asterism_ for domotics, available here](https://github.com/gxapplications/asterism-for-domotics).
 
 
 # Prerequisites
@@ -30,7 +33,7 @@ _Extensible & dynamic dashboard platform. Made in NodeJS, React and Materialize 
 
 
 # :construction: Project under beta stage development
-_asterism_ is for now in beta stage, for several months.
+_asterism_ is for now in beta stage, until november 2018.
 Please come back in few months to see v1.0 release. Thank you!
 
 :copyright: 2017-2018 GXApplications. [ [Roadmap/Milestones](https://github.com/gxapplications/asterism/milestones?direction=asc&sort=due_date&state=open) | [License](https://github.com/gxapplications/asterism/blob/master/LICENSE.md) ]

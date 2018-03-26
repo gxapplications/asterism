@@ -14,7 +14,7 @@ import DefaultLocalStorage from './default-local-storage'
 import DefaultServerStorage from './default-server-storage'
 import ItemManager from './item-manager'
 import ItemSetting from './edition/item-setting'
-import logger from './logger'
+// import logger from './logger'
 import NotificationManager from './notification-manager'
 import Settings from './edition/settings'
 import SocketManager from './socket-manager'
@@ -31,7 +31,7 @@ class MainComponent extends React.Component {
   constructor (props) {
     super(props)
 
-    this.logger = logger(this) // FIXME: to disable, one day...
+    this.logger = console // logger(this)
 
     this.notificationManager = new NotificationManager(this, this.logger)
     this.socketManager = new SocketManager(this.notificationManager, this.logger)
@@ -61,6 +61,9 @@ class MainComponent extends React.Component {
     }
 
     this.services = (process.env.ASTERISM_SERVICES || []).reduce((map, toRequire) => {
+      if (!toRequire) {
+        return map
+      }
       const Clazz = plugins.services[toRequire.service].default
       const instance = new Clazz({
         getServices: () => map,
@@ -78,7 +81,7 @@ class MainComponent extends React.Component {
     }, {})
 
     this.state = {
-      editMode: false,
+      editMode: window.document.location.hash === '#edit',
       animationLevel: parseInt(props.localStorage.getItem('settings-animation-level') || 3), // 1..3
       itemFactories: (process.env.ASTERISM_ITEM_FACTORIES || []).map((toRequire) => {
         const Clazz = plugins.itemFactories[toRequire.module].default
@@ -115,11 +118,12 @@ class MainComponent extends React.Component {
       items: [],
       itemSettingPanel: null,
       EditPanel: null,
+      editPanelButtonHighlight: false,
       animationFlow: null,
       notifications: [], // not directly used to render, but to trigger a render() when modified
       messageModal: null,
-      speechDialog: null,
-      logs: []
+      speechDialog: null
+      // logs: []
     }
   }
 
@@ -227,7 +231,7 @@ class MainComponent extends React.Component {
   render () {
     const { theme, localStorage, serverStorage } = this.props
     const { editMode, animationLevel, itemFactories, editPanels, EditPanel, items, itemSettingPanel, messageModal,
-      speechDialog, logs } = this.state
+      speechDialog, editPanelButtonHighlight } = this.state
     const SpeechStatus = this.speechManager.getComponent()
     const notifications = this.notificationManager.getComponents({ animationLevel, theme })
     const editPanelContext = EditPanel ? editPanels.find((ep) => ep.Panel === EditPanel) : {}
@@ -268,13 +272,13 @@ class MainComponent extends React.Component {
           </NavItem>
         </Navbar>
 
-        <pre className='logger'>
+        { /* <pre className='logger'>
           <ul>
             {logs.map((log, idx) => (
               <li key={idx}>{log}</li>
             ))}
           </ul>
-        </pre>
+        </pre> */ }
 
         {items.length ? (
           <Gridifier editable={editMode} sortDispersion orderHandler={this.itemManager.orderHandler}
@@ -314,13 +318,15 @@ class MainComponent extends React.Component {
               <EditPanel serverStorage={serverStorage} theme={theme} animationLevel={animationLevel}
                 localStorage={localStorage} services={() => this.services}
                 privateSocket={editPanelContext.privateSocket} publicSockets={editPanelContext.publicSockets}
-                ref={(c) => { this._editPanelInstance = c }} />
+                ref={(c) => { this._editPanelInstance = c }} highlightCloseButton={this.highlightCloseButton.bind(this)} />
             </div>
             <div className={cx('modal-footer', theme.backgrounds.body)}>
-              <a href='#!' onClick={this.closeEditPanel.bind(this)} className={cx(
-                'modal-action btn-flat',
-                { 'waves-effect waves-green': animationLevel >= 3 }
-              )}><Icon left>check</Icon> Ok</a>
+              <a href='javascript:void(0)' onClick={this.closeEditPanel.bind(this)} className={cx('modal-action btn', {
+                'btn-flat': !editPanelButtonHighlight,
+                [theme.actions.edition]: editPanelButtonHighlight,
+                'waves-effect waves-green': (animationLevel >= 3) && !editPanelButtonHighlight,
+                'waves-effect waves-light': (animationLevel >= 3) && editPanelButtonHighlight
+              })}><Icon left>check</Icon> Ok</a>
             </div>
           </div>
         ) : null}
@@ -383,6 +389,10 @@ class MainComponent extends React.Component {
   }
 
   closeEditPanel () {
+    this.setState({
+      editPanelButtonHighlight: false
+    })
+
     if (this._editPanelInstance && !!this._editPanelInstance.handleCloseButton) {
       return this._editPanelInstance.handleCloseButton()
       .catch(() => { // rejected = not handled
@@ -391,6 +401,12 @@ class MainComponent extends React.Component {
     }
 
     $('#edit-panel-modal').modal('close')
+  }
+
+  highlightCloseButton () {
+    this.setState({
+      editPanelButtonHighlight: true
+    })
   }
 
   getState () {

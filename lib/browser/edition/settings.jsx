@@ -73,7 +73,7 @@ class Settings extends React.Component {
                 <span className='hide-on-small-only hide-on-large-only'>Close &amp; reload</span>
                 <span className='hide-on-med-and-up'>Close</span>
               </button>
-              <a href='#!' id='settings-modal-close-button'
+              <a href='javascript:void(0)' id='settings-modal-close-button'
                 className={cx(
                   'right modal-action modal-close btn-flat',
                   { 'waves-effect waves-light': animationLevel >= 2 }

@@ -17,8 +17,10 @@
         </style>
 
         <link rel="manifest" href="manifest.json">
-        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+        <link href="/assets/material-icons.css" rel="stylesheet" />
         <link type="text/css" rel="stylesheet" href="/materialize-css/css/materialize.min.css"
+              media="screen,projection" />
+        <link type="text/css" rel="stylesheet" href="/materialize-css-extras/noUiSlider/nouislider.css"
               media="screen,projection" />
         <link type="text/css" rel="stylesheet" href="/build/styles.css" media="screen,projection" />
     </head>
@@ -26,8 +28,9 @@
         <div id="app"></div>
         <script src="/jquery/jquery.min.js" type="text/javascript"></script>
         <script src="/materialize-css/js/materialize.min.js" type="text/javascript"></script>
-        <script src="/build/common.js" onerror="alert('no script found. TODO !0: RELOAD THE PAGE')" type="text/javascript"></script>
-        <script src="/build/plugins.js" onerror="alert('no script found. TODO !0: RELOAD THE PAGE')" type="text/javascript"></script>
-        <script src="/build/bundle.js" onerror="alert('no script found. TODO !0: RELOAD THE PAGE')" type="text/javascript"></script>
+        <script src="/materialize-css-extras/noUiSlider/nouislider.min.js" type="text/javascript"></script>
+        <script src="/build/common.js" onerror="window.location.reload(true)" type="text/javascript"></script>
+        <script src="/build/plugins.js" onerror="window.location.reload(true)" type="text/javascript"></script>
+        <script src="/build/bundle.js" onerror="window.location.reload(true)" type="text/javascript"></script>
     </body>
 </html>

@@ -10,7 +10,7 @@ class GoToPathButtonItem extends Item {
   render () {
     const { mainState, theme } = this.props.context
     const { animationLevel } = mainState()
-    const { title = '', path = '/example/of/another-path', icon = 'link', color = 'primary' } = this.state.params
+    const { title = '', path = '/example/of/another-path', icon = 'link', color = 'secondary' } = this.state.params
 
     return (
       <Button waves={animationLevel >= 2 ? 'light' : null}
@@ -22,7 +22,7 @@ class GoToPathButtonItem extends Item {
   }
 
   click () {
-    window.location.pathname = this.state.params.path
+    window.location.pathname = this.state.params.path || '/example/of/another-path'
   }
 }
 

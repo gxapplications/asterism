@@ -1,5 +1,6 @@
 'use strict'
 
+/* global $ */
 import cx from 'classnames'
 import Joi from 'joi'
 import PropTypes from 'prop-types'
@@ -33,7 +34,7 @@ class BrowserProcedureEditForm extends React.Component {
       items: ':not(.add)',
       handle: '.orderHandler',
       forcePlaceholderSize: true
-    })[0].addEventListener('sortupdate', this.reorderSequence.bind(this))
+    }).forEach((e) => e.addEventListener('sortupdate', this.reorderSequence.bind(this)))
   }
 
   componentWillUnmount () {
@@ -56,7 +57,7 @@ class BrowserProcedureEditForm extends React.Component {
       <div>
         <Row className='section card form hide-in-procedure'>
           <Input placeholder='Give a name to quickly identify your action' s={12} label='Name'
-            defaultValue={defaultValue} onChange={(e) => { instance.data.name = e.currentTarget.value }} />
+            defaultValue={defaultValue} onChange={(e) => { instance.data.name = e.currentTarget.value; this.props.highlightCloseButton() }} />
         </Row>
 
         <Row className='section procedurePanel'>
@@ -109,7 +110,7 @@ class BrowserProcedureEditForm extends React.Component {
           <i className='material-icons'>{this.isActionGlobal(e) ? 'clear' : 'delete'}</i>
         </div>,
         this.isActionGlobal(e)
-          ? <div className='globalizeAction disabled'><i className='material-icons'>public</i> Global action, cannot be edited here.</div>
+          ? <div className='globalizeAction disabled'><i className='material-icons'>public</i> Shared action, cannot be edited here.</div>
           : <div className={cx('globalizeAction btn-flat', waves)} onClick={this.globalizeAction.bind(this, e)}>
             <i className='material-icons'>public</i>
           </div>
@@ -118,7 +119,7 @@ class BrowserProcedureEditForm extends React.Component {
     return (
       <ol data-sequenceKey={key}>
         {scriptsOrActions.map((scriptOrAction) => (
-          <li key={uuid.v4()} >
+          <li key={uuid.v4()}>
             {scriptOrAction[0]}
             <div className='orderHandler'><i className='material-icons'>reorder</i></div>
             {scriptOrAction[1]}
@@ -144,6 +145,7 @@ class BrowserProcedureEditForm extends React.Component {
   addAction (sequence, actionId) {
     sequence.push(actionId)
     this.forceUpdate()
+    this.props.highlightCloseButton()
   }
 
   renderAction (actionId) {
@@ -206,6 +208,7 @@ class BrowserProcedureEditForm extends React.Component {
 
     this._deleteConfirm(null)
     this._deleteAction(sequence, idx, actionId)
+    this.props.highlightCloseButton()
   }
   _deleteAction (sequence, idx, actionId) {
     sequence.splice(idx, 1) // removes 1 element from idx position
@@ -221,12 +224,15 @@ class BrowserProcedureEditForm extends React.Component {
       action.parent = null
       this.scenariiService.setActionInstance(action, null)
       .then(() => this.forceUpdate())
+      this.props.highlightCloseButton()
     }
   }
 
   addScript (sequence) {
-    sequence.push({ 'a': [] })
+    const key = uuid.v4()
+    sequence.push({ [key]: [] })
     this.forceUpdate()
+    this.props.highlightCloseButton()
   }
 
   isDeleteScriptConfirmation (script, sequence, idx) {
@@ -243,6 +249,7 @@ class BrowserProcedureEditForm extends React.Component {
     this._deleteConfirm(null)
     this._deleteScript(sequence, idx)
     this.forceUpdate()
+    this.props.highlightCloseButton()
   }
   _deleteScript (sequence, idx) {
     const removedScript = sequence.splice(idx, 1)[0] // removes 1 element from idx position
@@ -253,6 +260,7 @@ class BrowserProcedureEditForm extends React.Component {
     const key = uuid.v4()
     script[key] = []
     this.forceUpdate()
+    this.props.highlightCloseButton()
   }
 
   isDeleteSequenceConfirmation (sequenceKey, script, idx) {
@@ -269,6 +277,7 @@ class BrowserProcedureEditForm extends React.Component {
     this._deleteConfirm(null)
     this._deleteSequence(script, sequenceKey)
     this.forceUpdate()
+    this.props.highlightCloseButton()
   }
   _deleteSequence (script, sequenceKey) {
     const sequence = script[sequenceKey]
@@ -281,15 +290,22 @@ class BrowserProcedureEditForm extends React.Component {
 
   reorderSequence (event) {
     const detail = event.detail
-    console.log('###', detail.startParent, detail.oldElementIndex, detail.elementIndex)
-    // TODO !0: event handling here to store move (https://github.com/lukasoppermann/html5sortable)
+    const elementIndex = detail.destination.elementIndex
+    const oldElementIndex = detail.origin.elementIndex
+    const sequenceKey = $(detail.destination.container).attr('data-sequenceKey')
+    const sequencePath = Array.from($(detail.destination.container).parents('ol')).reduce((acc, parent) => {
+      acc.unshift($(parent).attr('data-sequenceKey'))
+      return acc
+    }, [sequenceKey])
+    const sequenceObject = sequencePath.reduce((seq, sequenceKey) => {
+      const script = seq.find((seq) => !!seq[sequenceKey])
+      seq = script[sequenceKey]
+      return seq
+    }, [this.props.instance.data.script])
 
-    /*
-     passage de idx 0 à 1:
-     oldElementIndex: 0
-     elementIndex: 2 (its a bug). Consider 1
-     ==> if (oldElementIndex < elementIndex) { array.splice(elementIndex + 1, 0, e); array.splice(oldElementIndex, 1); } else { ??? }
-    */
+    const itemToMove = sequenceObject.splice(oldElementIndex, 1)
+    sequenceObject.splice(elementIndex, 0, itemToMove[0])
+    this.props.highlightCloseButton()
   }
 
   _deleteConfirm (element) {
@@ -313,7 +329,12 @@ BrowserProcedureEditForm.propTypes = {
   theme: PropTypes.object.isRequired,
   animationLevel: PropTypes.number.isRequired,
   instance: PropTypes.object.isRequired,
-  services: PropTypes.func.isRequired
+  services: PropTypes.func.isRequired,
+  highlightCloseButton: PropTypes.func
+}
+
+BrowserProcedureEditForm.defaultProps = {
+  highlightCloseButton: () => {}
 }
 
 BrowserProcedureEditForm.label = 'Basic procedure'

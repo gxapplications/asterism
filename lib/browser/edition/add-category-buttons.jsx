@@ -222,7 +222,7 @@ class AddCategoryButtons extends React.Component {
               </div>
             </div>
             <div className={cx('modal-footer', theme.backgrounds.body)}>
-              <a href='#!' className={cx('modal-action modal-close btn-flat', animationLevel >= 2 ? 'waves-effect waves-light' : null)}>Close</a>
+              <a href='javascript:void(0)' className={cx('modal-action modal-close btn-flat', animationLevel >= 2 ? 'waves-effect waves-light' : null)}>Close</a>
             </div>
           </div>
         ) : null}

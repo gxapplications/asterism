@@ -31,7 +31,7 @@ class BrowserLevelStateEditForm extends React.Component {
     return (
       <Row className='section card form'>
         <Input placeholder='Give a name to quickly identify your state' s={12} label='Name'
-          defaultValue={defaultValue} onChange={(e) => { instance.data.name = e.currentTarget.value }} />
+          defaultValue={defaultValue} onChange={(e) => { instance.data.name = e.currentTarget.value; this.props.highlightCloseButton() }} />
 
         <div className='col s12'>Maximum level: {instance.data.max}</div>
         <div className='range-field col s12'>
@@ -103,6 +103,7 @@ class BrowserLevelStateEditForm extends React.Component {
       max: v,
       colors: i.data.colors
     })
+    this.props.highlightCloseButton()
   }
 
   changeStateValue (value) {
@@ -111,6 +112,7 @@ class BrowserLevelStateEditForm extends React.Component {
     })
 
     this.debouncerStateChange(value)
+    this.props.highlightCloseButton()
   }
 
   colorChange (index, event) {
@@ -118,13 +120,19 @@ class BrowserLevelStateEditForm extends React.Component {
     this.setState({
       colors: this.props.instance.data.colors
     })
+    this.props.highlightCloseButton()
   }
 }
 
 BrowserLevelStateEditForm.propTypes = {
   theme: PropTypes.object.isRequired,
   animationLevel: PropTypes.number.isRequired,
-  instance: PropTypes.object.isRequired
+  instance: PropTypes.object.isRequired,
+  highlightCloseButton: PropTypes.func
+}
+
+BrowserLevelStateEditForm.defaultProps = {
+  highlightCloseButton: () => {}
 }
 
 BrowserLevelStateEditForm.label = 'Level state'

@@ -4,6 +4,7 @@
 import cx from 'classnames'
 import PropTypes from 'prop-types'
 import React from 'react'
+import uuid from 'uuid'
 
 class PanelList extends React.Component {
   constructor (props) {
@@ -59,6 +60,7 @@ class PanelList extends React.Component {
             },
             onDelete: (event) => {
               event.stopPropagation()
+              event.preventDefault()
               if (this.state.deleteConfirm === instance) {
                 clearTimeout(this._deleteTimer)
                 this.props.deleteInstance(instance)
@@ -80,24 +82,26 @@ class PanelList extends React.Component {
                 }, 3000)
               }
             },
-            testing: null, // null: not testing, undefined: testing, true: tested and succeed, false: tested and failed
+            testing: null, // null: not testing, string-typed: testing, true: tested and succeed, false: tested and failed
             onTest: this.props.testInstance ? (event) => {
               event.stopPropagation()
+              event.preventDefault()
 
+              const executionId = uuid.v4()
               this.setState({ instances: this.state.instances.map((i) => {
                 if (i.instance === instance) {
-                  i.testing = undefined
+                  i.testing = executionId
                 }
                 return i
               }) })
 
-              this.props.testInstance(instance)
+              this.props.testInstance(instance, 10000, executionId)
               .catch(() => false)
               .then((success) => {
                 if (this._mounted) {
                   this.setState({
                     instances: this.state.instances.map((i) => {
-                      if (i.instance === instance) {
+                      if (i.instance === instance && i.testing !== null) {
                         i.testing = success
                       }
                       return i
@@ -116,6 +120,46 @@ class PanelList extends React.Component {
                       })
                     }
                   }, 2000)
+                }
+              })
+            } : null,
+            onStop: this.props.abortInstance ? (event) => {
+              event.stopPropagation()
+              event.preventDefault()
+
+              let executionId
+              this.setState({ instances: this.state.instances.map((i) => {
+                if (i.instance === instance) {
+                  executionId = i.testing
+                  i.testing = executionId
+                }
+                return i
+              }) })
+
+              this.props.abortInstance(instance, executionId, 10000)
+              .catch(() => false)
+              .then(() => {
+                if (this._mounted) {
+                  this.setState({
+                    instances: this.state.instances.map((i) => {
+                      if (i.instance === instance) {
+                        i.testing = null
+                      }
+                      return i
+                    })
+                  })
+                }
+              })
+            } : null,
+            onActivateSwitch: this.props.activateInstance ? (event) => {
+              event.stopPropagation()
+              event.preventDefault()
+
+              this.props.activateInstance(instance)
+              .catch(() => false)
+              .then(() => {
+                if (this._mounted) {
+                  this.forceUpdate()
                 }
               })
             } : null
@@ -139,28 +183,45 @@ class PanelList extends React.Component {
     if (instances === null || types.length === 0) {
       return (<div />)
     }
-
     return (
       <div className={cx('collection', { 'with-header': instances.length === 0 })}>
         {instances.length === 0 ? this.props.children : null}
-        {instances.map(({ instance, onClick, onDelete, onTest, testing }, idx) => instance ? (
+        {instances.map(({ instance, onClick, onDelete, onTest, testing, onStop, onActivateSwitch }, idx) => instance ? (
           <a key={instance.instanceId} href='javascript:void(0)' onClick={onClick}
             className={cx('collection-item', waves)}>
             <div onClick={onDelete}
               className={cx('secondary-content', (deleteConfirm === instance) ? deleteWavesConfirm : deleteWaves)}>
               <i className='material-icons'>delete</i>
             </div>
-            {onTest ? (
+            {onStop && (
+              <div href='javascript:void(0)' onClick={onStop}
+                className={cx(
+                  'secondary-content',
+                  testing === true ? testingWavesPositive : (testing === false ? testingWavesNegative : (typeof testing === 'string' ? testingWaves : `btn-flat ${waves}`))
+                )}>
+                <i className='material-icons'>stop</i>
+              </div>
+            )}
+            {onTest && (
               <div href='javascript:void(0)' onClick={onTest}
                 className={cx(
                   'secondary-content',
-                  testing === true ? testingWavesPositive : (testing === false ? testingWavesNegative : (testing === undefined ? testingWaves : `btn-flat ${waves}`))
+                  testing === true ? testingWavesPositive : (testing === false ? testingWavesNegative : (typeof testing === 'string' ? testingWaves : `btn-flat ${waves}`))
                 )}>
                 <i className='material-icons'>play_arrow</i>
               </div>
-            ) : null}
-            <span className='title truncate'>{instance.name}</span>
-            <span className='truncate'>{instance.shortLabel}</span>
+            )}
+            {onActivateSwitch && (
+              <div className='secondary-content switch' onClick={onActivateSwitch}>
+                <label>
+                  <input type='checkbox' checked={instance.data.activated} onChange={() => {}} />
+                  <span className='lever' />
+                  {instance.data.activated ? 'ON' : 'OFF'}
+                </label>
+              </div>
+            )}
+            <span className='primary-content title truncate'>{instance.name}</span>
+            <span className='primary-content truncate'>{instance.fullLabel}</span>
           </a>
         ) : null)}
         {types.map(({ type, onClick }, idx) => (
@@ -186,11 +247,15 @@ PanelList.propTypes = {
   createInstance: PropTypes.func.isRequired,
   deleteInstance: PropTypes.func.isRequired,
   testInstance: PropTypes.func,
+  abortInstance: PropTypes.func,
+  activateInstance: PropTypes.func,
   applyEditForm: PropTypes.func.isRequired
 }
 
 PanelList.defaultProps = {
-  testInstance: null
+  testInstance: null,
+  abortInstance: null,
+  activateInstance: null
 }
 
 export default PanelList

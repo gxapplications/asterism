@@ -14,7 +14,7 @@ class ScenariiEditPanel extends React.Component {
   constructor (props) {
     super(props)
 
-    this._tabs = [ null, null, null, null ]
+    this._tabs = [ null, null, null, null, null ]
     this._editInstance = null
     this.scenariiService = props.services()['asterism-scenarii']
 
@@ -22,10 +22,27 @@ class ScenariiEditPanel extends React.Component {
       EditForm: null,
       currentTab: 0
     }
+
+    this._listenerId = null
   }
 
   componentDidMount () {
     $('#scenarii-edit-panel.coloring-header-tabs div.row > div.col:first-of-type').addClass(this.props.theme.backgrounds.editing)
+    this._listenerId = this.scenariiService.addScenariiListener((event, instance) => {
+      switch (event) {
+        case 'scenarioActivationChanged':
+          if (this._tabs[0]) {
+            this._tabs[0].forceUpdate()
+          }
+      }
+    })
+  }
+
+  componentWillUnmount () {
+    if (this._listenerId) {
+      this.scenariiService.removeScenariiListener(this._listenerId)
+      delete this._listenerId
+    }
   }
 
   shouldComponentUpdate (nextState) {
@@ -33,13 +50,28 @@ class ScenariiEditPanel extends React.Component {
   }
 
   render () {
-    const { theme, animationLevel, services } = this.props
+    const { theme, animationLevel, services, highlightCloseButton } = this.props
     const { EditForm, currentTab } = this.state
     return (
       <div id='scenarii-edit-panel' className={cx({ 'editFormOpened': !!EditForm }, 'coloring-header-tabs thin-scrollable ScenariiEditPanel', styles.ScenariiEditPanel)}>
         <Tabs onChange={this.tabChanged.bind(this)}>
           <Tab title={(<span><Icon>offline_pin</Icon> <span className='hide-on-small-only'>Scenarii</span></span>)} active={currentTab === 0}>
-            <div ref={(c) => { this._tabs[0] = c }}>Scenarii, to do...</div>
+            <PanelList theme={theme} animationLevel={animationLevel}
+              getInstances={this.scenariiService.getScenarioInstances.bind(this.scenariiService)}
+              getTypes={this.scenariiService.getScenarioTypes.bind(this.scenariiService)}
+              createInstance={this.scenariiService.createScenarioInstance.bind(this.scenariiService)}
+              deleteInstance={this.scenariiService.deleteScenarioInstance.bind(this.scenariiService)}
+              testInstance={this.scenariiService.forceTriggerScenarioInstance.bind(this.scenariiService)}
+              abortInstance={this.scenariiService.forceAbortScenarioInstance.bind(this.scenariiService)}
+              activateInstance={this.scenariiService.setActivationScenarioInstance.bind(this.scenariiService)}
+              applyEditForm={this.applyEditForm.bind(this)}
+              ref={(c) => { this._tabs[0] = c }}>
+              <div className='collection-header'>
+                <Icon>lightbulb_outline</Icon>
+                No scenario yet. You can add one choosing a scenario type below.<br />
+                A scenario is a complex structure you can trigger or (de)activate. Most common scenario will be triggered by an event to run an action.
+              </div>
+            </PanelList>
           </Tab>
           <Tab title={(<span><Icon>help</Icon> <span className='hide-on-small-only'>Conditions</span></span>)} active={currentTab === 1}>
             <PanelList theme={theme} animationLevel={animationLevel}
@@ -64,6 +96,7 @@ class ScenariiEditPanel extends React.Component {
               createInstance={this.scenariiService.createActionInstance.bind(this.scenariiService)}
               deleteInstance={this.scenariiService.deleteActionInstance.bind(this.scenariiService)}
               testInstance={this.scenariiService.executeActionInstance.bind(this.scenariiService)}
+              abortInstance={this.scenariiService.abortActionInstance.bind(this.scenariiService)}
               applyEditForm={this.applyEditForm.bind(this)}
               ref={(c) => { this._tabs[2] = c }}>
               <div className='collection-header'>
@@ -106,9 +139,13 @@ class ScenariiEditPanel extends React.Component {
         </Tabs>
         <div className={cx('editForm', theme.backgrounds.body)}>
           {EditForm ? (
+            <h5 className='title'>{EditForm.label} - Edition</h5>
+          ) : null}
+          {EditForm ? (
             <EditForm ref={(c) => { this._editFormInstance = c }}
               instance={this._editInstance} services={services}
               theme={theme} animationLevel={animationLevel}
+              highlightCloseButton={highlightCloseButton}
             />
           ) : null}
         </div>
@@ -133,7 +170,7 @@ class ScenariiEditPanel extends React.Component {
     const save = (instance.presave) ? instance.presave(this.props.services).then(() => instance.save()) : instance.save()
     return save
     .catch((error) => {
-      $('#scenarii-persistence-error-modal p').html(error.message)
+      $('#scenarii-persistence-error-modal p').html(error ? error.message : 'Unknown error saving element!')
       $('#scenarii-persistence-error-modal').modal('open')
     })
     .then(() => {
@@ -182,7 +219,12 @@ ScenariiEditPanel.propTypes = {
   theme: PropTypes.object.isRequired,
   animationLevel: PropTypes.number.isRequired,
   localStorage: PropTypes.object.isRequired,
-  services: PropTypes.func.isRequired
+  services: PropTypes.func.isRequired,
+  highlightCloseButton: PropTypes.func
+}
+
+ScenariiEditPanel.defaultProps = {
+  highlightCloseButton: () => {}
 }
 
 ScenariiEditPanel.label = 'Scenarii'

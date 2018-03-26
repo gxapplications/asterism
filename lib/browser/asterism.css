@@ -190,6 +190,10 @@
   font-size: xx-small;
 }
 
+.translucent-text {
+  color: rgba(0,0,0,0.4);
+}
+
 /* SPEECH NOTIFS, CONTAINERS AND BUBBLES */
 
 .asterism .navbar-fixed ul li.speech-disabled > a > i.material-icons {
@@ -574,6 +578,7 @@
 #settings-modal {
   max-height: 80%;
   overflow: hidden;
+  width: 67%;
 }
 
 #settings-modal .modal-content {

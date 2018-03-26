@@ -9,7 +9,7 @@ import DataHandler from '../../../../helpers/data-handler.js'
 import Logger from '../../../../helpers/logger.js'
 import notificationHandler from '../../../../helpers/notification-handler.js'
 
-import ServerService from '../../../../../lib/plugins/scenarii/server/service.js'
+import ServerService, { _getEnergyPricing } from '../../../../../lib/plugins/scenarii/server/service.js'
 import ServerProcedure from '../../../../../lib/plugins/scenarii/base-elements/procedure/server.js'
 
 describe('Plugin scenarii - server service', function () {
@@ -81,5 +81,54 @@ describe('Plugin scenarii - server service', function () {
       expect(results[0]).to.have.property('instanceId')
       expect(results[0].typeId).to.equal('base-procedure')
     })
+  })
+
+  it('Service sub-function _getEnergyPricing can get right pricing given basic settings', function () {
+    const settings = {
+      prices: [54, 55, 56, 57, 58, 59],
+      planningBase: [3, 1, 5, 4, 3, 2, 1],
+      planningOthers: [[], [], [], [], [], [], []]
+    }
+    expect(_getEnergyPricing(settings, new Date('2018-08-14T08:25:05+02:00'))).to.equal(59) // tuesday
+    expect(_getEnergyPricing(settings, new Date('2018-08-13T08:25:05+02:00'))).to.equal(55) // monday
+    expect(_getEnergyPricing(settings, new Date('2018-08-12T08:25:05+02:00'))).to.equal(57) // sunday
+  })
+
+  it('Service sub-function _getEnergyPricing can get right pricing given specific settings', function () {
+    const settings = {
+      prices: [43, 44, 45, 46, 47, 48, 49],
+      planningBase: [0, 1, 2, 3, 4, 5, 6],
+      planningOthers: [[], [], [ // tuesday
+        { hour: 8 * 60, pricing: 6 }
+      ], [ // wednesday
+        { hour: 7 * 60, pricing: 4 },
+        { hour: 9 * 60, pricing: 5 }
+      ], [], [], []]
+    }
+    expect(_getEnergyPricing(settings, new Date('2018-08-14T08:25:05+02:00'))).to.equal(49) // tuesday
+    expect(_getEnergyPricing(settings, new Date('2018-08-14T07:25:05+02:00'))).to.equal(45) // tuesday
+    expect(_getEnergyPricing(settings, new Date('2018-08-15T07:25:05+02:00'))).to.equal(47) // wednesday
+    expect(_getEnergyPricing(settings, new Date('2018-08-15T06:25:05+02:00'))).to.equal(46) // wednesday
+    expect(_getEnergyPricing(settings, new Date('2018-08-15T09:25:05+02:00'))).to.equal(48) // wednesday
+  })
+
+  it('Service sub-function _getEnergyPricing can get right pricing given specific settings, borderline cases', function () {
+    const settings = {
+      prices: [43, 44, 45, 46, 47, 48, 49],
+      planningBase: [0, 1, 2, 3, 4, 5, 6],
+      planningOthers: [[], [], [ // tuesday
+        { hour: 8 * 60, pricing: 6 }
+      ], [ // wednesday
+        { hour: 7 * 60, pricing: 4 },
+        { hour: 9 * 60, pricing: 5 }
+      ], [], [], []]
+    }
+    expect(_getEnergyPricing(settings, new Date('2018-08-14T00:00:00+02:00'))).to.equal(45) // tuesday
+    expect(_getEnergyPricing(settings, new Date('2018-08-14T08:00:00+02:00'))).to.equal(49) // tuesday
+    expect(_getEnergyPricing(settings, new Date('2018-08-14T07:59:59+02:00'))).to.equal(45) // tuesday
+    expect(_getEnergyPricing(settings, new Date('2018-08-15T07:00:00+02:00'))).to.equal(47) // wednesday
+    expect(_getEnergyPricing(settings, new Date('2018-08-15T06:59:59+02:00'))).to.equal(46) // wednesday
+    expect(_getEnergyPricing(settings, new Date('2018-08-15T09:00:00+02:00'))).to.equal(48) // wednesday
+    expect(_getEnergyPricing(settings, new Date('2018-08-15T08:59:59+02:00'))).to.equal(47) // wednesday
   })
 })
