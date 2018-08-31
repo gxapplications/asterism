@@ -16,7 +16,7 @@ class DevtoolsLogActionEditForm extends React.Component {
     return (
       <Row className='section card form'>
         <Input placeholder='Will log this message in a logger you can add to your dashboard' s={12} label='Name / Message'
-          defaultValue={defaultValue} onChange={(e) => { instance.data.name = e.currentTarget.value }} />
+          defaultValue={defaultValue} onChange={(e) => { instance.data.name = e.currentTarget.value; this.props.highlightCloseButton() }} />
       </Row>
     )
   }
@@ -27,6 +27,10 @@ DevtoolsLogActionEditForm.propTypes = {
   animationLevel: PropTypes.number.isRequired,
   instance: PropTypes.object.isRequired,
   services: PropTypes.func.isRequired
+}
+
+DevtoolsLogActionEditForm.defaultProps = {
+  highlightCloseButton: () => {}
 }
 
 DevtoolsLogActionEditForm.label = 'Simple log action'

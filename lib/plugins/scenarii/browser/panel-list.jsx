@@ -4,7 +4,35 @@
 import cx from 'classnames'
 import PropTypes from 'prop-types'
 import React from 'react'
+import { Input, Row } from 'react-materialize'
 import uuid from 'uuid'
+
+const _sorter = (a, b) => {
+  if (a.instance.name.toLowerCase() < b.instance.name.toLowerCase()) {
+    return -1
+  }
+  return (a.instance.name.toLowerCase() > b.instance.name.toLowerCase()) ? 1 : 0
+}
+
+const _typeSorter = (a, b) => {
+  const aName = a.type.shortLabel || a.type.fullLabel || a.type.name
+  const bName = b.type.shortLabel || b.type.fullLabel || b.type.name
+  if (aName.toLowerCase() < bName.toLowerCase()) {
+    return -1
+  }
+  return (aName.toLowerCase() > bName.toLowerCase()) ? 1 : 0
+}
+
+const _filter = (s) => (i) => {
+  if (s === '') {
+    return true
+  }
+  return i.instance.name.toLowerCase().includes(s.toLowerCase())
+}
+
+const _typeFilter = (s) => (i) => {
+  return true // TODO !0
+}
 
 class PanelList extends React.Component {
   constructor (props) {
@@ -12,7 +40,8 @@ class PanelList extends React.Component {
     this.state = {
       instances: null, // is dynamic, can be refreshed
       types: [], // should be static, no refresh provided
-      deleteConfirm: null
+      deleteConfirm: null,
+      search: ''
     }
 
     this._mounted = false
@@ -171,7 +200,7 @@ class PanelList extends React.Component {
   }
 
   render () {
-    const { instances, types, deleteConfirm } = this.state
+    const { instances, types, deleteConfirm, search } = this.state
     const { animationLevel, theme } = this.props
     const waves = animationLevel >= 2 ? 'waves-effect waves-light' : undefined
     const deleteWaves = animationLevel >= 2 ? 'btn-flat waves-effect waves-red' : 'btn-flat'
@@ -183,10 +212,13 @@ class PanelList extends React.Component {
     if (instances === null || types.length === 0) {
       return (<div />)
     }
-    return (
-      <div className={cx('collection', { 'with-header': instances.length === 0 })}>
+    return [
+      <Row key={0} className='card form search'>
+        <Input s={12} m={10} l={8} type='text' icon='search' label='Search by name' onChange={this.searchChanged.bind(this)} defaultValue={search} />
+      </Row>,
+      <Row key={1} className={cx('collection', { 'with-header': instances.length === 0 })}>
         {instances.length === 0 ? this.props.children : null}
-        {instances.map(({ instance, onClick, onDelete, onTest, testing, onStop, onActivateSwitch }, idx) => instance ? (
+        {instances.filter(_filter(search)).sort(_sorter).map(({ instance, onClick, onDelete, onTest, testing, onStop, onActivateSwitch }, idx) => instance ? (
           <a key={instance.instanceId} href='javascript:void(0)' onClick={onClick}
             className={cx('collection-item', waves)}>
             <div onClick={onDelete}
@@ -224,7 +256,7 @@ class PanelList extends React.Component {
             <span className='primary-content truncate'>{instance.fullLabel}</span>
           </a>
         ) : null)}
-        {types.map(({ type, onClick }, idx) => (
+        {types.filter(_typeFilter(search)).sort(_typeSorter).map(({ type, onClick }, idx) => (
           <a key={type.name} href='javascript:void(0)' onClick={onClick}
             className={cx('collection-item active avatar', waves)}>
             <i className='material-icons circle'>add</i>
@@ -234,8 +266,12 @@ class PanelList extends React.Component {
             ) : null}
           </a>
         ))}
-      </div>
-    )
+      </Row>
+    ]
+  }
+
+  searchChanged (event) {
+    this.setState({ search: event.currentTarget.value })
   }
 }
 

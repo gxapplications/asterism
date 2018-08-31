@@ -42,6 +42,9 @@ class DomoticsSettings extends React.Component {
     this.props.serverStorage.getItem('settings-domotics-location')
     .then((location) => {
       if (this._mounted) {
+        if (location.name.length) { // FIXME: to delete when react-materialize will work...
+          $('#domotics_settings .location-field input + label').addClass('active')
+        }
         this.setState({
           currentLocation: location || {}
         })
@@ -149,7 +152,7 @@ class DomoticsSettings extends React.Component {
           <p>
             Setup home location and global domotics data to enhance a lot of useful features.
           </p>
-          <Row className='section card form'>
+          <Row className='section card form location-field'>
             <Icon s={1} className='hide-on-small-only location-icon' left>my_location</Icon>
             <Autocomplete s={12} m={11} l={11} title='Nearest big city' minLength={2}
               limit={10} data={Object.assign({}, ...locations)} value={currentLocation.name}

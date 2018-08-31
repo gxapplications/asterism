@@ -72,7 +72,7 @@ class LevelStateControlItem extends Item {
 
   updateLevel (level, levelState) {
     this.setState({
-      levelState,
+      levelState: Object.assign(this.state.levelState, levelState),
       currentLevel: level
     })
   }

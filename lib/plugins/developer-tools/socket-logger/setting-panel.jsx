@@ -42,7 +42,7 @@ class SocketLoggerSettingPanel extends ItemSettingPanel {
           </div>
         </Row>
 
-        <Button waves={waves} className={cx('right', theme.actions.primary)} onClick={this.save.bind(this)}>
+        <Button waves={waves} className={cx('right btn-bottom-sticky', theme.actions.primary)} onClick={this.save.bind(this)}>
           Save &amp; close
         </Button>
       </div>

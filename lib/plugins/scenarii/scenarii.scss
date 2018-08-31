@@ -33,6 +33,10 @@
     top: 6.3rem;
   }
 
+  & > div.row > div.col:first-of-type {
+    padding-bottom: 23px !important;
+  }
+
   & div.collection {
 
     & .collection-header {
@@ -104,6 +108,15 @@
     & .editForm {
       transform: translateY(-100%);
     }
+  }
+
+  & .card.form.search {
+    position: sticky;
+    top: -0.5rem;
+    z-index: 2;
+    margin: -0.5rem -0.7rem 1rem -0.7rem;
+    padding-top: 0.4rem;
+    border-radius: 0;
   }
 }
 

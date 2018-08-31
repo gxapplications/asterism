@@ -162,6 +162,9 @@ class ScenariiEditPanel extends React.Component {
     $(`#scenarii-edit-panel > div.row > div.col > ul.tabs > li.tab > a[href^='#']`).each((idx, el) => {
       if ($(el).attr('href') === `#tab_${href}`) {
         this.setState({ currentTab: idx })
+        setTimeout(() => {
+          $(`#scenarii-edit-panel > div.row > div:eq(${idx + 1}) .search input`).focus()
+        }, 300)
       }
     })
   }
@@ -233,6 +236,7 @@ ScenariiEditPanel.hideHeader = true
 
 ScenariiEditPanel.onReady = () => {
   $('#scenarii-edit-panel > div.row > div.col > ul.tabs').tabs()
+  $('#scenarii-edit-panel > div.row > div:eq(1) .search input').focus()
 }
 
 export default ScenariiEditPanel

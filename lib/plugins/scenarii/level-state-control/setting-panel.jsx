@@ -53,7 +53,7 @@ class LevelStateControlSettingPanel extends ItemSettingPanel {
         <ActionColorSwitch theme={theme} animationLevel={animationLevel} defaultColor={color}
           onChange={this.handleValueChange.bind(this, 'color')} />
 
-        <Button waves={waves} className={cx('right', theme.actions.primary)} onClick={this.save.bind(this)}>
+        <Button waves={waves} className={cx('right btn-bottom-sticky', theme.actions.primary)} onClick={this.save.bind(this)}>
           Save &amp; close
         </Button>
       </div>

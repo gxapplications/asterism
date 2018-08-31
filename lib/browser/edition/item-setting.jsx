@@ -35,6 +35,10 @@ class ItemSetting extends React.Component {
           <div className='center setting-panel thin-scrollable'>
             {children}
           </div>
+
+          <div className={cx('bottom-bar', theme.backgrounds.body)}>
+            &nbsp;
+          </div>
         </div>
       </div>
     )

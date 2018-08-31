@@ -136,6 +136,13 @@ class MainComponent extends React.Component {
     $('div.asterism .navbar-fixed ul.side-nav').css('background-color', navbarColor)
     $('div.asterism .navbar-fixed ul.side-nav').css('color', textColor)
 
+    // FIXME: to delete when react-materialize will work... jquery.initialize.min.js must also be deleted!
+    $.initialize('.input-field input', function () {
+      if ($(this).val().length) {
+        $(this).next('label').addClass('active')
+      }
+    })
+
     sleep(200)
     .then(() => Promise.all(this.itemManager.getAllItems()))
     .then((items) => {

@@ -729,6 +729,8 @@
 #item-setting-modal .modal-content .setting-panel {
   overflow: auto;
   height: 55vh;
+  padding-bottom: 5.4vh;
+  position: relative;
 }
 #item-setting-modal .collection .collection-item, #item-setting-modal .modal-content .card {
   background-color: rgba(255, 255, 255, 0.3);
@@ -740,6 +742,19 @@
 
 #item-setting-modal .center .input-field i.prefix {
   left: 0;
+}
+
+#item-setting-modal .bottom-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0.5rem;
+  height: 5.4vh;
+}
+
+#item-setting-modal .btn-bottom-sticky {
+  position: sticky;
+  bottom: calc(-5.4vh + 0.6rem);
 }
 
 #edit-panel-modal {
