@@ -17,6 +17,7 @@ class ScenariiEditPanel extends React.Component {
     this._tabs = [ null, null, null, null, null ]
     this._editInstance = null
     this.scenariiService = props.services()['asterism-scenarii']
+    this._socket = props.privateSocket
 
     this.state = {
       EditForm: null,
@@ -36,6 +37,12 @@ class ScenariiEditPanel extends React.Component {
           }
       }
     })
+
+    this._socket.on('stateChanged', (instance) => {
+      if (this._tabs[4]) {
+        this._tabs[4].forceUpdate()
+      }
+    })
   }
 
   componentWillUnmount () {
@@ -45,8 +52,8 @@ class ScenariiEditPanel extends React.Component {
     }
   }
 
-  shouldComponentUpdate (nextState) {
-    return (this.state.EditForm !== nextState.EditForm && this.state.currentTab !== nextState.currentTab)
+  shouldComponentUpdate (nextProps, nextState) {
+    return (this.state.EditForm !== nextState.EditForm)
   }
 
   render () {
@@ -146,6 +153,7 @@ class ScenariiEditPanel extends React.Component {
               instance={this._editInstance} services={services}
               theme={theme} animationLevel={animationLevel}
               highlightCloseButton={highlightCloseButton}
+              privateSocket={this._socket}
             />
           ) : null}
         </div>

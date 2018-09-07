@@ -30,8 +30,12 @@ const _filter = (s) => (i) => {
   return i.instance.name.toLowerCase().includes(s.toLowerCase())
 }
 
-const _typeFilter = (s) => (i) => {
-  return true // TODO !0
+const _typeFilter = (s) => (t) => {
+  if (s === '') {
+    return true
+  }
+  const ss = s.toLowerCase()
+  return t.type.name.toLowerCase().includes(ss) || t.type.shortLabel.toLowerCase().includes(ss) || t.type.fullLabel.toLowerCase().includes(ss)
 }
 
 class PanelList extends React.Component {
@@ -124,6 +128,8 @@ class PanelList extends React.Component {
                 return i
               }) })
 
+              super.forceUpdate()
+
               this.props.testInstance(instance, 10000, executionId)
               .catch(() => false)
               .then((success) => {
@@ -137,6 +143,8 @@ class PanelList extends React.Component {
                     })
                   })
 
+                  super.forceUpdate()
+
                   setTimeout(() => {
                     if (this._mounted) {
                       this.setState({
@@ -147,6 +155,8 @@ class PanelList extends React.Component {
                           return i
                         })
                       })
+
+                      super.forceUpdate()
                     }
                   }, 2000)
                 }
@@ -165,6 +175,8 @@ class PanelList extends React.Component {
                 return i
               }) })
 
+              super.forceUpdate()
+
               this.props.abortInstance(instance, executionId, 10000)
               .catch(() => false)
               .then(() => {
@@ -177,6 +189,8 @@ class PanelList extends React.Component {
                       return i
                     })
                   })
+
+                  super.forceUpdate()
                 }
               })
             } : null,
@@ -195,8 +209,25 @@ class PanelList extends React.Component {
           }))
         })
       }
-      // super.forceUpdate() // seems not useful as setState will trigger a new render
     })
+  }
+
+  shouldComponentUpdate (nextProps, nextState) {
+    const comparator = (i) => [
+      i.instance && i.instance.instanceId,
+      i.instance && i.instance.data && i.instance.data.name,
+      i.instance && i.instance.data && i.instance.data.activated,
+      i.testing,
+      i.instance && i.instance.data && i.instance.data.state
+    ]
+    const is1 = this.state.instances && this.state.instances.map(comparator)
+    const is2 = nextState.instances && nextState.instances.map(comparator)
+
+    return (
+      this.state.search !== nextState.search ||
+      this.state.deleteConfirm !== nextState.deleteConfirm ||
+      JSON.stringify(is1) !== JSON.stringify(is2)
+    )
   }
 
   render () {
@@ -271,7 +302,7 @@ class PanelList extends React.Component {
   }
 
   searchChanged (event) {
-    this.setState({ search: event.currentTarget.value })
+    this.setState({ search: event.currentTarget.value || '' })
   }
 }
 
