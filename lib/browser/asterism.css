@@ -750,11 +750,13 @@
   left: 0;
   right: 0.5rem;
   height: 5.4vh;
+  z-index: 1;
 }
 
 #item-setting-modal .btn-bottom-sticky {
   position: sticky;
   bottom: calc(-5.4vh + 0.6rem);
+  z-index: 2;
 }
 
 #edit-panel-modal {

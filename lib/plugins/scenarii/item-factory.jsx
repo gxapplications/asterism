@@ -8,6 +8,9 @@ import ActionButtonSettingPanel from './action-button/setting-panel'
 import LevelStateControlItem from './level-state-control/item'
 import LevelStateControlSettingPanel from './level-state-control/setting-panel'
 
+import BitmaskStateControlItem from './bitmask-state-control/item'
+import BitmaskStateControlSettingPanel from './bitmask-state-control/setting-panel'
+
 const builder = new ItemFactoryBuilder()
 .newItemType('action_button', AdditionalItem.categories.DOMOTICS)
   .withDescription('Action button', 'A button that launches an action')
@@ -31,6 +34,18 @@ const builder = new ItemFactoryBuilder()
     { w: 1, h: 3 },
     { w: 2, h: 2 },
     { w: 2, h: 3 }
+  ])
+  .build()
+.newItemType('bitmask_state_control', AdditionalItem.categories.DOMOTICS)
+  .withDescription('Bitmask state control', 'A control to change booleans on a multi-position state')
+  .settingPanelWithHeader('Bitmask state control settings', 'toggle_on') // optional override, but always before *Instance*() calls...
+  .newInstanceFromInitialSetting(2, 2, BitmaskStateControlSettingPanel)
+  .existingInstance(BitmaskStateControlItem, BitmaskStateControlSettingPanel)
+  .acceptDimensions([
+    { w: 2, h: 1 },
+    { w: 3, h: 1 },
+    { w: 2, h: 2 },
+    { w: 3, h: 2 }
   ])
   .build()
 

@@ -74,7 +74,8 @@ class BrowserLevelStateChangerEditForm extends React.Component {
       <Row className='section card form levelStateChangerPanel'>
         <div className='col s12'>
           <StatesDropdown defaultStateId={instance.data.levelStateId} onChange={this.levelStateChanged.bind(this)}
-            theme={theme} animationLevel={animationLevel} services={services} />
+            theme={theme} animationLevel={animationLevel} services={services}
+            typeFilter={(e) => e.id === 'level-state'} instanceFilter={(e) => e.typeId === 'level-state'} />
         </div>
 
         <Input s={12} m={3} label='Operation' type='select' icon='swap_vert' onChange={this.operationChanged.bind(this)}

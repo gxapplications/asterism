@@ -78,8 +78,15 @@ class LevelStateControlItem extends Item {
   }
 
   click (delta) {
-    this.state.levelState.data.state = this.state.currentLevel + delta
-    this.scenariiService.setStateInstance(this.state.levelState)
+    const newStateValue = this.state.currentLevel + delta
+    this.scenariiService.setStateState(this.state.levelState, newStateValue)
+    .then((state) => this.scenariiService.setStateInstance(state))
+    .then(() => {
+      this.state.levelState.data.state = newStateValue
+    })
+    .catch((error) => {
+      console.log(error)
+    })
   }
 }
 

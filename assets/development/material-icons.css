@@ -35,11 +35,17 @@
 }
 
 /*
-// When Google wants to insert missing icons, then we can remove this part and associated .svg files SAME IN /production !
+// If one day Google wants to insert missing icons, then we can remove this part and associated .svg files SAME IN /production !
+
 // TODO !0: please patient when Google want to update its fonts. Then must update my self hosted copy too!
 // https://github.com/google/material-design-icons/issues/798
 // https://github.com/google/material-design-icons/issues/181
 // https://productforums.google.com/forum/#!topic/chrome/FYHXNz9plIE;context-place=forum/chrome
+
+// Other way to have early version:
+// https://jossef.github.io/material-design-icons-iconfont/
+// https://github.com/jossef/material-design-icons-iconfont
+// Still missing some of them (battery_XX) but have new ones...
 */
 
 
