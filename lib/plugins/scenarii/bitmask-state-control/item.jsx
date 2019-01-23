@@ -35,7 +35,7 @@ class BitmaskStateControlItem extends Item {
 
   componentWillUnmount () {
     if (this.state.stateListenerId) {
-      this.scenariiService.removeStateListener(this.state.bimaskState, this.state.stateListenerId)
+      this.scenariiService.removeStateListener(this.state.bitmaskState, this.state.stateListenerId)
     }
   }
 

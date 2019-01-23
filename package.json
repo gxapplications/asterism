@@ -1,12 +1,12 @@
 {
   "name": "asterism",
-  "version": "0.20.12",
+  "version": "0.99.9",
   "description": "Extensible & dynamic dashboard platform",
   "author": "Xavier Gouley <gxapplications@gmail.com>",
   "contributors": [],
   "license": "CC-BY-NC-SA-4.0",
   "scripts": {
-    "start:dist": "npm run dist && cross-env NODE_ENV=production node example/dist.js -- --build",
+    "start:dist": "npm run dist:compact && cross-env NODE_ENV=production node example/dist.js -- --build",
     "start": "cross-env NODE_ENV=development nodemon --watch lib/server --watch lib/plugins example/hot-reload.js -- --build",
     "start:debug": "cross-env NODE_ENV=development DEBUG=* nodemon --watch lib/server example/hot-reload.js -- --build",
     "start:no-build": "cross-env NODE_ENV=development nodemon --watch lib/server --watch lib/plugins example/hot-reload.js",
@@ -36,12 +36,19 @@
     "domotics"
   ],
   "engines": {
-    "node": ">= 8.0.0",
-    "npm": ">= 5.0.0"
+    "node": ">= 8.9.4",
+    "npm": ">= 5.6.0"
   },
   "babel": {
     "presets": [
-      "env",
+      [
+        "env",
+        {
+          "targets": {
+            "chrome": "71"
+          }
+        }
+      ],
       "react"
     ],
     "plugins": [
@@ -88,7 +95,7 @@
     "ajv": "6.2.x",
     "all-the-cities": "2.0.x",
     "annyang": "^2.6.0",
-    "asterism-plugin-library": ">= 1.12.6",
+    "asterism-plugin-library": ">= 2.0.0",
     "babel-loader": "7.1.4",
     "babel-plugin-css-modules-transform": "1.5.0",
     "babel-plugin-transform-object-rest-spread": "6.23.x",

@@ -134,9 +134,9 @@ class BrowserActionableScenarioEditForm extends React.Component {
     }
 
     Promise.all([
-      this.scenariiService.getTriggerInstance(this.props.instance.data.executionTrigger),
-      this.props.instance.data.executionCondition.length ? this.scenariiService.getConditionInstance(this.props.instance.data.executionCondition) : Promise.resolve(null),
-      this.scenariiService.getActionInstance(this.props.instance.data.action)
+      this.scenariiService.getTriggerInstance(this.props.instance.data.executionTrigger, true),
+      this.props.instance.data.executionCondition.length ? this.scenariiService.getConditionInstance(this.props.instance.data.executionCondition, true) : Promise.resolve(null),
+      this.scenariiService.getActionInstance(this.props.instance.data.action, true)
     ]).then(([trigger, condition, action]) => {
       this.props.instance.data.name = this.props.instance.getAutoName(trigger, condition, action)
       this.setState({ name: this.props.instance.data.name })
