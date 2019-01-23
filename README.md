@@ -6,10 +6,12 @@ _asterism_ is made in NodeJS, React and Materialize CSS. Palm oil free!
 
 ---
 
-[![npm version](https://badge.fury.io/js/asterism.svg?logo=npm)](https://badge.fury.io/js/asterism)
-[![npm](https://img.shields.io/npm/dt/asterism.svg?logo=npm)](https://www.npmjs.com/package/asterism)
+[![release date](https://img.shields.io/github/release-date/gxapplications/asterism.svg)](https://github.com/gxapplications/asterism/releases)
+[![npm package version](https://badge.fury.io/js/asterism.svg?logo=npm)](https://www.npmjs.com/package/asterism)
+[![npm downloads](https://img.shields.io/npm/dt/asterism.svg?logo=npm&label=npm%20downloads)](https://www.npmjs.com/package/asterism)
 [![Build Status](https://travis-ci.org/gxapplications/asterism.png?branch=master&logo=travis)](https://travis-ci.org/gxapplications/asterism)
 [![Dependencies](https://david-dm.org/gxapplications/asterism/status.svg?logo=dependabot)](https://david-dm.org/gxapplications/asterism)
+[![lib dep version](https://img.shields.io/npm/dependency-version/asterism/asterism-plugin-library.svg)](https://www.npmjs.com/package/asterism-plugin-library)
 
 _[Roadmap available here (asterism and plugins)](https://github.com/gxapplications/asterism/milestones?direction=asc&sort=due_date&state=open)_
 
@@ -26,7 +28,7 @@ _[Roadmap available here (asterism and plugins)](https://github.com/gxapplicatio
 
 [Documentation of library to include in your developments](https://gxapplications.github.io/asterism-plugin-library/asterism-plugin-library/2.0.0/index.html)
 
-![](https://img.shields.io/node/v/asterism.svg)
+![node version](https://img.shields.io/badge/node-%3E%3D%208.9.4-pink.svg)
 ![](https://img.shields.io/npm/dependency-version/asterism/react.svg)
 ![](https://img.shields.io/npm/dependency-version/asterism/express.svg)
 ![](https://img.shields.io/npm/dependency-version/asterism/materialize-css.svg)
