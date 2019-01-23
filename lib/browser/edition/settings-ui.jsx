@@ -24,13 +24,34 @@ class SettingsUserInterface extends React.Component {
   render () {
     const { localStorage, theme, animationLevel } = this.props
     const { currentColor, continuousRecognition } = this.state
+    const waves = animationLevel >= 2 ? 'light' : undefined
     const level = parseInt(localStorage.getItem('settings-animation-level') || 3)
     const mainLanguage = localStorage.getItem('settings-speech-main-language') || 'en-US'
 
     return (
       <div className='card'>
         <div className='section left-align'>
-          <h5>Elements' palette</h5>
+          <h5><Icon left>view_quilt</Icon>Components ordering</h5>
+          <p>
+            You can save your current components ordering into server, to backup and/or to let your other devices use it.
+          </p>
+          <p className='row'>
+            <Button waves={waves} onClick={this.saveOrder.bind(this)} className={cx('marged col s12 m5 l7', theme.actions.primary)}>
+              <Icon left>devices</Icon>
+              <Icon left>keyboard_arrow_right</Icon>
+              <Icon left>storage</Icon>
+              &nbsp; <span className='hide-on-med-and-down'>Save current to server</span><span className='hide-on-large-only'>Save</span>
+            </Button>
+            <Button waves={waves} onClick={this.restoreOrder.bind(this)} className={cx('marged col s12 m5 l7', theme.actions.primary)}>
+              <Icon left>storage</Icon>
+              <Icon left>keyboard_arrow_right</Icon>
+              <Icon left>devices</Icon>
+              &nbsp; <span className='hide-on-med-and-down'>Restore from server</span><span className='hide-on-large-only'>Restore</span>
+            </Button>
+          </p>
+        </div>
+        <div className='section left-align'>
+          <h5><Icon left>palette</Icon>Elements' colors</h5>
           <div className='row'>
             {theme.editableElements.map((el, idx) => (
               <Button waves={animationLevel >= 2 ? 'light' : null}
@@ -42,7 +63,7 @@ class SettingsUserInterface extends React.Component {
           </div>
         </div>
         <div className='section left-align'>
-          <h5>Animations</h5>
+          <h5><Icon left>photo_filter</Icon>Animations</h5>
           <p>
             <input name='animationLevel' type='radio' value='3' id='animationLevel3'
               onClick={this.setAnimationLevel.bind(this, 3)} defaultChecked={level === 3} />
@@ -60,7 +81,7 @@ class SettingsUserInterface extends React.Component {
           </p>
         </div>
         <div className='section left-align'>
-          <h5>Speech and speak</h5>
+          <h5><Icon left>keyboard_voice</Icon>Speech and speak</h5>
           <div className='section card form'>
             <Input s={12} name='continuousRecognition' type='switch' checked={continuousRecognition}
               onChange={this.changeContinuousRecognition.bind(this)}
@@ -91,6 +112,15 @@ class SettingsUserInterface extends React.Component {
         </div>
       </div>
     )
+  }
+
+  saveOrder () {
+    const order = this.props.itemManager.orderHandler.getLocalOrder()
+    return this.props.serverStorage.setItemForPath('order-handler', order)
+  }
+
+  restoreOrder () {
+    this.props.itemManager.applyServerOrder()
   }
 
   selectColor (field) {

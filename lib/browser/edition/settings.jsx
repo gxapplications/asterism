@@ -6,7 +6,7 @@ import PropTypes from 'prop-types'
 import React from 'react'
 import { Icon, Tab, Tabs } from 'react-materialize'
 
-import Display from './settings-display'
+import Security from './settings-security'
 import UserInterface from './settings-ui'
 
 class Settings extends React.Component {
@@ -86,8 +86,8 @@ class Settings extends React.Component {
           </div>
 
           <Tabs>
-            <Tab title='Display' active={this._activeTabIndex === 0}>
-              <Display theme={theme} itemManager={itemManager} serverStorage={serverStorage}
+            <Tab title='Security' active={this._activeTabIndex === 0}>
+              <Security theme={theme} itemManager={itemManager} serverStorage={serverStorage}
                 animationLevel={animationLevel}
                 showRefreshButton={this.showRefreshButton.bind(this)} />
             </Tab>

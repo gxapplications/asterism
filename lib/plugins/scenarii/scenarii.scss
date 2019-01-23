@@ -601,7 +601,8 @@
       line-height: 1rem;
 
       & span {
-        opacity: 0.3;
+        opacity: 0.5;
+        margin-top: 2px;
       }
     }
 
@@ -630,7 +631,7 @@
     background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQI12P4////TAAJlQOXvEOXnwAAAABJRU5ErkJggg==');
   }
   .switch label input[type=checkbox]:not(:checked)+.lever:after {
-    background-color: #888;
+    background-color: rgba(128,128,128,0.8);
   }
 
 }
@@ -688,4 +689,7 @@
   .mainTitle+.switches {
     height: 60%;
   }
+}
+body > .rg-grid-item > .rg-item-wrapper .bitmaskStateItem .switches {
+  display: none;
 }

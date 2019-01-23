@@ -166,7 +166,7 @@ class DomoticsSettings extends React.Component {
             </p>
             {energyCosts.prices.map((pricing, idx) => (
               <Input s={6} m={4} l={4} key={idx} type='number' label={idx === 0 ? 'Base pricing' : `Pricing #${idx}`}
-                onChange={this.pricingChange.bind(this, idx)} value={pricing || 0} min={0} max={100} step={0.0001} />
+                onChange={this.pricingChange.bind(this, idx)} value={pricing || '0'} min={0} max={100} step={0.0001} />
             ))}
             <hr className='col s12' />
 

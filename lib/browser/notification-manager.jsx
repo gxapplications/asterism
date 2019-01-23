@@ -8,6 +8,8 @@ const _translateCss = (css, theme) => {
   switch (css) {
     case 'error':
       return theme.feedbacks.error
+    case 'warning':
+      return theme.feedbacks.warning
     default:
       return ''
   }

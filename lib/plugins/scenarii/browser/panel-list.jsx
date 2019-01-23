@@ -8,10 +8,14 @@ import { Input, Row } from 'react-materialize'
 import uuid from 'uuid'
 
 const _sorter = (a, b) => {
-  if (a.instance.name.toLowerCase() < b.instance.name.toLowerCase()) {
-    return -1
+  try {
+    if (a.instance.name.toLowerCase() < b.instance.name.toLowerCase()) {
+      return -1
+    }
+    return (a.instance.name.toLowerCase() > b.instance.name.toLowerCase()) ? 1 : 0
+  } catch (error) {
+    return 0
   }
-  return (a.instance.name.toLowerCase() > b.instance.name.toLowerCase()) ? 1 : 0
 }
 
 const _typeSorter = (a, b) => {
