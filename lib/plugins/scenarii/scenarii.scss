@@ -630,7 +630,7 @@
     background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQI12P4////TAAJlQOXvEOXnwAAAABJRU5ErkJggg==');
   }
   .switch label input[type=checkbox]:not(:checked)+.lever:after {
-    background-color: #888;
+    background-color: rgba(128,128,128,0.8);
   }
 
 }

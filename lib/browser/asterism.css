@@ -125,6 +125,8 @@
 .asterism .rg-grid-item .rg-item-wrapper.card {
   text-align: center;
   vertical-align: middle;
+  border-radius: 3px;
+  background-color: rgba(8, 8, 8, 0.15);
 }
 
 .asterism .rg-grid-item .rg-item-wrapper {
@@ -539,8 +541,8 @@
   top: calc(50% - 50px);
     z-index: -1;
   transition:
-    all 0.15s,
-    transform 0.15s 0.2s ease-in;
+    all 0.25s,
+    transform 0.25s 0.25s ease-in;
 }
 
 #category-modal .ripple.rippleEffect {
@@ -550,13 +552,13 @@
 #category-modal-bullet {
   position: absolute;
   display: none;
-  transition-duration: 0.15s;
+  transition-duration: 0.25s;
   box-shadow: none;
   transition:
-    all 0.15s,
-    top 0.15s ease-in,
-    left 0.15s ease-out,
-    transform 0.15s linear;
+    all 0.25s,
+    top 0.25s ease-in,
+    left 0.25s ease-out,
+    transform 0.25s linear;
   z-index: 1004;
 }
 
@@ -732,6 +734,11 @@
   padding-bottom: 5.4vh;
   position: relative;
 }
+
+#item-setting-modal .modal-content .setting-panel > div {
+  margin-bottom: -5.4vh;
+}
+
 #item-setting-modal .collection .collection-item, #item-setting-modal .modal-content .card {
   background-color: rgba(255, 255, 255, 0.3);
 }
@@ -775,6 +782,7 @@
 
 #edit-panel-modal .modal-content {
   padding: 0;
+  overflow-y: hidden;
 }
 
 #edit-panel-modal .collection .collection-item {
