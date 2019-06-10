@@ -42,8 +42,10 @@ const builder = new ItemFactoryBuilder()
   .newInstanceFromInitialSetting(2, 2, BitmaskStateControlSettingPanel)
   .existingInstance(BitmaskStateControlItem, BitmaskStateControlSettingPanel)
   .acceptDimensions([
+    { w: 1, h: 1 },
     { w: 2, h: 1 },
     { w: 3, h: 1 },
+    { w: 1, h: 2 },
     { w: 2, h: 2 },
     { w: 3, h: 2 }
   ])

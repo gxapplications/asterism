@@ -54,7 +54,7 @@ class BitmaskStateControlItem extends Item {
           </Row>
         )}
 
-        <Row className='col s12 switches'>
+        <Row className='col s12 switches thin-scrollable'>
           {bitmaskState.data.colors.map((color, idx) => (
             <div key={idx} className='fluid switch vertical-switch'>
               <label>

@@ -830,3 +830,12 @@
   margin-left: 5rem;
   width: calc(100% - 5rem - 1.5rem);
 }
+
+/* Grid Items: Dragging mode (only when "body > .rg-grid-item > .rg-item-wrapper") need some adjustments */
+
+body > .rg-grid-item > .rg-item-wrapper button.waves-effect {
+  position: inherit;
+}
+body > .rg-grid-item > .rg-item-wrapper div.doubleBtn {
+  position: inherit;
+}
