@@ -84,7 +84,7 @@
     },
     "parser": "babel-eslint",
     "ignore": [
-      "/doc/"
+      "/docs/"
     ]
   },
   "pre-commit": [
