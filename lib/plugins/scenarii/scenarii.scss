@@ -690,6 +690,6 @@
     height: 60%;
   }
 }
-body > .rg-grid-item > .rg-item-wrapper .bitmaskStateItem .vertical-switch span.lever.titled {
-  position: inherit;
+body > .rg-grid-item > .rg-item-wrapper .bitmaskStateItem .switches {
+  display: none;
 }

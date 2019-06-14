@@ -834,8 +834,8 @@
 /* Grid Items: Dragging mode (only when "body > .rg-grid-item > .rg-item-wrapper") need some adjustments */
 
 body > .rg-grid-item > .rg-item-wrapper button.waves-effect {
-  position: inherit;
+  position: inherit !important;
 }
 body > .rg-grid-item > .rg-item-wrapper div.doubleBtn {
-  position: inherit;
+  position: inherit !important;
 }
