@@ -13,7 +13,7 @@ _asterism_ is made in NodeJS, React and Materialize CSS. Palm oil free!
 [![Dependencies](https://david-dm.org/gxapplications/asterism/status.svg?logo=dependabot)](https://david-dm.org/gxapplications/asterism)
 [![lib dep version](https://img.shields.io/npm/dependency-version/asterism/asterism-plugin-library.svg)](https://www.npmjs.com/package/asterism-plugin-library)
 
-_[Roadmap available here (asterism and plugins)](https://github.com/gxapplications/asterism/milestones?direction=asc&sort=due_date&state=open)_
+_[Development progression / Roadmap available here (asterism and plugins)](https://github.com/users/gxapplications/projects/1)_
 
 ---
 
