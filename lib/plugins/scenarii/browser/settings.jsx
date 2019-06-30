@@ -1,10 +1,10 @@
 'use strict'
 
-/* global $, noUiSlider, wNumb */
+/* global $, noUiSlider, wNumb, M */
 import debounce from 'debounce'
 import PropTypes from 'prop-types'
 import React from 'react'
-import { Autocomplete, Icon, Input, Row } from 'react-materialize'
+import { Autocomplete, Icon, Select, Row, TextInput } from 'react-materialize'
 
 const _weekdays = ['Sun.', 'Mon.', 'Tue.', 'Wed.', 'Thu.', 'Fri.', 'Sat.']
 
@@ -42,8 +42,9 @@ class DomoticsSettings extends React.Component {
     this.props.serverStorage.getItem('settings-domotics-location')
     .then((location) => {
       if (this._mounted) {
-        if (location.name.length) { // FIXME: to delete when react-materialize will work...
-          $('#domotics_settings .location-field input + label').addClass('active')
+        if (location.name.length) {
+          $('#domotics_settings .location-field label').addClass('active')
+          $('#domotics_settings .autocomplete').val(location.name)
         }
         this.setState({
           currentLocation: location || {}
@@ -138,35 +139,45 @@ class DomoticsSettings extends React.Component {
         this._slider[idx].set(knobs)
       }
     })
+
+    if (this.state.currentLocation.name.length) {
+      $('#domotics_settings .location-field label').addClass('active')
+      $('#domotics_settings .autocomplete').val(this.state.currentLocation.name)
+    }
   }
 
   render () {
     const { locationSearch, currentLocation, energyCosts } = this.state
 
-    const locations = locationSearch.map((loc) => ({ [loc.title]: null }))
+    const locations = locationSearch.reduce((acc, loc) => {
+      acc[loc.title] = null
+      return acc
+    }, {})
 
     return (
       <div id='domotics_settings' className='card domoticsSettings'>
         <div className='section left-align'>
           <h5>Home settings</h5>
           <p>
-            Setup home location and global domotics data to enhance a lot of useful features.
+            Setup home location and global domotics data to enhance a lot of useful features (weather, sunrise time, ...).
           </p>
           <Row className='section card form location-field'>
             <Icon s={1} className='hide-on-small-only location-icon' left>my_location</Icon>
-            <Autocomplete s={12} m={11} l={11} title='Nearest big city' minLength={2}
-              limit={10} data={Object.assign({}, ...locations)} value={currentLocation.name}
+            <br />
+            <Autocomplete s={12} m={11} l={11} title='Nearest big city'
+              value={currentLocation.name}
               onChange={this.onLocationChanged.bind(this)}
-              onAutocomplete={this.onLocationChoosed.bind(this)} />
+              options={{ minLength: 2, limit: 10, onAutocomplete: this.onLocationChoosed.bind(this), data: Object.assign({}, ...locations) }} />
           </Row>
           <Row className='section card form'>
             <p className='col s12'>
               <Icon left>flash_on</Icon>
               Energy pricing allows you to follow comsumption and real time costs.
+              <br clear='both' /><br clear='both' />
             </p>
             {energyCosts.prices.map((pricing, idx) => (
-              <Input s={6} m={4} l={4} key={idx} type='number' label={idx === 0 ? 'Base pricing' : `Pricing #${idx}`}
-                onChange={this.pricingChange.bind(this, idx)} value={pricing || '0'} min={0} max={100} step={0.0001} />
+              <TextInput s={6} m={4} l={4} key={idx} type='number' label={idx === 0 ? 'Base pricing' : `Pricing #${idx}`}
+                onChange={this.pricingChange.bind(this, idx)} value={`${pricing}` || '0'} min={0} max={100} step={0.0001} />
             ))}
             <hr className='col s12' />
 
@@ -184,20 +195,20 @@ class DomoticsSettings extends React.Component {
                 </tr>
                 <tr className='energyPlanningPrices'>
                   {_weekdays.map((weekday, idx) => (<td key={`weekdays_b${idx}`} className='top-aligned'>
-                    <Input key={`weekdays_b${idx}_select`} type='select' label={false}
-                      onChange={this.mainPricingChange.bind(this, idx)} value={energyCosts.planningBase[idx]}>
+                    <Select key={`weekdays_b${idx}_select`} label={null}
+                      onChange={this.mainPricingChange.bind(this, idx)} value={`${energyCosts.planningBase[idx]}` || '0'}>
                       {energyCosts.prices.map((price, idx2) => (
                         <option key={`weekdays_b${idx}_select_${idx2}`} value={idx2}>{idx2 === 0 ? 'Base' : `#${idx2}`}</option>
                       ))}
-                    </Input>
+                    </Select>
 
                     {energyCosts.planningOthers[idx].map((area, idx2) => (
-                      <Input key={`weekdays_b${idx}_select_${idx2}`} type='select'
-                        onChange={this.otherPricingChange.bind(this, idx, idx2)} value={area.pricing}>
+                      <Select key={`weekdays_b${idx}_select_${idx2}`}
+                        onChange={this.otherPricingChange.bind(this, idx, idx2)} value={`${area.pricing}` || '0'}>
                         {energyCosts.prices.map((price, idx3) => (
                           <option key={`weekdays_b${idx}_select_${idx2}_${idx3}`} value={idx3}>{idx3 === 0 ? 'Base' : `#${idx3}`}</option>
                         ))}
-                      </Input>
+                      </Select>
                     ))}
                   </td>))}
                 </tr>
@@ -214,12 +225,16 @@ class DomoticsSettings extends React.Component {
       // use onLocationChoosed trigger instead
       return
     }
-    this.setState({
-      currentLocation: { name: value }
-    })
+    const instance = M.Autocomplete.getInstance($(event.currentTarget))
+
     this._socket.emit('getCities', value, (answer) => {
       if (this._mounted) {
-        this.setState({ locationSearch: answer.map((loc) => ({ title: `${loc.name} (${loc.country})`, ...loc })) })
+        answer = answer.map((loc) => ({ title: `${loc.name} (${loc.country})`, ...loc }))
+        this.setState({ currentLocation: { name: value }, locationSearch: answer })
+        instance.updateData(answer.reduce((acc, loc) => {
+          acc[loc.title] = null
+          return acc
+        }, {}))
       }
     })
   }
@@ -228,11 +243,14 @@ class DomoticsSettings extends React.Component {
     const city = this.state.locationSearch.find((loc) => loc.title === value)
     const location = { name: city.name, latitude: city.lat, longitude: city.lon }
     this.setState({
-      currentLocation: location,
-      locationSearch: []
+      currentLocation: location
     })
+
+    $('#domotics_settings .autocomplete').val(location.name)
+
     this.props.serverStorage.setItem('settings-domotics-location', location)
     this._socket.emit('rescheduleAllTriggers')
+    this.props.showRefreshButton()
   }
 
   pricingChange (idx, event) {
@@ -246,32 +264,33 @@ class DomoticsSettings extends React.Component {
       }
     })
     this.energyCostsDebouncer()
+    this.props.showRefreshButton()
   }
 
   mainPricingChange (weekdayIdx, event) {
     const planningBase = [...this.state.energyCosts.planningBase]
     planningBase[weekdayIdx] = parseInt(event.currentTarget.value)
-    this.setState({
-      energyCosts: {
-        prices: this.state.energyCosts.prices,
-        planningBase,
-        planningOthers: this.state.energyCosts.planningOthers
-      }
-    })
-    this.props.serverStorage.setItem('settings-domotics-energy-costs', this.state.energyCosts)
+    const energyCosts = {
+      prices: this.state.energyCosts.prices,
+      planningBase,
+      planningOthers: this.state.energyCosts.planningOthers
+    }
+    this.setState({ energyCosts })
+    this.props.serverStorage.setItem('settings-domotics-energy-costs', energyCosts)
+    this.props.showRefreshButton()
   }
 
   otherPricingChange (weekdayIdx, areaIdx, event) {
     const planningOthers = [...this.state.energyCosts.planningOthers]
     planningOthers[weekdayIdx][areaIdx].pricing = parseInt(event.currentTarget.value)
-    this.setState({
-      energyCosts: {
-        prices: this.state.energyCosts.prices,
-        planningBase: this.state.energyCosts.planningBase,
-        planningOthers: planningOthers
-      }
-    })
-    this.props.serverStorage.setItem('settings-domotics-energy-costs', this.state.energyCosts)
+    const energyCosts = {
+      prices: this.state.energyCosts.prices,
+      planningBase: this.state.energyCosts.planningBase,
+      planningOthers: planningOthers
+    }
+    this.setState({ energyCosts })
+    this.props.serverStorage.setItem('settings-domotics-energy-costs', energyCosts)
+    this.props.showRefreshButton()
   }
 
   changeEnergyCostsPlanning (weekdayIdx, values) {
@@ -318,6 +337,7 @@ class DomoticsSettings extends React.Component {
         planningOthers: planningOthers
       }
     })
+    this.props.showRefreshButton()
   }
 }
 

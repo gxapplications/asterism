@@ -3,7 +3,7 @@
 /* global $, noUiSlider, wNumb */
 import PropTypes from 'prop-types'
 import React from 'react'
-import { Input, Row } from 'react-materialize'
+import { Select, Row } from 'react-materialize'
 
 import { Scenarii } from 'asterism-plugin-library'
 
@@ -78,12 +78,12 @@ class BrowserLevelStateChangerEditForm extends React.Component {
             typeFilter={(e) => e.id === 'level-state'} instanceFilter={(e) => e.typeId === 'level-state'} />
         </div>
 
-        <Input s={12} m={3} label='Operation' type='select' icon='swap_vert' onChange={this.operationChanged.bind(this)}
+        <Select s={12} m={3} label='Operation' icon='swap_vert' onChange={this.operationChanged.bind(this)}
           defaultValue={instance.data.operation || 'replace'}>
           <option key='replace' value='replace'>Set value</option>
           <option key='increment' value='increment'>Increment value</option>
           <option key='decrement' value='decrement'>Decrement value</option>
-        </Input>
+        </Select>
 
         <div className='col s12 m9 slider'>
           <div id={`amount-slider-${instance.instanceId}`} />

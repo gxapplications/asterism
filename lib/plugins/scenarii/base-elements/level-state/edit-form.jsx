@@ -4,7 +4,7 @@ import debounce from 'debounce'
 import Joi from 'joi'
 import PropTypes from 'prop-types'
 import React from 'react'
-import { Input, Row } from 'react-materialize'
+import { Select, TextInput, Row } from 'react-materialize'
 
 import levelStateSchema from './schema'
 
@@ -30,7 +30,7 @@ class BrowserLevelStateEditForm extends React.Component {
 
     return (
       <Row className='section card form'>
-        <Input placeholder='Give a name to quickly identify your state' s={12} label='Name'
+        <TextInput placeholder='Give a name to quickly identify your state' s={12} label='Name'
           defaultValue={defaultValue} onChange={(e) => { instance.data.name = e.currentTarget.value; this.props.highlightCloseButton() }} />
 
         <div className='col s12'>Maximum level: {instance.data.max}</div>
@@ -73,12 +73,12 @@ class BrowserLevelStateEditForm extends React.Component {
         </div>
 
         {instance.data.colors.map((color, idx) => (
-          <Input s={6} m={4} l={3} key={idx} type='select' label={`Color for state ${idx + 1}`}
+          <Select s={6} m={4} l={3} key={idx} label={`Color for state ${idx + 1}`}
             onChange={this.colorChange.bind(this, idx)} value={color} className={`${color}-text`}>
             {levelStateSchema.colors.map((color, idx2) => (
               <option key={`${idx}-${idx2}`} value={color}>{color}</option>
             ))}
-          </Input>
+          </Select>
         ))}
       </Row>
     )

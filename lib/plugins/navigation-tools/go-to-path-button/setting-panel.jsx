@@ -2,7 +2,7 @@
 
 import cx from 'classnames'
 import React from 'react'
-import { Button, Input, Row } from 'react-materialize'
+import { Button, TextInput, Row } from 'react-materialize'
 
 import { ItemSettingPanel, IconPicker, ActionColorSwitch } from 'asterism-plugin-library'
 
@@ -29,15 +29,15 @@ class GoToPathButtonSettingPanel extends ItemSettingPanel {
     return (
       <div id='goToPathSettingDiv' className='clearing padded'>
         <Row className='padded card'>
-          <Input s={12} label='Path' placeholder='/example/of/another-path' ref={(c) => { this._path = c }}
+          <TextInput s={12} label='Path' placeholder='/example/of/another-path' ref={(c) => { this._path = c }}
             value={path} onChange={this.handleEventChange.bind(this, 'path')} />
 
-          <Input s={12} label='Label' ref={(c) => { this._title = c }} className='iconPicker'
+          <TextInput s={12} label='Label' ref={(c) => { this._title = c }} className='iconPicker'
             value={title} onChange={this.handleEventChange.bind(this, 'title')}>
             <div>
               <IconPicker theme={theme} animationLevel={animationLevel} defaultIcon={icon} onChange={this.handleValueChange.bind(this, 'icon')} />
             </div>
-          </Input>
+          </TextInput>
         </Row>
 
         <ActionColorSwitch theme={theme} animationLevel={animationLevel} defaultColor={color} onChange={this.handleValueChange.bind(this, 'color')} />

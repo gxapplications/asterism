@@ -3,7 +3,7 @@
 /* global $ */
 import PropTypes from 'prop-types'
 import React from 'react'
-import { Row, Input } from 'react-materialize'
+import { Row, Checkbox, Select } from 'react-materialize'
 import uuid from 'uuid'
 
 class BrowserTimeBasedTriggerEditForm extends React.Component {
@@ -51,33 +51,33 @@ class BrowserTimeBasedTriggerEditForm extends React.Component {
       const d = (dm % 32) + 1
       const m = dm >> 5
       return <div key={`190-${j}`} className='col s12 m6 l4'>
-        <Input key={`19-${j}`} s={6} label='Day' type='select' icon='today' onChange={this.changeDayAndMonth.bind(this, j, 0)} defaultValue={d}>
+        <Select key={`19-${j}`} s={6} label='Day' icon='today' onChange={this.changeDayAndMonth.bind(this, j, 0)} defaultValue={d}>
           <option key={`19-${j}-d`} value={''}>Remove</option>
           {(new Array(31).fill(null)).map((o, i) =>
             <option key={`19-${j}-${i}`} value={i + 1}>{i + 1}</option>
           )}
-        </Input>
-        <Input key={`20-${j}`} s={6} label='Month' type='select' onChange={this.changeDayAndMonth.bind(this, j, 1)} defaultValue={m}>
+        </Select>
+        <Select key={`20-${j}`} s={6} label='Month' onChange={this.changeDayAndMonth.bind(this, j, 1)} defaultValue={m}>
           {(new Array(12).fill(null)).map((o, i) =>
             <option key={`20-${j}-${i}`} value={i + 1}>{i + 1}</option>
           )}
-        </Input>
+        </Select>
       </div>
     })
     if (list.length < 32) {
       list.push(
         <div key={192} className='col s12 m6 l4 translucent-text'>
-          <Input key={`19-${dayAndMonth.length}`} s={6} label='Day' type='select' icon='today' onChange={this.changeDayAndMonth.bind(this, dayAndMonth.length, 0)} defaultValue={''}>
+          <Select key={`19-${dayAndMonth.length}`} s={6} label='Day' icon='today' onChange={this.changeDayAndMonth.bind(this, dayAndMonth.length, 0)} defaultValue={''}>
             <option key={`19-${dayAndMonth.length}-a`} value={''}>Add</option>
             {(new Array(31).fill(null)).map((o, i) =>
               <option key={`19-${dayAndMonth.length}-${i}`} value={i + 1}>{i + 1}</option>
             )}
-          </Input>
-          <Input key={`20-${dayAndMonth.length}`} s={6} label='Month' type='select' onChange={this.changeDayAndMonth.bind(this, dayAndMonth.length, 1)} defaultValue={1}>
+          </Select>
+          <Select key={`20-${dayAndMonth.length}`} s={6} label='Month' onChange={this.changeDayAndMonth.bind(this, dayAndMonth.length, 1)} defaultValue={1}>
             {(new Array(12).fill(null)).map((o, i) =>
               <option key={`20-${dayAndMonth.length}-${i}`} value={i + 1}>{i + 1}</option>
             )}
-          </Input>
+          </Select>
         </div>
       )
     }
@@ -94,7 +94,7 @@ class BrowserTimeBasedTriggerEditForm extends React.Component {
   renderWeekdayInMonthSelectors (weekdayInMonth) {
     const list = weekdayInMonth.map(([o, d], j) =>
       <div key={`31-${uuid.v4()}`} className='col s12 l6'>
-        <Input key={`31-${j}-o`} s={6} label='Occurrence' type='select' icon='today' onChange={this.changeWeekdayInMonth.bind(this, j, 0)} defaultValue={o}>
+        <Select key={`31-${j}-o`} s={6} label='Occurrence' icon='today' onChange={this.changeWeekdayInMonth.bind(this, j, 0)} defaultValue={o}>
           <option key={`31-${j}-o-d`} value={''}>Remove</option>
           <option key={`31-${j}-o-1`} value={1}>First</option>
           <option key={`31-${j}-o-2`} value={2}>Second</option>
@@ -102,8 +102,8 @@ class BrowserTimeBasedTriggerEditForm extends React.Component {
           <option key={`31-${j}-o-4`} value={4}>Fourth</option>
           <option key={`31-${j}-o-8`} value={8}>Penultimate</option>
           <option key={`31-${j}-o-9`} value={9}>Last</option>
-        </Input>
-        <Input key={`31-${j}-d`} s={6} label='Day' type='select' onChange={this.changeWeekdayInMonth.bind(this, j, 1)} defaultValue={d}>
+        </Select>
+        <Select key={`31-${j}-d`} s={6} label='Day' onChange={this.changeWeekdayInMonth.bind(this, j, 1)} defaultValue={d}>
           <option key={`31-${j}-d-0`} value={0}>Sunday</option>
           <option key={`31-${j}-d-1`} value={1}>Monday</option>
           <option key={`31-${j}-d-2`} value={2}>Tuesday</option>
@@ -111,14 +111,14 @@ class BrowserTimeBasedTriggerEditForm extends React.Component {
           <option key={`31-${j}-d-4`} value={4}>Thursday</option>
           <option key={`31-${j}-d-5`} value={5}>Friday</option>
           <option key={`31-${j}-d-6`} value={6}>Saturday</option>
-        </Input>
+        </Select>
       </div>
     )
 
     if (list.length < 32) {
       list.push(
         <div key={`31-${weekdayInMonth.length}`} className='col s12 l6 translucent-text'>
-          <Input key={`31-${weekdayInMonth.length}-o`} s={6} label='Occurrence' type='select' icon='today'
+          <Select key={`31-${weekdayInMonth.length}-o`} s={6} label='Occurrence' icon='today'
             onChange={this.changeWeekdayInMonth.bind(this, weekdayInMonth.length, 0)} defaultValue={''}>
             <option key={`31-${weekdayInMonth.length}-o-a`} value={''}>Add</option>
             <option key={`31-${weekdayInMonth.length}-o-1`} value={1}>First</option>
@@ -127,8 +127,8 @@ class BrowserTimeBasedTriggerEditForm extends React.Component {
             <option key={`31-${weekdayInMonth.length}-o-4`} value={4}>Fourth</option>
             <option key={`31-${weekdayInMonth.length}-o-8`} value={8}>Penultimate</option>
             <option key={`31-${weekdayInMonth.length}-o-9`} value={9}>Last</option>
-          </Input>
-          <Input key={`31-${weekdayInMonth.length}-d`} s={6} label='Day' type='select'
+          </Select>
+          <Select key={`31-${weekdayInMonth.length}-d`} s={6} label='Day' type='select'
             onChange={this.changeWeekdayInMonth.bind(this, weekdayInMonth.length, 1)} defaultValue={1}>
             <option key={`31-${weekdayInMonth.length}-d-0`} value={0}>Sunday</option>
             <option key={`31-${weekdayInMonth.length}-d-1`} value={1}>Monday</option>
@@ -137,7 +137,7 @@ class BrowserTimeBasedTriggerEditForm extends React.Component {
             <option key={`31-${weekdayInMonth.length}-d-4`} value={4}>Thursday</option>
             <option key={`31-${weekdayInMonth.length}-d-5`} value={5}>Friday</option>
             <option key={`31-${weekdayInMonth.length}-d-6`} value={6}>Saturday</option>
-          </Input>
+          </Select>
         </div>
       )
     }
@@ -152,39 +152,39 @@ class BrowserTimeBasedTriggerEditForm extends React.Component {
 
     return (
       <Row className='section card form time-based-trigger-panel' id={this._formId}>
-        <Input key={0} s={12} label='Day / Date' type='select' icon='calendar_today' onChange={this.changeDayMode.bind(this)} defaultValue={dayMode}>
+        <Select key={0} s={12} label='Day / Date' icon='calendar_today' onChange={this.changeDayMode.bind(this)} defaultValue={dayMode}>
           <option key='everyday' value='everyday'>Every day</option>
           <option key='weekdays' value='weekdays'>Based on week days</option>
           <option key='dayInMonth' value='dayInMonth'>Based on days # each month</option>
           <option key='dayAndMonth' value='dayAndMonth'>Same dates each year</option>
           <option key='weekdayInMonth' value='weekdayInMonth'>Based on the nth weekday of the month</option>
-        </Input>
+        </Select>
 
         {dayMode === 'weekdays' && [
-          <Input key={10} name='weekdays' type='checkbox' value='0' label='Sunday' className='filled-in' checked={weekdays.includes(0)} onChange={this.changeWeekdays.bind(this)} />,
-          <Input key={11} name='weekdays' type='checkbox' value='1' label='Monday' className='filled-in' checked={weekdays.includes(1)} onChange={this.changeWeekdays.bind(this)} />,
-          <Input key={12} name='weekdays' type='checkbox' value='2' label='Tuesday' className='filled-in' checked={weekdays.includes(2)} onChange={this.changeWeekdays.bind(this)} />,
-          <Input key={13} name='weekdays' type='checkbox' value='3' label='Wednesday' className='filled-in' checked={weekdays.includes(3)} onChange={this.changeWeekdays.bind(this)} />,
-          <Input key={14} name='weekdays' type='checkbox' value='4' label='Thursday' className='filled-in' checked={weekdays.includes(4)} onChange={this.changeWeekdays.bind(this)} />,
-          <Input key={15} name='weekdays' type='checkbox' value='5' label='Friday' className='filled-in' checked={weekdays.includes(5)} onChange={this.changeWeekdays.bind(this)} />,
-          <Input key={16} name='weekdays' type='checkbox' value='6' label='Saturday' className='filled-in' checked={weekdays.includes(6)} onChange={this.changeWeekdays.bind(this)} />
+          <Checkbox key={10} name='weekdays' value='0' label='Sunday' className='filled-in' checked={weekdays.includes(0)} onChange={this.changeWeekdays.bind(this)} />,
+          <Checkbox key={11} name='weekdays' value='1' label='Monday' className='filled-in' checked={weekdays.includes(1)} onChange={this.changeWeekdays.bind(this)} />,
+          <Checkbox key={12} name='weekdays' value='2' label='Tuesday' className='filled-in' checked={weekdays.includes(2)} onChange={this.changeWeekdays.bind(this)} />,
+          <Checkbox key={13} name='weekdays' value='3' label='Wednesday' className='filled-in' checked={weekdays.includes(3)} onChange={this.changeWeekdays.bind(this)} />,
+          <Checkbox key={14} name='weekdays' value='4' label='Thursday' className='filled-in' checked={weekdays.includes(4)} onChange={this.changeWeekdays.bind(this)} />,
+          <Checkbox key={15} name='weekdays' value='5' label='Friday' className='filled-in' checked={weekdays.includes(5)} onChange={this.changeWeekdays.bind(this)} />,
+          <Checkbox key={16} name='weekdays' value='6' label='Saturday' className='filled-in' checked={weekdays.includes(6)} onChange={this.changeWeekdays.bind(this)} />
         ]}
 
         {dayMode === 'dayInMonth' && [
           dayInMonth.map((d, j) =>
-            <Input key={`17-${j}`} s={6} m={4} l={3} label='Day number' type='select' icon='today' onChange={this.changeDayInMonth.bind(this, j)} defaultValue={d}>
+            <Select key={`17-${j}`} s={6} m={4} l={3} label='Day number' icon='today' onChange={this.changeDayInMonth.bind(this, j)} defaultValue={d}>
               <option key={`17-${j}-d`} value={''}>Remove</option>
               {(new Array(31).fill(null)).map((o, i) =>
                 <option key={`17-${j}-${i}`} value={i + 1}>{i + 1}</option>
               )}
-            </Input>
+            </Select>
           ),
-          dayInMonth.length < 32 ? <Input key={`17-${dayInMonth.length}`} className='translucent-text' s={6} m={4} l={3} label='Day number' type='select' icon='today' onChange={this.changeDayInMonth.bind(this, dayInMonth.length)}>
+          dayInMonth.length < 32 ? <Select key={`17-${dayInMonth.length}`} className='translucent-text' s={6} m={4} l={3} label='Day number' icon='today' onChange={this.changeDayInMonth.bind(this, dayInMonth.length)}>
             <option key={`17-${dayInMonth.length}-a`} value={''}>Add</option>
             {(new Array(31).fill(null)).map((o, i) =>
               <option key={`17-${dayInMonth.length}-${i}`} value={i + 1}>{i + 1}</option>
             )}
-          </Input> : null,
+          </Select> : null,
           dayInMonth.includes(29) || dayInMonth.includes(30) || dayInMonth.includes(31)
             ? <div key={18} className='col s12'>If day number does not exist in a month then no trigger will occurs during this month.</div>
             : null
@@ -200,13 +200,13 @@ class BrowserTimeBasedTriggerEditForm extends React.Component {
         ]}
 
         <div key={6} className='col s12'>&nbsp;</div>
-        <Input key={7} s={12} label='Time / Frequency' type='select' icon='schedule' onChange={this.changeTimeMode.bind(this)}
+        <Select key={7} s={12} label='Time / Frequency' icon='schedule' onChange={this.changeTimeMode.bind(this)}
           defaultValue={timeMode}>
           <option key='hourMinute' value='hourMinute'>Specific time in the day</option>
           <option key='eachQuarter' value='eachQuarter'>Each round quarter hour (00/15/30/45)</option>
           <option key='eachHalf' value='eachHalf'>Each round half hour (00/30)</option>
           <option key='eachHour' value='eachHour'>Each round hour (HH:00)</option>
-        </Input>
+        </Select>
 
         {timeMode === 'hourMinute' && [
           hourMinute.map((hm, j) =>

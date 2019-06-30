@@ -3,7 +3,7 @@
 /* global $, noUiSlider, wNumb */
 import PropTypes from 'prop-types'
 import React from 'react'
-import { Row, Input } from 'react-materialize'
+import { Row, Select } from 'react-materialize'
 
 import { Scenarii } from 'asterism-plugin-library'
 
@@ -109,7 +109,7 @@ class BrowserBitmaskStateConditionEditForm extends React.Component {
             typeFilter={(e) => e.id === 'bitmask-state'} instanceFilter={(e) => e.typeId === 'bitmask-state'} />
         </div>
 
-        <Input key={0} s={12} label='Operator' type='select' icon='navigate_next' onChange={this.changeOperator.bind(this)} defaultValue={operator}>
+        <Select key={0} s={12} label='Operator' icon='navigate_next' onChange={this.changeOperator.bind(this)} defaultValue={operator}>
           <option key='position-set' value='position-set'>Position is set (at 1)</option>
           <option key='position-unset' value='position-unset'>Position is unset (at 0)</option>
           <option key='position-only-set' value='position-only-set'>Position is set (at 1), others are unset</option>
@@ -119,7 +119,7 @@ class BrowserBitmaskStateConditionEditForm extends React.Component {
           <option key='only-one-set' value='only-one-set'>Only one position is set, others are unset</option>
           <option key='only-one-unset' value='only-one-unset'>Only one position is unset, others are set</option>
           <option key='have-both' value='have-both'>There is set positions AND unset positions</option>
-        </Input>
+        </Select>
 
         {operator.match(/^position-/) && (
           <div className='col s12 m9 slider'>

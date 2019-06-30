@@ -2,7 +2,7 @@
 
 import cx from 'classnames'
 import React from 'react'
-import { Button, Input, Row } from 'react-materialize'
+import { Button, TextInput, Row } from 'react-materialize'
 
 import { Scenarii, IconPicker, ItemSettingPanel } from 'asterism-plugin-library'
 
@@ -57,20 +57,20 @@ class BitmaskStateControlSettingPanel extends ItemSettingPanel {
             services={() => this.props.context.services}
             typeFilter={(e) => e.id === 'bitmask-state'} instanceFilter={(e) => e.typeId === 'bitmask-state'} />
 
-          <Input s={12} label='Label' ref={(c) => { this._title = c }}
+          <TextInput s={12} label='Label' ref={(c) => { this._title = c }}
             value={title} onChange={this.handleEventChange.bind(this, 'title')} />
         </Row>
 
         {stateInstance && stateInstance.data.colors.map((color, idx) => (
           <Row key={idx} className='padded card'>
-            <Input s={12} label='Label' ref={(c) => { this[`_title_${idx}`] = c }} className='iconPicker'
+            <TextInput s={12} label='Label' ref={(c) => { this[`_title_${idx}`] = c }} className='iconPicker'
               value={titles[idx] || ''} onChange={this.handleTitleChange.bind(this, idx)}>
               <div>
                 <IconPicker theme={{ ...theme, actions: { ...theme.actions, inconspicuous: `${color} lighten-1 black-text` } }}
                   animationLevel={animationLevel} defaultIcon={icons[idx] || ''}
                   onChange={this.handleIconChange.bind(this, idx)} />
               </div>
-            </Input>
+            </TextInput>
           </Row>
         ))}
 

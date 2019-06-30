@@ -1,12 +1,12 @@
 'use strict'
 
-/* global $ */
+/* global $, M */
 import cx from 'classnames'
 import PropTypes from 'prop-types'
 import React from 'react'
 import { Button, Icon } from 'react-materialize'
 
-import { thenSleep } from '../tools'
+import { sleep, thenSleep } from '../tools'
 
 const categories = [
   {
@@ -66,68 +66,50 @@ class AddCategoryButtons extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      clazz: '',
       modal: null
     }
   }
 
-  componentWillEnter (callback) {
-    this.setState({
-      clazz: 'scale-transition scale-out'
-    })
-    return callback()
-  }
-
-  componentDidEnter () {
-    window.setTimeout(() => {
-      this.setState({
-        clazz: 'scale-transition scale-in'
-      })
-    }, 50)
-  }
-
-  componentWillLeave (callback) {
-    this.setState({
-      clazz: 'scale-transition scale-out'
-    })
-    return window.setTimeout(callback, 200)
-  }
-
   componentDidUpdate () {
     const { animationLevel } = this.props
-    if (this.state.modal) {
-      const bullet = $('#category-modal-bullet')
 
+    $('.fixed-action-btn').floatingActionButton({ direction: 'top', hoverEnabled: false })
+
+    if (this.state.modal) {
       $('#category-modal').modal({
         dismissible: true,
-        opacity: 0.5,
-        inDuration: animationLevel >= 2 ? 300 : 0,
+        opacity: 0.3,
+        inDuration: animationLevel >= 2 ? 400 : 0,
         outDuration: animationLevel >= 2 ? 300 : 0,
-        startingTop: bullet.css('top'),
+        startingTop: '95%',
         endingTop: '10%',
-        // ready: function(modal, trigger) { },
-        complete: () => {
+        onCloseEnd: () => {
           this.setState({
             modal: null
           })
+        },
+        onOpenStart: () => {
+          if (this.props.animationLevel >= 3) {
+            const screenHeight = $(window).height()
+            const headerTop = (screenHeight * 0.1) + 30
+            const bullet = $('#category-modal-bullet')
+            bullet.show({ queue: true }).css({ top: headerTop, left: '50%', transform: 'scale(2)' }).hide({ queue: true, duration: 100 })
+          }
+        },
+        onOpenEnd: () => {
+          if (this.props.animationLevel >= 3) {
+            const ripple = $('#category-modal .ripple')
+            ripple.addClass('rippleEffect')
+          }
+
+          try {
+            const fab = $('.fixed-action-btn.active')
+            M.FloatingActionButton.getInstance(fab).close()
+          } catch (error) {}
         }
       })
 
-      if (this.props.animationLevel >= 3) {
-        const screenHeight = $(window).height()
-        const headerTop = (screenHeight * 0.1) + 24
-        const bullet = $('#category-modal-bullet')
-        const ripple = $('#category-modal .ripple')
-
-        bullet.show({ queue: true }).css({ top: headerTop, left: '50%', transform: 'scale(1.8)' }).hide({ queue: true, duration: 0 })
-        $('#category-modal').modal('open')
-
-        $('.fixed-action-btn.vertical.active').closeFAB()
-        ripple.addClass('rippleEffect')
-      } else {
-        $('#category-modal').modal('open')
-        $('.fixed-action-btn.vertical.active').closeFAB()
-      }
+      $('#category-modal').modal('open')
     }
   }
 
@@ -165,11 +147,9 @@ class AddCategoryButtons extends React.Component {
   additionalItemShrinkAnimation (rectBounds) {
     const rect = $('#additional-item-rect')
     const bullet = $('div', rect)
-    return new Promise((resolve) => {
-      rect.css({ top: rectBounds.top, left: rectBounds.left, height: rectBounds.height, width: rectBounds.width, display: 'block' })
-      resolve()
-    })
-    .then(thenSleep(10))
+
+    rect.css({ top: rectBounds.top, left: rectBounds.left, height: rectBounds.height, width: rectBounds.width, display: 'block' })
+    return sleep(10)
     .then(() => {
       bullet.addClass('shrink')
       const editColor = this.props.theme.palette[this.props.theme.backgrounds.editing] || 'white'
@@ -184,7 +164,7 @@ class AddCategoryButtons extends React.Component {
 
   render () {
     const { theme, animationLevel, itemFactories } = this.props
-    const { modal, clazz } = this.state
+    const { modal } = this.state
     const waves = animationLevel >= 2 ? 'light' : undefined
     const modalCategory = modal ? categories.find((i) => i.id === modal) : null
 
@@ -222,7 +202,7 @@ class AddCategoryButtons extends React.Component {
               </div>
             </div>
             <div className={cx('modal-footer', theme.backgrounds.body)}>
-              <a href='javascript:void(0)' className={cx('modal-action modal-close btn-flat', animationLevel >= 2 ? 'waves-effect waves-light' : null)}>Close</a>
+              <a href='javascript:void(0)' className={cx('btn modal-action modal-close btn-flat', animationLevel >= 2 ? 'waves-effect waves-light' : null)}>Close</a>
             </div>
           </div>
         ) : null}
@@ -231,7 +211,7 @@ class AddCategoryButtons extends React.Component {
           <div id='category-modal-bullet' className={cx('btn-floating', (modalCategory && modalCategory.className) || theme.backgrounds.card)} />
         ) : null}
 
-        <Button large floating fab='vertical' icon='add_box' waves={waves} className={cx(theme.actions.edition, clazz)}>
+        <Button large floating fab={{ direction: 'top', hoverEnabled: false }} icon='add_box' waves={waves} className={cx(theme.actions.edition)}>
           {Array.from(categories).reverse().map((value, idx) => (
             value.condition ? (
               <Button key={idx}
@@ -246,7 +226,7 @@ class AddCategoryButtons extends React.Component {
         {animationLevel >= 3 ? (
           <div id='additional-item-rect'>
             <div>
-              <Icon>timer</Icon>
+              <Icon>more_horiz</Icon>
             </div>
           </div>
         ) : null}

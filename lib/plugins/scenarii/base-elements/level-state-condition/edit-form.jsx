@@ -3,7 +3,7 @@
 /* global $, noUiSlider, wNumb */
 import PropTypes from 'prop-types'
 import React from 'react'
-import { Row, Input } from 'react-materialize'
+import { Row, Select } from 'react-materialize'
 
 import { Scenarii } from 'asterism-plugin-library'
 
@@ -113,12 +113,12 @@ class BrowserLevelStateConditionEditForm extends React.Component {
             typeFilter={(e) => e.id === 'level-state'} instanceFilter={(e) => e.typeId === 'level-state'} />
         </div>
 
-        <Input key={0} s={12} label='Operator' type='select' icon='navigate_next' onChange={this.changeOperator.bind(this)} defaultValue={operator}>
+        <Select key={0} s={12} label='Operator' icon='navigate_next' onChange={this.changeOperator.bind(this)} defaultValue={operator}>
           <option key='eq' value='eq'>Equal</option>
           <option key='lte' value='lte'>Less or equal</option>
           <option key='between' value='between'>Between (including limits)</option>
           <option key='gte' value='gte'>Greater or equal</option>
-        </Input>
+        </Select>
 
         {operator !== 'between' && (
           <div className='col s12 m9 slider'>

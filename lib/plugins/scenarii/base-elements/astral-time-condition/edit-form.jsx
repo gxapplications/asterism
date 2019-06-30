@@ -5,7 +5,7 @@ import moment from 'moment'
 import PropTypes from 'prop-types'
 import React from 'react'
 import SunCalc from 'suncalc'
-import { Row, Input } from 'react-materialize'
+import { Row, Select } from 'react-materialize'
 
 class BrowserAstralTimeConditionEditForm extends React.Component {
   constructor (props) {
@@ -77,7 +77,7 @@ class BrowserAstralTimeConditionEditForm extends React.Component {
 
     return (
       <Row className='section card form astral-time-condition-panel'>
-        <Input s={12} label='Sunlight condition' type='select' icon='brightness_4' onChange={this.changeEvent.bind(this)}
+        <Select s={12} label='Sunlight condition' icon='brightness_4' onChange={this.changeEvent.bind(this)}
           defaultValue={event}>
           <option key='daylight' value='daylight'>Full daylight period</option>
           <option key='fewlight' value='fewlight'>Few or full daylight period (larger)</option>
@@ -85,7 +85,7 @@ class BrowserAstralTimeConditionEditForm extends React.Component {
           <option key='sunset' value='sunset'>Around sunset event</option>
           <option key='solarNoon' value='solarNoon'>Around solar noon</option>
           <option key='nadir' value='nadir'>Around darkest night moment</option>
-        </Input>
+        </Select>
 
         {event !== 'daylight' && event !== 'fewlight' && [
           <div className='col s12'>&nbsp;</div>,

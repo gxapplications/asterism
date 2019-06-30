@@ -3,7 +3,7 @@
 /* global $ */
 import PropTypes from 'prop-types'
 import React from 'react'
-import { Input, Row } from 'react-materialize'
+import { TextInput, Row } from 'react-materialize'
 import uuid from 'uuid'
 import { Scenarii } from 'asterism-plugin-library'
 
@@ -28,14 +28,17 @@ class BrowserActionableScenarioEditForm extends React.Component {
     if (!this.props.instance.data.executionTrigger.length) {
       this.scenariiService.getTriggerInstances()
       .then((instances) => {
-        this.props.instance.data.executionTrigger = instances[0].instanceId
+        if (instances[0]) {
+          this.props.instance.data.executionTrigger = instances[0].instanceId
+        }
 
         if (!this.props.instance.data.action.length) {
           this.scenariiService.getActionInstances()
           .then((instances2) => {
-            this.props.instance.data.action = instances2[0].instanceId
-
-            this.betterName()
+            if (instances2[0]) {
+              this.props.instance.data.action = instances2[0].instanceId
+              this.betterName()
+            }
           })
         } else {
           this.betterName()
@@ -54,7 +57,7 @@ class BrowserActionableScenarioEditForm extends React.Component {
     return (
       <div>
         <Row className='section card form hide-in-procedure'>
-          <Input placeholder='Give a name to quickly identify your scenario' s={12} label='Name' ref={(c) => { this._nameInput = c }}
+          <TextInput placeholder='Give a name to quickly identify your scenario' s={12} label='Name' ref={(c) => { this._nameInput = c }}
             id={`actionable-scenario-name-input-${this._nameInputId}`}
             defaultValue={name} onChange={(e) => { instance.data.name = e.currentTarget.value }} />
         </Row>

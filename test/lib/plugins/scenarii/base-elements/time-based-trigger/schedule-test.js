@@ -303,7 +303,6 @@ describe('Plugin scenarii - time based trigger scheduling,', function () {
   })
 
   it('Can schedule for closest Nth weekday of the month, based on weekdayInMonth dayMode', function () {
-    // TODO !0: test intégré dans le cas weekdayInMonth avec une date courante, et des tests pour éviter la date dans le passé.
     const now = moment('2018-03-13T13:10:05.123+01:00') // This is a Tuesday (index #2)
     const duration = _getWaitDuration({
       dayMode: 'weekdayInMonth',

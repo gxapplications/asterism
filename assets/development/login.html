@@ -141,7 +141,7 @@
             </div>
         </div>
 
-        <form id="form" method="post" action="/login" enctype="application/x-www-form-urlencoded">
+        <form id="form" method="post" enctype="application/x-www-form-urlencoded">
             <input type="hidden" value="" id="password" name="password" />
             <!--input type="submit" value="Test a failure" name="login" /-->
             <div id="pattern-outer"><div id="pattern-inner" /></div>
@@ -170,7 +170,7 @@
                     matrix: [3, 3],
                     onDraw: function(pattern) {
                         pattern = pattern + '$' + new Date();
-                        pattern = forge.util.bytesToHex(encoder.encrypt(pattern));
+                        pattern = forge.util.bytesToHex(encoder.encrypt(forge.util.encodeUtf8(pattern)));
 
                         $('#pattern-inner').removeClass('active');
                         setTimeout(function() {

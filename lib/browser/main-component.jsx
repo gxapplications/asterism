@@ -27,11 +27,24 @@ import 'asterism-plugin-library/styles.css'
 
 const localStorage = new DefaultLocalStorage('asterism')
 
+const hasCookie = (name) => {
+  var value = '; ' + window.document.cookie
+  var parts = value.split('; ' + name + '=')
+  return (parts.length === 2)
+}
+
+const deleteCookie = (name) => {
+  window.document.cookie = name + '=; Max-Age=-99999999;'
+}
+
 class MainComponent extends React.Component {
   constructor (props) {
     super(props)
 
     this.logger = console // logger(this)
+
+    this.readOnly = hasCookie('readOnly-access-token')
+    this.securityOn = hasCookie('readOnly-access-token') || hasCookie('admin-access-token')
 
     this.notificationManager = new NotificationManager(this, this.logger)
     this.socketManager = new SocketManager(this.notificationManager, this.logger)
@@ -46,18 +59,22 @@ class MainComponent extends React.Component {
       this.openEditPanel(this.state.editPanels.filter(ep => ep.libName === panelLibName)[idx].Panel)
     }
     mainState.openSettings = (tabId) => {
-      setTimeout(() => {
-        $('#settings-modal').modal('open')
-        try {
-          const id = $(`#${tabId}`).parent().attr('id')
-          setTimeout(() => {
-            $('#settings-modal ul.tabs').tabs('select_tab', id)
-          }, 400)
-        } catch (error) {
-          console.error(error)
-        }
-      }, this.state.editMode ? 100 : 1200)
-      this.setState({ editMode: true })
+      if (this.readOnly) {
+        this.openPermissionsModal()
+      } else {
+        setTimeout(() => {
+          $('#settings-modal').modal('open')
+          try {
+            const id = $(`#${tabId}`).parent().attr('id')
+            setTimeout(() => {
+              $('#settings-modal ul.tabs').tabs('select_tab', id)
+            }, 400)
+          } catch (error) {
+            console.error(error)
+          }
+        }, this.state.editMode ? 100 : 1200)
+        this.setState({ editMode: true })
+      }
     }
 
     this.services = (process.env.ASTERISM_SERVICES || []).reduce((map, toRequire) => {
@@ -81,7 +98,7 @@ class MainComponent extends React.Component {
     }, {})
 
     this.state = {
-      editMode: window.document.location.hash === '#edit',
+      editMode: (window.document.location.hash === '#edit' && !this.readOnly),
       animationLevel: parseInt(props.localStorage.getItem('settings-animation-level') || 3), // 1..3
       itemFactories: (process.env.ASTERISM_ITEM_FACTORIES || []).map((toRequire) => {
         const Clazz = plugins.itemFactories[toRequire.module].default
@@ -139,9 +156,18 @@ class MainComponent extends React.Component {
     // FIXME: to delete when react-materialize will work... jquery.initialize.min.js must also be deleted!
     $.initialize('.input-field input', function () {
       if ($(this).val().length) {
-        $(this).next('label').addClass('active')
+        $(this).parent().next('label').addClass('active')
       }
     })
+
+    // If readOnly scope
+    if (this.readOnly) {
+      $('#permissionsModal').modal({
+        dismissible: true,
+        inDuration: this.state.animationLevel >= 2 ? 300 : 0,
+        outDuration: this.state.animationLevel >= 2 ? 300 : 0
+      })
+    }
 
     sleep(200)
     .then(() => Promise.all(this.itemManager.getAllItems()))
@@ -167,13 +193,13 @@ class MainComponent extends React.Component {
           bulletIcon.css({ color: 'transparent' })
           return { rect, bullet, header, bulletIcon }
         })
-        .then(thenSleep(200))
+        .then(thenSleep(350))
         .then(({ rect, bullet, header, bulletIcon }) => {
           bullet.removeClass('shrink')
           $(header).addClass(this.props.theme.backgrounds.editing)
           return { rect, bullet, bulletIcon }
         })
-        .then(thenSleep(500))
+        .then(thenSleep(700))
         .then(({ rect, bullet, bulletIcon }) => {
           rect.css({ top: -100, left: -100, height: 10, width: 10, display: 'none' })
           bullet.css({ 'background-color': '#fff' })
@@ -222,12 +248,20 @@ class MainComponent extends React.Component {
         opacity: 0.5,
         inDuration: this.state.animationLevel >= 2 ? 300 : 0,
         outDuration: this.state.animationLevel >= 2 ? 300 : 0,
-        ready: () => {
-          if (this.state.EditPanel && this.state.EditPanel.onReady) {
-            this.state.EditPanel.onReady()
+        onOpenStart: () => {
+          $('#edit-panel-modal > nav > div.nav-wrapper').addClass(this.props.theme.backgrounds.editing)
+          $('#edit-panel-modal .sidenav-trigger').remove()
+          $('#edit-panel-modal > nav > div.nav-wrapper > ul').removeClass('hide-on-med-and-down')
+          if (this.state.EditPanel && this.state.EditPanel.onOpenStart) {
+            this.state.EditPanel.onOpenStart(this.props.theme)
           }
         },
-        complete: () => {
+        onOpenEnd: () => {
+          if (this.state.EditPanel && this.state.EditPanel.onOpenEnd) {
+            this.state.EditPanel.onOpenEnd(this.props.theme)
+          }
+        },
+        onCloseEnd: () => {
           this.setState({ EditPanel: null })
         }
       })
@@ -245,16 +279,13 @@ class MainComponent extends React.Component {
 
     return (
       <div className={cx('asterism', theme.backgrounds.body)}>
-        <Navbar fixed brand='⁂' href={null} right
-          options={{ closeOnClick: true }}
+        <Navbar fixed brand={<a>⁂</a>} alignLinks='right'
+          options={{ preventScrolling: true, edge: 'left', closeOnClick: true, draggable: true }}
           className={cx(editMode ? theme.backgrounds.editing : theme.backgrounds.card, animationLevel >= 2 ? 'animated' : null)}
         >
           {editMode ? null : notifications}
           {editMode ? null : (
             <SpeechStatus animationLevel={animationLevel} />
-          )}
-          {editMode ? null : (
-            <NavItem divider />
           )}
 
           {editMode ? editPanels.map(({ label, icon, Panel }, idx) => (
@@ -272,11 +303,16 @@ class MainComponent extends React.Component {
               <span className='hide-on-large-only'>Settings</span>
             </NavItem>
           ) : null}
-          <NavItem onClick={this.toggleEditMode.bind(this)} href='javascript:void(0)'
+          {this.readOnly ? null : (<NavItem onClick={this.toggleEditMode.bind(this)} href='javascript:void(0)'
             className={cx(animationLevel >= 2 ? 'waves-effect waves-light' : '')}>
             <Icon>{editMode ? 'check_circle' : 'edit'}</Icon>
             <span className='hide-on-large-only'>{editMode ? 'End edition' : 'Edit mode'}</span>
-          </NavItem>
+          </NavItem>)}
+          {this.securityOn ? (<NavItem onClick={this.logout.bind(this)} href='javascript:void(0)'
+            className={cx(animationLevel >= 2 ? 'waves-effect waves-light' : '')}>
+            <Icon>lock_open</Icon>
+            <span className='hide-on-large-only'>Logout</span>
+          </NavItem>) : null}
         </Navbar>
 
         { /* <pre className='logger'>
@@ -315,26 +351,38 @@ class MainComponent extends React.Component {
         ) : null}
 
         {editMode && EditPanel ? (
-          <div id='edit-panel-modal' className={cx('modal modal-fixed-footer', theme.backgrounds.body)}>
-            <div className='modal-content'>
-              {EditPanel.hideHeader ? null : (
-                <div className={cx('coloring-header', theme.backgrounds.editing)}>
-                  <h4><i className={cx('material-icons', EditPanel.icon)}>{EditPanel.icon}</i> {EditPanel.label}</h4>
-                </div>
-              )}
+          <div id='edit-panel-modal' className={cx('modal thin-scrollable', theme.backgrounds.body)}>
+            <Navbar alignLinks='right' className={EditPanel.extendHeader ? theme.backgrounds.body : theme.backgrounds.editing} extendWith={EditPanel.extendHeader ? (
               <EditPanel serverStorage={serverStorage} theme={theme} animationLevel={animationLevel}
                 localStorage={localStorage} services={() => this.services}
                 privateSocket={editPanelContext.privateSocket} publicSockets={editPanelContext.publicSockets}
                 ref={(c) => { this._editPanelInstance = c }} highlightCloseButton={this.highlightCloseButton.bind(this)} />
-            </div>
-            <div className={cx('modal-footer', theme.backgrounds.body)}>
-              <a href='javascript:void(0)' onClick={this.closeEditPanel.bind(this)} className={cx('modal-action btn', {
-                'btn-flat': !editPanelButtonHighlight,
-                [theme.actions.edition]: editPanelButtonHighlight,
-                'waves-effect waves-green': (animationLevel >= 3) && !editPanelButtonHighlight,
-                'waves-effect waves-light': (animationLevel >= 3) && editPanelButtonHighlight
-              })}><Icon left>check</Icon> Ok</a>
-            </div>
+            ) : null} brand={
+              <span>
+                <i className={cx('material-icons small', EditPanel.icon)}>{EditPanel.icon}</i>
+                <span className='hide-on-small-only'>{EditPanel.label}</span>
+              </span>
+            }>
+              <NavItem href='javascript:void(0)' id='edit-panel-close-button'
+                className={cx({
+                  'btn': editPanelButtonHighlight,
+                  [theme.actions.edition]: editPanelButtonHighlight,
+                  'waves-effect waves-green': (animationLevel >= 3) && !editPanelButtonHighlight,
+                  'waves-effect waves-light': (animationLevel >= 3) && editPanelButtonHighlight
+                })}
+                onClick={this.closeEditPanel.bind(this)}
+              >
+                {editPanelButtonHighlight ? (<span><Icon left>check</Icon> Ok</span>) : 'Close'}
+              </NavItem>
+            </Navbar>
+            {EditPanel.extendHeader ? null : (
+              <div className='modal-content thin-scrollable'>
+                <EditPanel serverStorage={serverStorage} theme={theme} animationLevel={animationLevel}
+                  localStorage={localStorage} services={() => this.services}
+                  privateSocket={editPanelContext.privateSocket} publicSockets={editPanelContext.publicSockets}
+                  ref={(c) => { this._editPanelInstance = c }} highlightCloseButton={this.highlightCloseButton.bind(this)} />
+              </div>
+            )}
           </div>
         ) : null}
 
@@ -345,10 +393,29 @@ class MainComponent extends React.Component {
               <p>{messageModal.message}</p>
             </div>
             <div className='modal-footer'>
-              <a href='#!' className={cx(
-                'modal-action modal-close btn-flat',
+              <a href='javascript:void(0)' className={cx(
+                'btn modal-action modal-close btn-flat',
                 { 'waves-effect waves-green': animationLevel >= 3 }
               )}><Icon>check</Icon></a>
+            </div>
+          </div>
+        ) : null}
+
+        {this.readOnly ? (
+          <div id='permissionsModal' className='modal'>
+            <div className='modal-content'>
+              <h4><Icon left>verified_user</Icon> Admin required</h4>
+              <p>You need admin privileges to access this feature.</p>
+            </div>
+            <div className='modal-footer'>
+              <a href='javascript:void(0)' className={cx(
+                  'btn modal-action modal-close btn-flat',
+                  { 'waves-effect waves-light': animationLevel >= 3 }
+              )}>Cancel</a>&nbsp;
+              <a href='javascript:void(0)' onClick={this.logout.bind(this)} className={cx(
+                  'btn modal-action modal-close btn-flat',
+                  { 'waves-effect waves-green': animationLevel >= 3 }
+              )}><Icon left>lock_open</Icon> Login as admin</a>
             </div>
           </div>
         ) : null}
@@ -382,17 +449,37 @@ class MainComponent extends React.Component {
   }
 
   toggleEditMode () {
-    $('#nav-mobile.side-nav').sideNav('hide')
-    this.setState({ editMode: !this.state.editMode })
+    if (!this.readOnly) {
+      $('#mobile-nav.sidenav').sidenav('close')
+      this.setState({editMode: !this.state.editMode})
+    }
   }
 
   openSettingsModal () {
-    $('#nav-mobile.side-nav').sideNav('hide')
-    $('#settings-modal').modal('open')
+    if (this.readOnly) {
+      this.openPermissionsModal()
+    } else {
+      $('#mobile-nav.sidenav').sidenav('close')
+      $('#settings-modal').modal('open')
+    }
   }
 
   openEditPanel (Panel) {
-    this.setState({ editMode: true, EditPanel: Panel })
+    if (this.readOnly) {
+      this.openPermissionsModal()
+    } else {
+      this.setState({ editMode: true, EditPanel: Panel })
+    }
+  }
+
+  openPermissionsModal () {
+    $('#permissionsModal').modal('open')
+  }
+
+  logout () {
+    deleteCookie('readOnly-access-token')
+    deleteCookie('admin-access-token')
+    window.location.replace(`/login?then=${encodeURIComponent(window.location.pathname)}`)
   }
 
   closeEditPanel () {

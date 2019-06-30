@@ -6,7 +6,7 @@ import objectPath from 'object-path'
 import PropTypes from 'prop-types'
 import React from 'react'
 import { CirclePicker } from 'react-color'
-import { Button, Icon, Input } from 'react-materialize'
+import { Button, Icon, RadioGroup, Select, Switch } from 'react-materialize'
 
 class SettingsUserInterface extends React.Component {
   constructor (props) {
@@ -15,18 +15,18 @@ class SettingsUserInterface extends React.Component {
       colorField: 'backgrounds.card',
       currentColor: props.theme.backgrounds.card,
       theme: { backgrounds: props.theme.backgrounds, actions: props.theme.actions, feedbacks: props.theme.feedbacks },
-      continuousRecognition: props.localStorage.getItem('settings-speech-continuous-recognition') || false
+      continuousRecognition: props.localStorage.getItem('settings-speech-continuous-recognition') || false,
+      animation: props.localStorage.getItem('settings-animation-level') || 3,
+      mainLanguage: props.localStorage.getItem('settings-speech-main-language') || 'en-US'
     }
 
     this.colors = props.theme.palette
   }
 
   render () {
-    const { localStorage, theme, animationLevel } = this.props
-    const { currentColor, continuousRecognition } = this.state
+    const { theme, animationLevel } = this.props
+    const { currentColor, continuousRecognition, animation, mainLanguage } = this.state
     const waves = animationLevel >= 2 ? 'light' : undefined
-    const level = parseInt(localStorage.getItem('settings-animation-level') || 3)
-    const mainLanguage = localStorage.getItem('settings-speech-main-language') || 'en-US'
 
     return (
       <div className='card'>
@@ -64,36 +64,34 @@ class SettingsUserInterface extends React.Component {
         </div>
         <div className='section left-align'>
           <h5><Icon left>photo_filter</Icon>Animations</h5>
-          <p>
-            <input name='animationLevel' type='radio' value='3' id='animationLevel3'
-              onClick={this.setAnimationLevel.bind(this, 3)} defaultChecked={level === 3} />
-            <label htmlFor='animationLevel3' className='truncate'>High animation level, my device is strong enough!</label>
-          </p>
-          <p>
-            <input name='animationLevel' type='radio' value='2' id='animationLevel2'
-              onClick={this.setAnimationLevel.bind(this, 2)} defaultChecked={level === 2} />
-            <label htmlFor='animationLevel2' className='truncate'>Medium animation level, need to be fluent.</label>
-          </p>
-          <p>
-            <input className='with-gap' name='animationLevel' type='radio' value='1' id='animationLevel1'
-              onClick={this.setAnimationLevel.bind(this, 1)} defaultChecked={level === 1} />
-            <label htmlFor='animationLevel1' className='truncate'>Low animation level, my device is a dinosaur...</label>
-          </p>
+          <RadioGroup
+            name='animationLevel'
+            label='Animations level' withGap
+            onChange={this.setAnimationLevel.bind(this)}
+            value={`${animation}`}
+            radioClassNames='radio-group-column'
+            options={[
+              { label: 'High animation level, my device is strong enough!', value: '3' },
+              { label: 'Medium animation level, need to be fluent.', value: '2' },
+              { label: 'Low animation level, my device is a dinosaur...', value: '1' }
+            ]}
+          />
         </div>
         <div className='section left-align'>
           <h5><Icon left>keyboard_voice</Icon>Speech and speak</h5>
           <div className='section card form'>
-            <Input s={12} name='continuousRecognition' type='switch' checked={continuousRecognition}
+            <Switch s={12} name='continuousRecognition' checked={continuousRecognition}
               onChange={this.changeContinuousRecognition.bind(this)}
               onLabel='Continuous recognition with keyword' offLabel='When mic button pressed' />
             <br />
-            <Input s={12} type='select' label={continuousRecognition ? 'Main language for speech keywords detection' : 'Speech language'}
+            <br />
+            <Select s={12} label={continuousRecognition ? 'Main language for speech keywords detection' : 'Speech language'}
               icon='language' onChange={this.changeMainLanguage.bind(this)}
-              defaultValue={mainLanguage}>
+              value={mainLanguage}>
               <option value='en-US'>English</option>
               <option value='fr-FR'>French</option>
               <option value='zh-CN'>Chinese</option>
-            </Input>
+            </Select>
             <br />
             {continuousRecognition ? (
               <span>
@@ -127,7 +125,7 @@ class SettingsUserInterface extends React.Component {
     this.setState({ ...this.state, colorField: field, currentColor: objectPath.get(this.state.theme, field) })
   }
 
-  setColor (color, event) {
+  setColor (color) {
     const theme = { ...this.state.theme }
 
     for (var colorName in this.colors) {
@@ -144,26 +142,29 @@ class SettingsUserInterface extends React.Component {
     $('#settings-modal .card .card-reveal .card-title').click()
   }
 
-  setAnimationLevel (level) {
-    this.props.localStorage.setItem('settings-animation-level', level)
+  setAnimationLevel (event) {
+    this.props.localStorage.setItem('settings-animation-level', event.currentTarget.value)
+    this.setState({ animation: event.currentTarget.value })
     this.props.showRefreshButton()
   }
 
-  changeContinuousRecognition (event, active) {
-    active = (active === true) // true => true; "on" => false ...
+  changeContinuousRecognition (event) {
+    const active = (event.currentTarget.checked === true)
     this.props.localStorage.setItem('settings-speech-continuous-recognition', active)
     this.setState({ continuousRecognition: active })
     this.props.showRefreshButton()
   }
 
-  changeMainLanguage (event, value) {
-    this.props.localStorage.setItem('settings-speech-main-language', value)
+  changeMainLanguage (event) {
+    this.props.localStorage.setItem('settings-speech-main-language', event.currentTarget.value)
     this.props.showRefreshButton()
   }
 }
 
 SettingsUserInterface.propTypes = {
   theme: PropTypes.object.isRequired,
+  itemManager: PropTypes.object.isRequired,
+  serverStorage: PropTypes.object.isRequired,
   localStorage: PropTypes.object.isRequired,
   showRefreshButton: PropTypes.func.isRequired,
   animationLevel: PropTypes.number.isRequired
