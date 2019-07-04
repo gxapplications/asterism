@@ -164,6 +164,8 @@ class SettingsUserInterface extends React.Component {
 
 SettingsUserInterface.propTypes = {
   theme: PropTypes.object.isRequired,
+  itemManager: PropTypes.object.isRequired,
+  serverStorage: PropTypes.object.isRequired,
   localStorage: PropTypes.object.isRequired,
   showRefreshButton: PropTypes.func.isRequired,
   animationLevel: PropTypes.number.isRequired

@@ -95,7 +95,7 @@
     "ajv": "6.2.x",
     "all-the-cities": "2.0.x",
     "annyang": "^2.6.0",
-    "asterism-plugin-library": ">= 2.0.2",
+    "asterism-plugin-library": ">= 2.0.3",
     "babel-loader": "7.1.4",
     "babel-plugin-css-modules-transform": "1.5.0",
     "babel-plugin-transform-object-rest-spread": "6.23.x",

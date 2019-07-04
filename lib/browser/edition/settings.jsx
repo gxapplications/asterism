@@ -34,7 +34,7 @@ class Settings extends React.Component {
       opacity: 0.5,
       inDuration: this.props.animationLevel >= 2 ? 300 : 0,
       outDuration: this.props.animationLevel >= 2 ? 300 : 0,
-      endingTop: '10%',
+      endingTop: '5%',
       ready: () => {
         $('#settings-modal .modal-content > div.row > div.col > ul.tabs').tabs({ onShow: (p) => {
           $(`#settings-modal .modal-content > div.row > div.col > ul.tabs > li.tab > a[href^='#']`).each((idx, el) => {
@@ -87,12 +87,13 @@ class Settings extends React.Component {
 
           <Tabs>
             <Tab title='Security' active={this._activeTabIndex === 0}>
-              <Security theme={theme} itemManager={itemManager} serverStorage={serverStorage}
+              <Security theme={theme} serverStorage={serverStorage}
                 animationLevel={animationLevel}
                 showRefreshButton={this.showRefreshButton.bind(this)} />
             </Tab>
             <Tab title='User interface' active={this._activeTabIndex === 1}>
               <UserInterface localStorage={localStorage} theme={theme} animationLevel={animationLevel}
+                itemManager={itemManager} serverStorage={serverStorage}
                 showRefreshButton={this.showRefreshButton.bind(this)} />
             </Tab>
             {this.pluginSettingsPanels.map(({ Panel, privateSocket, publicSockets, serverStorage }, idx) => (
