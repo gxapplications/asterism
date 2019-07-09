@@ -185,7 +185,7 @@ class DomoticsSettings extends React.Component {
                 <tr className='energyPlanningPrices'>
                   {_weekdays.map((weekday, idx) => (<td key={`weekdays_b${idx}`} className='top-aligned'>
                     <Input key={`weekdays_b${idx}_select`} type='select' label={false}
-                      onChange={this.mainPricingChange.bind(this, idx)} value={energyCosts.planningBase[idx]}>
+                      onChange={this.mainPricingChange.bind(this, idx)} value={energyCosts.planningBase[idx] || '0'}>
                       {energyCosts.prices.map((price, idx2) => (
                         <option key={`weekdays_b${idx}_select_${idx2}`} value={idx2}>{idx2 === 0 ? 'Base' : `#${idx2}`}</option>
                       ))}

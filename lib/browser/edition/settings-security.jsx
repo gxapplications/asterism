@@ -12,10 +12,20 @@ class SettingsSecurity extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      adminPatternExists: false, // TODO !0: init time
-      readOnlyPatternExists: false, // TODO !0: init time
+      adminPatternExists: false,
+      readOnlyPatternExists: false,
       currentPatternKey: null
     }
+  }
+
+  componentDidMount () {
+    return Promise.all([
+      this.props.serverStorage.getItem('security-admin').catch(() => false),
+      this.props.serverStorage.getItem('security-readOnly').catch(() => false)
+    ])
+    .then(([adminPattern, readOnlyPattern]) => {
+      this.setState({ adminPatternExists: !!adminPattern, readOnlyPatternExists: !!readOnlyPattern })
+    })
   }
 
   render () {
@@ -94,7 +104,8 @@ class SettingsSecurity extends React.Component {
   }
 
   removePattern (key) {
-    this.props.serverStorage.removeItem(`security-pattern-${key}`)
+    this.props.serverStorage.removeItem(`security-${key}`)
+    .catch(() => {}) // If does not exists, do nothing mre
     .then(() => {
       this.setState({
         [`${key}PatternExists`]: false,
@@ -106,13 +117,13 @@ class SettingsSecurity extends React.Component {
   patternDraw (pattern) {
     const patternKey = this.state.currentPatternKey
 
-    this.props.serverStorage.setItem(`security-pattern-${patternKey}`, pattern)
+    this.props.serverStorage.setItem(`security-${patternKey}`, { pattern })
     .then(() => {
       this.setState({
         [`${patternKey}PatternExists`]: true,
         currentPatternKey: null
       })
-      $('.pattern-close-card').click() // TODO !0: to test, should close it
+      $('.pattern-close-card').click()
     })
   }
 }
