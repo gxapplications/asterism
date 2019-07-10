@@ -624,7 +624,7 @@
 #settings-modal .card:not(.form) {
   background: none !important;
   margin: 0 !important;
-  height: calc(100% - 2px);
+  height: calc(100% - 12px);
   border: none;
   box-shadow: none;
 }
