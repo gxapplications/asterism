@@ -37,7 +37,7 @@ class Resizer extends React.Component {
     }
 
     return (
-      <Modal id={`resizer-${itemId.substr(-36)}`} header='Size' modalOptions={{
+      <Modal id={`resizer-${itemId.substr(-36)}`} header='Size' options={{
         inDuration: animationLevel >= 2 ? 300 : 0,
         outDuration: animationLevel >= 2 ? 300 : 0
       }}>

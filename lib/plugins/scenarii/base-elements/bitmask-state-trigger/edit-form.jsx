@@ -3,7 +3,7 @@
 /* global $, noUiSlider, wNumb */
 import PropTypes from 'prop-types'
 import React from 'react'
-import { Row, Input } from 'react-materialize'
+import { Row, Select } from 'react-materialize'
 
 import { Scenarii } from 'asterism-plugin-library'
 
@@ -109,14 +109,14 @@ class BrowserBitmaskStateTriggerEditForm extends React.Component {
             typeFilter={(e) => e.id === 'bitmask-state'} instanceFilter={(e) => e.typeId === 'bitmask-state'} />
         </div>
 
-        <Input key={0} s={12} label='Operator' type='select' icon='navigate_next' onChange={this.changeOperator.bind(this)} defaultValue={operator || 'position-move'}>
+        <Select key={0} s={12} label='Operator' icon='navigate_next' onChange={this.changeOperator.bind(this)} defaultValue={operator || 'position-move'}>
           <option key='position-move' value='position-move'>Specific position changed</option>
           <option key='position-set' value='position-set'>Specific position set (changed to 1)</option>
           <option key='position-unset' value='position-unset'>Specific position unset (changed to 0)</option>
           <option key='any-move' value='any-move'>Any position changed</option>
           <option key='any-set' value='any-set'>Any position set (changed to 1)</option>
           <option key='any-unset' value='any-unset'>Any position unset (changed to 0)</option>
-        </Input>
+        </Select>
 
         {operator.match(/^position-/) && (
           <div className='col s12 m9 slider'>

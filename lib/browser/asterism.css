@@ -31,6 +31,8 @@
   padding-right: 0.4em;
   -webkit-transform: inherit;
   transform: inherit;
+  user-select: none;
+  cursor: default;
 }
 
 @keyframes asterism-missing-air {
@@ -78,6 +80,10 @@
   line-height: 48px;
 }
 
+.asterism .modal {
+  border-radius: 0; /* To avoid a glitch */
+}
+
 .asterism .modal .coloring-header, .asterism .modal .coloring-header-tabs > div.row > div.col:first-of-type {
   padding: 23px;
   overflow: hidden;
@@ -92,6 +98,15 @@
 
 .asterism .modal .coloring-header h4 {
   margin-bottom: 0;
+}
+
+.asterism .modal .coloring-header > div + div > h4 {
+  color: transparent;
+  transition: color 0.15s 0.15s linear;
+}
+
+.asterism .modal .coloring-header > .rippleEffect + div > h4 {
+  color: inherit;
 }
 
 .asterism .modal .coloring-header h4 i {
@@ -410,6 +425,10 @@
   font-size: 0.9em;
 }
 
+.resizer table tr {
+  border-bottom: 0;
+}
+
 .resizer table tr > td {
   padding: 0.3rem;
   width: 44px;
@@ -545,24 +564,23 @@
   top: calc(50% - 50px);
     z-index: -1;
   transition:
-    all 0.25s,
-    transform 0.25s 0.25s ease-in;
+    transform 0.25s ease-in;
 }
 
 #category-modal .ripple.rippleEffect {
-    transform: scale(12);
+    transform: scale(11);
 }
 
 #category-modal-bullet {
   position: absolute;
   display: none;
-  transition-duration: 0.25s;
+  transition-duration: 0.35s;
   box-shadow: none;
   transition:
-    all 0.25s,
-    top 0.25s ease-in,
-    left 0.25s ease-out,
-    transform 0.25s linear;
+    all 0.35s,
+    top 0.35s ease-in,
+    left 0.35s ease-out,
+    transform 0.35s linear;
   z-index: 1004;
 }
 
@@ -587,38 +605,42 @@
   width: 80%;
 }
 
-#settings-modal .modal-content {
-  padding: 0;
-  height: 90vh;
+#settings-modal span.brand-logo {
+  padding-left: 0.5em;
 }
-
-#settings-modal .modal-content > .row > .col.s12 > .tabs {
-  background-color: rgba(0, 0, 0, 0.3);
-  display: flex;
+#settings-modal > nav {
+  background-color: transparent;
 }
-
-#settings-modal .modal-content > .row > .col.s12 > .tabs .tab a {
+#settings-modal > nav > .nav-wrapper {
+  min-height: 65px;
+}
+#settings-modal > nav > .nav-content > ul.tabs {
+  box-shadow: 0 3px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 3px 4px 0 rgba(0,0,0,0.2);
+  overflow-x: overlay;
+}
+#settings-modal > nav > .nav-content > ul.tabs a {
   color: white;
 }
-
-#settings-modal .modal-content > .row > .col.s12 > .tabs .indicator {
+#settings-modal > nav > .nav-content > ul.tabs a:focus {
+  background-color: inherit;
+}
+#settings-modal > nav > .nav-content > ul.tabs .indicator {
   background-color: white;
 }
-
-#settings-modal .modal-content > .row {
-  height: calc(90vh - 137px) !important;
-  width: 100%;
+#settings-modal > nav > .nav-content > div.row {
+  margin-bottom: 0;
 }
-
-#settings-modal .modal-content > .row > .col.s12 {
+#settings-modal > nav > .nav-content > div.row > div {
   padding: 0 !important;
-  height: 100%;
-  position: relative;
+  height: 80vh;
   overflow: auto;
+  width: 100%;
+  position: relative;
 }
-
-#settings-modal .modal-content > .row > .col.s12:first-child {
-  height: 3.6rem;
+#settings-modal > nav i, #settings-modal > nav [class^="mdi-"], #settings-modal > nav [class*="mdi-"], #settings-modal > nav i.material-icons {
+  font-size: inherit;
+  height: inherit;
+  line-height: inherit;
 }
 
 #settings-modal .card:not(.form) {
@@ -629,11 +651,11 @@
   box-shadow: none;
 }
 
-#settings-modal .modal-content .card.form {
+#settings-modal > nav > .nav-content > div.row > div .card.form {
   background-color: rgba(255, 255, 255, 0.3) !important;
 }
 
-#settings-modal .card .card-reveal {
+#settings-modal > nav > .nav-content > div.row > div .card .card-reveal {
   padding: 0.5rem 1.2rem 0;
 }
 
@@ -703,9 +725,9 @@
   opacity: 0;
   transform: scale(18);
   transition:
-    all 0.3s,
-    opacity 0.3s ease-out,
-    transform 0.3s ease-out;
+    all 0.35s,
+    opacity 0.35s ease-out,
+    transform 0.35s ease-out;
 }
 
 #additional-item-rect > div.shrink {
@@ -727,9 +749,6 @@
 
 #item-setting-modal .modal-content {
   padding: 0;
-}
-#item-setting-modal .modal-content .coloring-header {
-  height: 15vh;
 }
 
 #item-setting-modal .modal-content .setting-panel {
@@ -833,6 +852,22 @@
 .input-field .prefix + .iconPicker + label {
   margin-left: 5rem;
   width: calc(100% - 5rem - 1.5rem);
+}
+
+/* Input text label and underline cannot be grey */
+.input-field > input[type=text]:not(:focus) {
+  border-bottom: 1px solid rgba(255,255,255,0.4);
+}
+.input-field > input[type=text]:not(:focus) + label {
+  color: rgba(255,255,255,0.4);
+}
+.input-field > input[type=text]:focus {
+  border-bottom: 1px solid #fff !important;
+  -webkit-box-shadow: 0 1px 0 0 #fff !important;
+  box-shadow: 0 1px 0 0 #fff !important;
+}
+.input-field > input[type=text]:focus + label {
+  color: #fff !important;
 }
 
 /* Grid Items: Dragging mode (only when "body > .rg-grid-item > .rg-item-wrapper") need some adjustments */

@@ -2,7 +2,7 @@
 
 import cx from 'classnames'
 import React from 'react'
-import { Button, Input, Row } from 'react-materialize'
+import { Button, TextInput, Row } from 'react-materialize'
 
 import { ItemSettingPanel, IconPicker, ActionColorSwitch, Scenarii } from 'asterism-plugin-library'
 
@@ -36,13 +36,13 @@ class ActionButtonSettingPanel extends ItemSettingPanel {
             ref={(c) => { this._action = c }} theme={theme} animationLevel={animationLevel}
             services={() => this.props.context.services} />
 
-          <Input s={12} label='Label' ref={(c) => { this._title = c }} className='iconPicker'
+          <TextInput s={12} label='Label' ref={(c) => { this._title = c }} className='iconPicker'
             value={title} onChange={this.handleEventChange.bind(this, 'title')}>
             <div>
               <IconPicker theme={theme} animationLevel={animationLevel} defaultIcon={icon}
                 onChange={this.handleValueChange.bind(this, 'icon')} />
             </div>
-          </Input>
+          </TextInput>
         </Row>
 
         <ActionColorSwitch theme={theme} animationLevel={animationLevel} defaultColor={color}

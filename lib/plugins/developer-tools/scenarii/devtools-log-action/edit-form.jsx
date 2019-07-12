@@ -3,7 +3,7 @@
 import Joi from 'joi'
 import PropTypes from 'prop-types'
 import React from 'react'
-import { Input, Row } from 'react-materialize'
+import { TextInput, Row } from 'react-materialize'
 
 import devtoolsLogActionSchema from './schema'
 
@@ -15,7 +15,7 @@ class DevtoolsLogActionEditForm extends React.Component {
 
     return (
       <Row className='section card form'>
-        <Input placeholder='Will log this message in a logger you can add to your dashboard' s={12} label='Name / Message'
+        <TextInput placeholder='Will log this message in a logger you can add to your dashboard' s={12} label='Name / Message'
           defaultValue={defaultValue} onChange={(e) => { instance.data.name = e.currentTarget.value; this.props.highlightCloseButton() }} />
       </Row>
     )

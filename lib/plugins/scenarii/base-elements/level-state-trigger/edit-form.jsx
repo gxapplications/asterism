@@ -3,7 +3,7 @@
 /* global $, noUiSlider, wNumb */
 import PropTypes from 'prop-types'
 import React from 'react'
-import { Row, Input } from 'react-materialize'
+import { Row, Select } from 'react-materialize'
 
 import { Scenarii } from 'asterism-plugin-library'
 
@@ -77,13 +77,13 @@ class BrowserLevelStateTriggerEditForm extends React.Component {
             typeFilter={(e) => e.id === 'level-state'} instanceFilter={(e) => e.typeId === 'level-state'} />
         </div>
 
-        <Input s={12} m={3} label='Way' type='select' icon='swap_vert' onChange={this.wayChanged.bind(this)}
+        <Select s={12} m={3} label='Way' icon='swap_vert' onChange={this.wayChanged.bind(this)}
           defaultValue={way || 'reach'}>
           <option key='reach' value='reach'>Level reached</option>
           <option key='upward' value='upward'>Level reached upward</option>
           <option key='downward' value='downward'>Level reached downward</option>
           <option key='left' value='left'>Level left</option>
-        </Input>
+        </Select>
 
         <div className='col s12 m9 slider'>
           <div id={`level-slider-${instance.instanceId}`} />

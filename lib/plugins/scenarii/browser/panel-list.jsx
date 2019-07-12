@@ -4,7 +4,7 @@
 import cx from 'classnames'
 import PropTypes from 'prop-types'
 import React from 'react'
-import { Input, Row } from 'react-materialize'
+import { TextInput, Row } from 'react-materialize'
 import uuid from 'uuid'
 
 const _sorter = (a, b) => {
@@ -249,7 +249,7 @@ class PanelList extends React.Component {
     }
     return [
       <Row key={0} className='card form search'>
-        <Input s={12} m={10} l={8} type='text' icon='search' label='Search by name' onChange={this.searchChanged.bind(this)} defaultValue={search} />
+        <TextInput s={12} m={10} l={8} icon='search' label='Search by name' onChange={this.searchChanged.bind(this)} defaultValue={search} />
       </Row>,
       <Row key={1} className={cx('collection', { 'with-header': instances.length === 0 })}>
         {instances.length === 0 ? this.props.children : null}

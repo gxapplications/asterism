@@ -4,7 +4,7 @@
 import moment from 'moment'
 import PropTypes from 'prop-types'
 import React from 'react'
-import { Input, Row } from 'react-materialize'
+import { Select, Row } from 'react-materialize'
 import SunCalc from 'suncalc'
 import uuid from 'uuid'
 
@@ -124,13 +124,13 @@ class BrowserAstralTimeTriggerEditForm extends React.Component {
 
     return (
       <Row className='section card form astral-time-trigger-panel' id={this._formId}>
-        <Input s={12} label='Event to monitor' type='select' icon='brightness_4' onChange={this.changeEvent.bind(this)}
+        <Select s={12} label='Event to monitor' icon='brightness_4' onChange={this.changeEvent.bind(this)}
           defaultValue={event}>
           <option key='sunrise' value='sunrise'>At sunrise</option>
           <option key='sunset' value='sunset'>At sunset</option>
           <option key='solarNoon' value='solarNoon'>At solar noon</option>
           <option key='night' value='night'>At night (stars are visible)</option>
-        </Input>
+        </Select>
 
         <div className='col s12'>&nbsp;</div>
         <div className='col s12'>

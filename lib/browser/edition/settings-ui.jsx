@@ -6,7 +6,7 @@ import objectPath from 'object-path'
 import PropTypes from 'prop-types'
 import React from 'react'
 import { CirclePicker } from 'react-color'
-import { Button, Icon, Input } from 'react-materialize'
+import { Button, Icon, Select, Switch } from 'react-materialize'
 
 class SettingsUserInterface extends React.Component {
   constructor (props) {
@@ -83,17 +83,17 @@ class SettingsUserInterface extends React.Component {
         <div className='section left-align'>
           <h5><Icon left>keyboard_voice</Icon>Speech and speak</h5>
           <div className='section card form'>
-            <Input s={12} name='continuousRecognition' type='switch' checked={continuousRecognition}
+            <Switch s={12} name='continuousRecognition' checked={continuousRecognition}
               onChange={this.changeContinuousRecognition.bind(this)}
               onLabel='Continuous recognition with keyword' offLabel='When mic button pressed' />
             <br />
-            <Input s={12} type='select' label={continuousRecognition ? 'Main language for speech keywords detection' : 'Speech language'}
+            <Select s={12} label={continuousRecognition ? 'Main language for speech keywords detection' : 'Speech language'}
               icon='language' onChange={this.changeMainLanguage.bind(this)}
               defaultValue={mainLanguage}>
               <option value='en-US'>English</option>
               <option value='fr-FR'>French</option>
               <option value='zh-CN'>Chinese</option>
-            </Input>
+            </Select>
             <br />
             {continuousRecognition ? (
               <span>

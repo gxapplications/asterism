@@ -81,7 +81,7 @@ class SocketLoggerItem extends Item {
             timestamp = timestamp.toLocaleString()
             return (
               <Modal key={idx} header={timestamp}
-                modalOptions={{
+                options={{
                   inDuration: animationLevel >= 2 ? 300 : 0,
                   outDuration: animationLevel >= 2 ? 300 : 0
                 }}

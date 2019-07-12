@@ -3,7 +3,7 @@
 /* global $, noUiSlider, wNumb */
 import PropTypes from 'prop-types'
 import React from 'react'
-import { Input, Row } from 'react-materialize'
+import { Select, Row } from 'react-materialize'
 import uuid from 'uuid'
 
 class BrowserWaitEditForm extends React.Component {
@@ -84,23 +84,23 @@ class BrowserWaitEditForm extends React.Component {
     const timePickerId = uuid.v4()
     return (
       <Row className='section card form waitPanel'>
-        <Input key={0} s={12} label='Mode' type='select' icon={waitMode === 'amount' ? 'timer' : (waitMode === 'until' ? 'timelapse' : 'av_timer')} onChange={this.changeWaitMode.bind(this)}
+        <Select key={0} s={12} label='Mode' icon={waitMode === 'amount' ? 'timer' : (waitMode === 'until' ? 'timelapse' : 'av_timer')} onChange={this.changeWaitMode.bind(this)}
           defaultValue={waitMode}>
           <option key='amount' value='amount'>Wait a lapse of time</option>
           <option key='until' value='until'>Wait until a specific moment</option>
           <option key='hours' value='untilQuarter'>Wait until next round quarter hour</option>
-        </Input>
+        </Select>
         <div className='col s12'>&nbsp;</div>
         <hr className='col s12' />
         <div className='col s12'>&nbsp;</div>
 
         {waitMode === 'amount' && [
-          <Input key={1} s={12} m={12} l={2} label='Unit' type='select' icon='timer' onChange={this.changeAmountUnit.bind(this)}
+          <Select key={1} s={12} m={12} l={2} label='Unit' icon='timer' onChange={this.changeAmountUnit.bind(this)}
             defaultValue={amountUnit}>
             <option key='seconds' value='seconds'>seconds</option>
             <option key='minutes' value='minutes'>minutes</option>
             <option key='hours' value='hours'>hours</option>
-          </Input>,
+          </Select>,
           <div key={2} className='col s12 m12 l10 slider'>
             <div id={`amount-slider-${instance.instanceId}`} />
           </div>
@@ -111,15 +111,15 @@ class BrowserWaitEditForm extends React.Component {
             <input id={timePickerId} type='text' className='timepicker' defaultValue={until} onChange={this.changeUntil.bind(this)} />
             <label htmlFor={timePickerId}>Time</label>
           </div>,
-          <Input key={4} s={12} m={7} l={8} label='Occurrence' type='select' icon='timelapse' onChange={this.changeUntilOccurrence.bind(this)}
+          <Select key={4} s={12} m={7} l={8} label='Occurrence' icon='timelapse' onChange={this.changeUntilOccurrence.bind(this)}
             defaultValue={untilOccurrence}>
             <option key='first' value='first'>at first occurrence of this moment</option>
             <option key='tomorrow' value='tomorrow'>tomorrow</option>
-          </Input>
+          </Select>
         ]}
 
         {waitMode === 'untilQuarter' && (
-          <Input key={5} s={12} label='Until next occurrence of' type='select' icon='av_timer' onChange={this.changeUntilQuarter.bind(this)}
+          <Select key={5} s={12} label='Until next occurrence of' icon='av_timer' onChange={this.changeUntilQuarter.bind(this)}
             defaultValue={untilQuarter}>
             <option key='all' value='00/15/30/45'>any round quarter hour (00/15/30/45)</option>
             <option key='halfs' value='00/30'>any round half hour (00/30)</option>
@@ -127,7 +127,7 @@ class BrowserWaitEditForm extends React.Component {
             <option key='HH:15' value='15'>HH:15</option>
             <option key='HH:30' value='30'>HH:30</option>
             <option key='HH:45' value='45'>HH:45</option>
-          </Input>
+          </Select>
         )}
       </Row>
     )

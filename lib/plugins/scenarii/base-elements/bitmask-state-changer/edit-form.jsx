@@ -3,7 +3,7 @@
 /* global $, noUiSlider, wNumb */
 import PropTypes from 'prop-types'
 import React from 'react'
-import { Input, Row } from 'react-materialize'
+import { Select, Row } from 'react-materialize'
 
 import { Scenarii } from 'asterism-plugin-library'
 
@@ -103,14 +103,14 @@ class BrowserBitmaskStateChangerEditForm extends React.Component {
             typeFilter={(e) => e.id === 'bitmask-state'} instanceFilter={(e) => e.typeId === 'bitmask-state'} />
         </div>
 
-        <Input s={12} m={3} label='Operation' type='select' icon='swap_vert' onChange={this.operationChanged.bind(this)}
+        <Select s={12} m={3} label='Operation' icon='swap_vert' onChange={this.operationChanged.bind(this)}
           defaultValue={instance.data.operation || 'set-position'}>
           <option key='set-position' value='set-position'>Set position (to 1)</option>
           <option key='unset-position' value='unset-position'>Unset position (to 0)</option>
           <option key='invert-position' value='invert-position'>Invert position state</option>
           <option key='set-all' value='set-all'>Set all positions (to 1)</option>
           <option key='unset-all' value='unset-all'>Unset all positions (to 0)</option>
-        </Input>
+        </Select>
 
         {instance.data.operation.includes('-position') && (
           <div className='col s12 m9 slider'>

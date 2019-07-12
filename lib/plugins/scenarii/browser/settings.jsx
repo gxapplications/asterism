@@ -4,7 +4,7 @@
 import debounce from 'debounce'
 import PropTypes from 'prop-types'
 import React from 'react'
-import { Autocomplete, Icon, Input, Row } from 'react-materialize'
+import { Autocomplete, Icon, Select, Row, TextInput } from 'react-materialize'
 
 const _weekdays = ['Sun.', 'Mon.', 'Tue.', 'Wed.', 'Thu.', 'Fri.', 'Sat.']
 
@@ -154,10 +154,10 @@ class DomoticsSettings extends React.Component {
           </p>
           <Row className='section card form location-field'>
             <Icon s={1} className='hide-on-small-only location-icon' left>my_location</Icon>
-            <Autocomplete s={12} m={11} l={11} title='Nearest big city' minLength={2}
-              limit={10} data={Object.assign({}, ...locations)} value={currentLocation.name}
+            <Autocomplete s={12} m={11} l={11} title='Nearest big city'
+              value={currentLocation.name}
               onChange={this.onLocationChanged.bind(this)}
-              onAutocomplete={this.onLocationChoosed.bind(this)} />
+              options={{ minLength: 2, limit: 10, onAutocomplete: this.onLocationChoosed.bind(this), data: Object.assign({}, ...locations) }} />
           </Row>
           <Row className='section card form'>
             <p className='col s12'>
@@ -165,7 +165,7 @@ class DomoticsSettings extends React.Component {
               Energy pricing allows you to follow comsumption and real time costs.
             </p>
             {energyCosts.prices.map((pricing, idx) => (
-              <Input s={6} m={4} l={4} key={idx} type='number' label={idx === 0 ? 'Base pricing' : `Pricing #${idx}`}
+              <TextInput s={6} m={4} l={4} key={idx} type='number' label={idx === 0 ? 'Base pricing' : `Pricing #${idx}`}
                 onChange={this.pricingChange.bind(this, idx)} value={pricing || '0'} min={0} max={100} step={0.0001} />
             ))}
             <hr className='col s12' />
@@ -184,20 +184,20 @@ class DomoticsSettings extends React.Component {
                 </tr>
                 <tr className='energyPlanningPrices'>
                   {_weekdays.map((weekday, idx) => (<td key={`weekdays_b${idx}`} className='top-aligned'>
-                    <Input key={`weekdays_b${idx}_select`} type='select' label={false}
+                    <Select key={`weekdays_b${idx}_select`} label={null}
                       onChange={this.mainPricingChange.bind(this, idx)} value={energyCosts.planningBase[idx] || '0'}>
                       {energyCosts.prices.map((price, idx2) => (
                         <option key={`weekdays_b${idx}_select_${idx2}`} value={idx2}>{idx2 === 0 ? 'Base' : `#${idx2}`}</option>
                       ))}
-                    </Input>
+                    </Select>
 
                     {energyCosts.planningOthers[idx].map((area, idx2) => (
-                      <Input key={`weekdays_b${idx}_select_${idx2}`} type='select'
+                      <Select key={`weekdays_b${idx}_select_${idx2}`}
                         onChange={this.otherPricingChange.bind(this, idx, idx2)} value={area.pricing}>
                         {energyCosts.prices.map((price, idx3) => (
                           <option key={`weekdays_b${idx}_select_${idx2}_${idx3}`} value={idx3}>{idx3 === 0 ? 'Base' : `#${idx3}`}</option>
                         ))}
-                      </Input>
+                      </Select>
                     ))}
                   </td>))}
                 </tr>

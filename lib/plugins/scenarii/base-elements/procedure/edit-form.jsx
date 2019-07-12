@@ -5,7 +5,7 @@ import cx from 'classnames'
 import Joi from 'joi'
 import PropTypes from 'prop-types'
 import React from 'react'
-import { Icon, Input, Row } from 'react-materialize'
+import { Icon, TextInput, Row } from 'react-materialize'
 import sortable from 'html5sortable/dist/html5sortable.es.js'
 import uuid from 'uuid'
 import { Scenarii } from 'asterism-plugin-library'
@@ -56,7 +56,7 @@ class BrowserProcedureEditForm extends React.Component {
     return (
       <div>
         <Row className='section card form hide-in-procedure'>
-          <Input placeholder='Give a name to quickly identify your action' s={12} label='Name'
+          <TextInput placeholder='Give a name to quickly identify your action' s={12} label='Name'
             defaultValue={defaultValue} onChange={(e) => { instance.data.name = e.currentTarget.value; this.props.highlightCloseButton() }} />
         </Row>
 

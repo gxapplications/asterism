@@ -2,7 +2,7 @@
 
 import cx from 'classnames'
 import React from 'react'
-import { Button, Input, Row } from 'react-materialize'
+import { Button, TextInput, Row } from 'react-materialize'
 
 import { ItemSettingPanel } from 'asterism-plugin-library'
 import RefreshButtonItem from './item'
@@ -25,7 +25,7 @@ class RefreshButtonSettingPanel extends ItemSettingPanel {
     return (
       <div className='clearing padded'>
         <Row className='padded card'>
-          <Input placeholder='Refresh' s={12} label='Label' ref={(c) => { this._title = c }}
+          <TextInput placeholder='Refresh' s={12} label='Label' ref={(c) => { this._title = c }}
             value={title} onChange={this.handleEventChange.bind(this, 'title')} />
         </Row>
         <Button waves={waves} className={cx('right btn-bottom-sticky', theme.actions.primary)} onClick={this.save.bind(this)}>

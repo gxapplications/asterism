@@ -193,13 +193,13 @@ class MainComponent extends React.Component {
           bulletIcon.css({ color: 'transparent' })
           return { rect, bullet, header, bulletIcon }
         })
-        .then(thenSleep(200))
+        .then(thenSleep(350))
         .then(({ rect, bullet, header, bulletIcon }) => {
           bullet.removeClass('shrink')
           $(header).addClass(this.props.theme.backgrounds.editing)
           return { rect, bullet, bulletIcon }
         })
-        .then(thenSleep(500))
+        .then(thenSleep(700))
         .then(({ rect, bullet, bulletIcon }) => {
           rect.css({ top: -100, left: -100, height: 10, width: 10, display: 'none' })
           bullet.css({ 'background-color': '#fff' })
@@ -271,16 +271,13 @@ class MainComponent extends React.Component {
 
     return (
       <div className={cx('asterism', theme.backgrounds.body)}>
-        <Navbar fixed brand='⁂' href={null} right
-          options={{ closeOnClick: true }}
+        <Navbar fixed brand={<a>⁂</a>} alignLinks='right'
+          options={{ preventScrolling: true, edge: 'left', closeOnClick: true, draggable: true }}
           className={cx(editMode ? theme.backgrounds.editing : theme.backgrounds.card, animationLevel >= 2 ? 'animated' : null)}
         >
           {editMode ? null : notifications}
           {editMode ? null : (
             <SpeechStatus animationLevel={animationLevel} />
-          )}
-          {editMode ? null : (
-            <NavItem divider />
           )}
 
           {editMode ? editPanels.map(({ label, icon, Panel }, idx) => (
@@ -433,7 +430,7 @@ class MainComponent extends React.Component {
 
   toggleEditMode () {
     if (!this.readOnly) {
-      $('#nav-mobile.side-nav').sideNav('hide')
+      $('#mobile-nav.sidenav').sidenav('close')
       this.setState({editMode: !this.state.editMode})
     }
   }
@@ -442,7 +439,7 @@ class MainComponent extends React.Component {
     if (this.readOnly) {
       this.openPermissionsModal()
     } else {
-      $('#nav-mobile.side-nav').sideNav('hide')
+      $('#mobile-nav.sidenav').sidenav('close')
       $('#settings-modal').modal('open')
     }
   }

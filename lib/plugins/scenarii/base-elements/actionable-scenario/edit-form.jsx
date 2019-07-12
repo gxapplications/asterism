@@ -3,7 +3,7 @@
 /* global $ */
 import PropTypes from 'prop-types'
 import React from 'react'
-import { Input, Row } from 'react-materialize'
+import { TextInput, Row } from 'react-materialize'
 import uuid from 'uuid'
 import { Scenarii } from 'asterism-plugin-library'
 
@@ -54,7 +54,7 @@ class BrowserActionableScenarioEditForm extends React.Component {
     return (
       <div>
         <Row className='section card form hide-in-procedure'>
-          <Input placeholder='Give a name to quickly identify your scenario' s={12} label='Name' ref={(c) => { this._nameInput = c }}
+          <TextInput placeholder='Give a name to quickly identify your scenario' s={12} label='Name' ref={(c) => { this._nameInput = c }}
             id={`actionable-scenario-name-input-${this._nameInputId}`}
             defaultValue={name} onChange={(e) => { instance.data.name = e.currentTarget.value }} />
         </Row>

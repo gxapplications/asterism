@@ -2,7 +2,7 @@
 
 import PropTypes from 'prop-types'
 import React from 'react'
-import { Input, Row } from 'react-materialize'
+import { Select, Row } from 'react-materialize'
 
 import { Scenarii } from 'asterism-plugin-library'
 
@@ -33,12 +33,12 @@ class BrowserScenarioActivatorEditForm extends React.Component {
             theme={theme} animationLevel={animationLevel} services={services} noCreationPanel typeFilter={() => false} />
         </div>
 
-        <Input s={12} m={3} label='Operation' type='select' icon='settings_power' onChange={this.operationChanged.bind(this)}
+        <Select s={12} m={3} label='Operation' icon='settings_power' onChange={this.operationChanged.bind(this)}
           defaultValue={instance.data.operation || 'switch'}>
           <option key='switch' value='switch'>Switch state</option>
           <option key='activate' value='activate'>Activate</option>
           <option key='deactivate' value='deactivate'>Deactivate</option>
-        </Input>
+        </Select>
       </Row>
     )
   }
