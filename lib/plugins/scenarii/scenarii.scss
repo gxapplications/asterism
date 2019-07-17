@@ -1,50 +1,22 @@
 .ScenariiEditPanel {
   height: 100%;
+  width: 100%;
   position: relative;
   overflow-y: hidden;
 
-  & > div.row {
-    min-height: 100%;
-    position: relative;
-  }
-
-  & > div.row > div.col {
-    & > ul.tabs {
-      background-color: transparent;
-
-      & .tab a {
-        font-size: 1.6em;
-        color: white;
-        text-transform: none;
-      }
-
-      & .indicator {
-        background-color: white;
-      }
-    }
-  }
-
-  & > div.row > div.col ~ div.col {
-    padding-top: 0.5rem;
-    display: block;
-    overflow-y: auto;
-    position: absolute;
-    bottom: 0;
-    top: 6.3rem;
-  }
-
-  & > div.row > div.col:first-of-type {
-    padding-bottom: 23px !important;
-  }
-
   & div.collection {
+    margin-left: 0.6rem;
+    margin-right: 0.6rem;
+    border-width: 1px;
 
     & .collection-header {
-      padding: 2rem;
+      padding: 4rem 3rem;
       text-align: center;
-      color: initial;
+      color: white;
+      background-color: rgba(255,255,255,0.5);
 
       & .material-icons {
+        font-size: 4rem !important;
         margin: 1rem;
         vertical-align: sub;
       }
@@ -55,6 +27,12 @@
 
       &.avatar {
         min-height: inherit;
+
+        & i {
+          height: 42px !important;
+          font-size: 1.8em !important;
+          line-height: 1.5em !important;
+        }
       }
     }
 
@@ -113,12 +91,26 @@
   }
 
   & .card.form.search {
-    position: sticky;
-    top: -0.5rem;
     z-index: 2;
     margin: -0.5rem -0.7rem 1rem -0.7rem;
-    padding-top: 0.4rem;
+    padding-top: 0.6rem;
     border-radius: 0;
+
+    & .input-field {
+      & input {
+        margin-bottom: 4px;
+      }
+      & .helper-text {
+        min-height: 0;
+      }
+      & i {
+        font-size: 2em !important;
+        line-height: 1.1em !important;
+        padding-left: 0.3rem;
+      }
+    }
+
+
   }
 }
 
@@ -504,9 +496,9 @@
     & .noUi-origin:last-of-type > .noUi-handle .noUi-tooltip {
       & > span {
         opacity: 1;
-        zoom: 2.2;
-        left: 1%;
-        top: -25%;
+        zoom: 3;
+        left: 5%;
+        top: -26%;
       }
     }
 
@@ -530,22 +522,22 @@
         }
       }
 
-      & > div:nth-of-type(1) {
+      & > div:nth-of-type(1) input {
         color: #2196f3;
       }
-      & > div:nth-of-type(2) {
+      & > div:nth-of-type(2) input {
         color: #f44336;
       }
-      & > div:nth-of-type(3) {
+      & > div:nth-of-type(3) input {
         color: #4caf50;
       }
-      & > div:nth-of-type(4) {
+      & > div:nth-of-type(4) input {
         color: #ff5722;
       }
-      & > div:nth-of-type(5) {
+      & > div:nth-of-type(5) input {
         color: #673ab7;
       }
-      & > div:nth-of-type(6) {
+      & > div:nth-of-type(6) input {
         color: #795548;
       }
     }

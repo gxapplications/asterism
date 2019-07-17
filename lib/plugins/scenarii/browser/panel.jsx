@@ -28,7 +28,6 @@ class ScenariiEditPanel extends React.Component {
   }
 
   componentDidMount () {
-    $('#scenarii-edit-panel.coloring-header-tabs div.row > div.col:first-of-type').addClass(this.props.theme.backgrounds.editing)
     this._listenerId = this.scenariiService.addScenariiListener((event, instance) => {
       switch (event) {
         case 'scenarioActivationChanged':
@@ -60,9 +59,9 @@ class ScenariiEditPanel extends React.Component {
     const { theme, animationLevel, services, highlightCloseButton } = this.props
     const { EditForm, currentTab } = this.state
     return (
-      <div id='scenarii-edit-panel' className={cx({ 'editFormOpened': !!EditForm }, 'coloring-header-tabs thin-scrollable ScenariiEditPanel', styles.ScenariiEditPanel)}>
-        <Tabs onChange={this.tabChanged.bind(this)}>
-          <Tab title={(<span><Icon>offline_pin</Icon> <span className='hide-on-small-only'>Scenarii</span></span>)} active={currentTab === 0}>
+      <div id='scenarii-edit-panel' className={cx({ 'editFormOpened': !!EditForm }, 'ScenariiEditPanel', styles.ScenariiEditPanel)}>
+        <Tabs onChange={this.tabChanged.bind(this)} className={theme.backgrounds.editing}>
+          <Tab title={<span><Icon left>offline_pin</Icon><span className='hide-on-small-only'>Scenarii</span></span>} active={currentTab === 0}>
             <PanelList theme={theme} animationLevel={animationLevel}
               getInstances={this.scenariiService.getScenarioInstances.bind(this.scenariiService)}
               getTypes={this.scenariiService.getScenarioTypes.bind(this.scenariiService)}
@@ -75,12 +74,14 @@ class ScenariiEditPanel extends React.Component {
               ref={(c) => { this._tabs[0] = c }}>
               <div className='collection-header'>
                 <Icon>lightbulb_outline</Icon>
-                No scenario yet. You can add one choosing a scenario type below.<br />
-                A scenario is a complex structure you can trigger or (de)activate. Most common scenario will be triggered by an event to run an action.
+                No scenario yet.<br /><br />
+                A scenario is a complex structure you can trigger or (de)activate.<br />
+                Most common scenario will be triggered by an event to run an action.<br />
+                You can add one choosing a scenario type below.
               </div>
             </PanelList>
           </Tab>
-          <Tab title={(<span><Icon>help</Icon> <span className='hide-on-small-only'>Conditions</span></span>)} active={currentTab === 1}>
+          <Tab title={<span><Icon left>help</Icon><span className='hide-on-small-only'>Conditions</span></span>} active={currentTab === 1}>
             <PanelList theme={theme} animationLevel={animationLevel}
               getInstances={this.scenariiService.getConditionInstances.bind(this.scenariiService)}
               getTypes={this.scenariiService.getConditionTypes.bind(this.scenariiService)}
@@ -91,12 +92,13 @@ class ScenariiEditPanel extends React.Component {
               ref={(c) => { this._tabs[1] = c }}>
               <div className='collection-header'>
                 <Icon>lightbulb_outline</Icon>
-                No condition yet. You can add one choosing a condition type below.<br />
-                A condition is a configured test you can use in a scenario to run an action or not.
+                No condition yet.<br /><br />
+                A condition is a configured test you can use in a scenario to run an action or not.<br />
+                You can add one choosing a condition type below.
               </div>
             </PanelList>
           </Tab>
-          <Tab title={(<span><Icon>error</Icon> <span className='hide-on-small-only'>Actions</span></span>)} active={currentTab === 2}>
+          <Tab title={<span><Icon left>error</Icon><span className='hide-on-small-only'>Actions</span></span>} active={currentTab === 2}>
             <PanelList theme={theme} animationLevel={animationLevel}
               getInstances={this.scenariiService.getActionInstances.bind(this.scenariiService)}
               getTypes={this.scenariiService.getActionTypes.bind(this.scenariiService)}
@@ -108,12 +110,13 @@ class ScenariiEditPanel extends React.Component {
               ref={(c) => { this._tabs[2] = c }}>
               <div className='collection-header'>
                 <Icon>lightbulb_outline</Icon>
-                No action yet. You can add one choosing an action type below.<br />
-                An action is a configured intent you can trigger via a button, a dashboard item or a scenario.
+                No action yet.<br /><br />
+                An action is a configured intent you can trigger via a button, a dashboard item or a scenario.<br />
+                You can add one choosing an action type below.
               </div>
             </PanelList>
           </Tab>
-          <Tab title={(<span><Icon>play_circle_filled</Icon> <span className='hide-on-med-and-down'>Triggers</span></span>)} active={currentTab === 3}>
+          <Tab title={<span><Icon left>play_circle_filled</Icon><span className='hide-on-small-only'>Triggers</span></span>} active={currentTab === 3}>
             <PanelList theme={theme} animationLevel={animationLevel}
               getInstances={this.scenariiService.getTriggerInstances.bind(this.scenariiService)}
               getTypes={this.scenariiService.getTriggerTypes.bind(this.scenariiService)}
@@ -123,12 +126,13 @@ class ScenariiEditPanel extends React.Component {
               ref={(c) => { this._tabs[3] = c }}>
               <div className='collection-header'>
                 <Icon>lightbulb_outline</Icon>
-                No trigger yet. You can add one choosing a trigger type below.<br />
-                A trigger is a configured event you can use in a scenario to launch the scenario.
+                No trigger yet.<br /><br />
+                A trigger is a configured event you can use in a scenario to launch the scenario.<br />
+                You can add one choosing a trigger type below.
               </div>
             </PanelList>
           </Tab>
-          <Tab title={(<span><Icon>monetization_on</Icon> <span className='hide-on-med-and-down'>States</span></span>)} active={currentTab === 4}>
+          <Tab title={<span><Icon left>monetization_on</Icon><span className='hide-on-small-only'>States</span></span>} active={currentTab === 4}>
             <PanelList theme={theme} animationLevel={animationLevel}
               getInstances={this.scenariiService.getStateInstances.bind(this.scenariiService)}
               getTypes={this.scenariiService.getStateTypes.bind(this.scenariiService)}
@@ -138,8 +142,10 @@ class ScenariiEditPanel extends React.Component {
               ref={(c) => { this._tabs[4] = c }}>
               <div className='collection-header'>
                 <Icon>lightbulb_outline</Icon>
-                No state yet. You can add one choosing an state type below.<br />
-                A state is like a variable that can be changed by actions. When a state changes, it sends an event for other elements.
+                No state yet.<br /><br />
+                A state is like a variable that can be changed by actions.<br />
+                When a state changes, it sends an event for other elements.<br />
+                You can add one choosing an state type below.
               </div>
             </PanelList>
           </Tab>
@@ -238,13 +244,16 @@ ScenariiEditPanel.defaultProps = {
   highlightCloseButton: () => {}
 }
 
-ScenariiEditPanel.label = 'Scenarii'
+ScenariiEditPanel.label = 'Scenarii settings'
 ScenariiEditPanel.icon = 'playlist_play'
-ScenariiEditPanel.hideHeader = true
+ScenariiEditPanel.extendHeader = true
 
-ScenariiEditPanel.onReady = () => {
-  $('#scenarii-edit-panel > div.row > div.col > ul.tabs').tabs()
-  $('#scenarii-edit-panel > div.row > div:eq(1) .search input').focus()
+ScenariiEditPanel.onOpenStart = (theme) => {
+  $('#scenarii-edit-panel > ul.tabs').tabs('updateTabIndicator')
+}
+ScenariiEditPanel.onOpenEnd = (theme) => {
+  $('#scenarii-edit-panel > ul.tabs').tabs('updateTabIndicator')
+  $('#scenarii-edit-panel > div.row > div:eq(0) .search input').focus()
 }
 
 export default ScenariiEditPanel

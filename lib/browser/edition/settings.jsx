@@ -37,7 +37,8 @@ class Settings extends React.Component {
       endingTop: '5%',
       onOpenStart: () => {
         $('#settings-modal > nav > div.nav-wrapper').addClass(this.props.theme.backgrounds.editing)
-
+        $('#settings-modal .sidenav-trigger').remove()
+        $('#settings-modal > nav > div.nav-wrapper > ul').removeClass('hide-on-med-and-down')
         $('#settings-modal > nav > .nav-content > ul.tabs').tabs({ onShow: (p) => {
           $(`#settings-modal > nav > .nav-content > ul.tabs > li.tab > a[href^='#']`).each((idx, el) => {
             if ($(el).attr('href') === p.selector) {
@@ -84,7 +85,7 @@ class Settings extends React.Component {
     )
 
     return (
-      <div id='settings-modal' className={cx('modal', theme.backgrounds.body)}>
+      <div id='settings-modal' className={cx('modal thin-scrollable', theme.backgrounds.body)}>
         <Navbar
           alignLinks='right' extendWith={tabs}
           brand={<span>
@@ -94,7 +95,7 @@ class Settings extends React.Component {
         >
           <NavItem href='javascript:void(0)' id='settings-modal-refresh-button'
             className={cx(
-              'hide',
+              'hide btn',
               { 'waves-effect waves-light': animationLevel >= 2 },
               theme.actions.edition
             )}

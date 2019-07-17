@@ -28,14 +28,17 @@ class BrowserActionableScenarioEditForm extends React.Component {
     if (!this.props.instance.data.executionTrigger.length) {
       this.scenariiService.getTriggerInstances()
       .then((instances) => {
-        this.props.instance.data.executionTrigger = instances[0].instanceId
+        if (instances[0]) {
+          this.props.instance.data.executionTrigger = instances[0].instanceId
+        }
 
         if (!this.props.instance.data.action.length) {
           this.scenariiService.getActionInstances()
           .then((instances2) => {
-            this.props.instance.data.action = instances2[0].instanceId
-
-            this.betterName()
+            if (instances2[0]) {
+              this.props.instance.data.action = instances2[0].instanceId
+              this.betterName()
+            }
           })
         } else {
           this.betterName()

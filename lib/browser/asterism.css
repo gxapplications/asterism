@@ -599,51 +599,80 @@
 
 /* EDITION MODE: SETTINGS MODAL */
 
-#settings-modal {
+#settings-modal, #edit-panel-modal {
+  height: 90%;
   max-height: 90%;
   overflow: hidden;
   width: 80%;
 }
 
-#settings-modal span.brand-logo {
+@media only screen and (max-width: 992px) {
+  #edit-panel-modal {
+    width: 96%;
+  }
+}
+
+#edit-panel-modal .modal-content {
+  overflow-y: auto;
+}
+
+#settings-modal span.brand-logo, #edit-panel-modal span.brand-logo {
   padding-left: 0.5em;
 }
-#settings-modal > nav {
+#settings-modal > nav, #edit-panel-modal > nav {
   background-color: transparent;
 }
-#settings-modal > nav > .nav-wrapper {
+#settings-modal > nav > .nav-wrapper, #edit-panel-modal > nav > .nav-wrapper {
   min-height: 65px;
 }
-#settings-modal > nav > .nav-content > ul.tabs {
+#settings-modal > nav > .nav-content > ul.tabs, #edit-panel-modal > nav > .nav-content > * > ul.tabs {
   box-shadow: 0 3px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 3px 4px 0 rgba(0,0,0,0.2);
   overflow-x: overlay;
 }
-#settings-modal > nav > .nav-content > ul.tabs a {
+#settings-modal > nav > .nav-content > ul.tabs a, #edit-panel-modal > nav > .nav-content > * > ul.tabs a {
   color: white;
 }
-#settings-modal > nav > .nav-content > ul.tabs a:focus {
+#settings-modal > nav > .nav-content > ul.tabs a:focus, #edit-panel-modal > nav > .nav-content > * > ul.tabs a:focus {
   background-color: inherit;
 }
-#settings-modal > nav > .nav-content > ul.tabs .indicator {
+#settings-modal > nav > .nav-content > ul.tabs .indicator, #edit-panel-modal > nav > .nav-content > * > ul.tabs .indicator {
   background-color: white;
 }
-#settings-modal > nav > .nav-content > div.row {
+#settings-modal > nav > .nav-content > div.row, #edit-panel-modal > nav > .nav-content > * > div.row {
   margin-bottom: 0;
 }
-#settings-modal > nav > .nav-content > div.row > div {
+#settings-modal > nav > .nav-content > div.row > div, #edit-panel-modal > nav > .nav-content > * > div.row > div {
   padding: 0 !important;
   height: 80vh;
   overflow: auto;
   width: 100%;
   position: relative;
 }
-#settings-modal > nav i, #settings-modal > nav [class^="mdi-"], #settings-modal > nav [class*="mdi-"], #settings-modal > nav i.material-icons {
+#settings-modal > nav > .nav-content > div.row > div i, #settings-modal > nav > .nav-content > div.row > div i.material-icons,
+#settings-modal > nav > .nav-content > div.row > div [class^="mdi-"], #settings-modal > nav > .nav-content > div.row > div [class*="mdi-"],
+#edit-panel-modal > nav > .nav-content > * > div.row > div i, #edit-panel-modal > nav > .nav-content > * > div.row > div i.material-icons,
+#edit-panel-modal > nav > .nav-content > * > div.row > div [class^="mdi-"], #edit-panel-modal > nav > .nav-content > * > div.row > div [class*="mdi-"] {
+  font-size: 1.3rem;
+}
+#settings-modal > nav i, #settings-modal > nav [class^="mdi-"],
+#settings-modal > nav [class*="mdi-"], #settings-modal > nav i.material-icons,
+#edit-panel-modal > nav  i, #edit-panel-modal > nav [class^="mdi-"],
+#edit-panel-modal > nav  [class*="mdi-"], #edit-panel-modal > nav  i.material-icons {
   font-size: inherit;
   height: inherit;
   line-height: inherit;
 }
+#settings-modal > nav > .nav-content i, #settings-modal > nav > .nav-content [class^="mdi-"],
+#settings-modal > nav > .nav-content [class*="mdi-"], #settings-modal > nav i.material-icons,
+#edit-panel-modal > nav > .nav-content i, #edit-panel-modal > nav > .nav-content [class^="mdi-"],
+#edit-panel-modal > nav > .nav-content [class*="mdi-"], #edit-panel-modal > nav > .nav-content i.material-icons {
+  font-size: 24px;
+  height: inherit;
+  line-height: inherit;
+}
 
-#settings-modal .card:not(.form) {
+#settings-modal .card:not(.form),
+#edit-panel-modal .card:not(.form) {
   background: none !important;
   margin: 0 !important;
   height: calc(100% - 12px);
@@ -651,20 +680,31 @@
   box-shadow: none;
 }
 
-#settings-modal > nav > .nav-content > div.row > div .card.form {
+#settings-modal > nav > .nav-content > div.row > div .card.form,
+#edit-panel-modal > nav > .nav-content > * > div.row > div .card.form {
   background-color: rgba(255, 255, 255, 0.3) !important;
 }
-
-#settings-modal > nav > .nav-content > div.row > div .card .card-reveal {
+#settings-modal > nav > .nav-content > div.row > div .card .card-reveal,
+#edit-panel-modal > nav > .nav-content > * > div.row > div .card .card-reveal {
   padding: 0.5rem 1.2rem 0;
 }
-
-#settings-modal .card .card-reveal .card {
+#settings-modal .card .card-reveal .card,
+#edit-panel-modal .card .card-reveal .card {
   background-color: rgba(255, 255, 255, 0.3) !important;
   margin: .5rem 0 1rem 0 !important;
 }
-
-#settings-modal .card .card-reveal .circle-picker-container {
+#settings-modal .card .card-reveal .card-title,
+#edit-panel-modal .card .card-reveal .card-title {
+  line-height: 3.2rem;
+  font-size: 2.2em;
+  padding-bottom: 1rem;
+}
+#settings-modal .card .card-reveal .card-title > i.material-icons,
+#edit-panel-modal .card .card-reveal .card-title > i.material-icons {
+  font-size: 1em;
+}
+#settings-modal .card .card-reveal .circle-picker-container,
+#edit-panel-modal .card .card-reveal .circle-picker-container {
   display: inline-flex !important;
   padding: 1em 0.2em;
 }
@@ -672,7 +712,6 @@
 #settings-modal .collection .collection-item {
   background-color: rgba(255, 255, 255, 0.3);
 }
-
 #settings-modal .collection a.collection-item {
   color: inherit;
 }
@@ -789,30 +828,16 @@
   z-index: 2;
 }
 
-#edit-panel-modal {
-  width: 88%;
-  height: 88%;
-  max-height: 88%;
-}
-
-@media only screen and (max-width: 992px) {
-  #edit-panel-modal {
-    width: 96%;
-    height: 92%;
-    max-height: 92%;
-  }
-}
-
-#edit-panel-modal .modal-content {
-  padding: 0;
-  overflow-y: hidden;
-}
-
 #edit-panel-modal .collection .collection-item {
   background-color: rgba(255, 255, 255, 0.3);
 }
 
 /* Used by item setting panels and items from outside */
+
+.radio-group-column {
+  display: block;
+  line-height: 2.5em;
+}
 
 .asterism .rg-grid-item .rg-item-wrapper .fluid,
 #item-setting-modal .modal-content .setting-panel .fluid {

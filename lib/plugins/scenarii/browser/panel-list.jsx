@@ -249,10 +249,10 @@ class PanelList extends React.Component {
     }
     return [
       <Row key={0} className='card form search'>
-        <TextInput s={12} m={10} l={8} icon='search' label='Search by name' onChange={this.searchChanged.bind(this)} defaultValue={search} />
+        <TextInput s={12} m={10} l={8} icon='search' placeholder='Search by name' onChange={this.searchChanged.bind(this)} defaultValue={search} />
       </Row>,
-      <Row key={1} className={cx('collection', { 'with-header': instances.length === 0 })}>
-        {instances.length === 0 ? this.props.children : null}
+      <Row key={1} className={cx('collection', { 'with-header': instances.length === 0 && search.length === 0 })}>
+        {instances.length === 0 && search.length === 0 ? this.props.children : null}
         {instances.filter(_filter(search)).sort(_sorter).map(({ instance, onClick, onDelete, onTest, testing, onStop, onActivateSwitch }, idx) => instance ? (
           <a key={instance.instanceId} href='javascript:void(0)' onClick={onClick}
             className={cx('collection-item', waves)}>
@@ -301,7 +301,8 @@ class PanelList extends React.Component {
             ) : null}
           </a>
         ))}
-      </Row>
+      </Row>,
+      <br />
     ]
   }
 

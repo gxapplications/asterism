@@ -156,7 +156,7 @@ class MainComponent extends React.Component {
     // FIXME: to delete when react-materialize will work... jquery.initialize.min.js must also be deleted!
     $.initialize('.input-field input', function () {
       if ($(this).val().length) {
-        $(this).next('label').addClass('active')
+        $(this).parent().next('label').addClass('active')
       }
     })
 
@@ -248,12 +248,20 @@ class MainComponent extends React.Component {
         opacity: 0.5,
         inDuration: this.state.animationLevel >= 2 ? 300 : 0,
         outDuration: this.state.animationLevel >= 2 ? 300 : 0,
-        ready: () => {
-          if (this.state.EditPanel && this.state.EditPanel.onReady) {
-            this.state.EditPanel.onReady()
+        onOpenStart: () => {
+          $('#edit-panel-modal > nav > div.nav-wrapper').addClass(this.props.theme.backgrounds.editing)
+          $('#edit-panel-modal .sidenav-trigger').remove()
+          $('#edit-panel-modal > nav > div.nav-wrapper > ul').removeClass('hide-on-med-and-down')
+          if (this.state.EditPanel && this.state.EditPanel.onOpenStart) {
+            this.state.EditPanel.onOpenStart(this.props.theme)
           }
         },
-        complete: () => {
+        onOpenEnd: () => {
+          if (this.state.EditPanel && this.state.EditPanel.onOpenEnd) {
+            this.state.EditPanel.onOpenEnd(this.props.theme)
+          }
+        },
+        onCloseEnd: () => {
           this.setState({ EditPanel: null })
         }
       })
@@ -343,26 +351,38 @@ class MainComponent extends React.Component {
         ) : null}
 
         {editMode && EditPanel ? (
-          <div id='edit-panel-modal' className={cx('modal modal-fixed-footer', theme.backgrounds.body)}>
-            <div className='modal-content'>
-              {EditPanel.hideHeader ? null : (
-                <div className={cx('coloring-header', theme.backgrounds.editing)}>
-                  <h4><i className={cx('material-icons', EditPanel.icon)}>{EditPanel.icon}</i> {EditPanel.label}</h4>
-                </div>
-              )}
+          <div id='edit-panel-modal' className={cx('modal thin-scrollable', theme.backgrounds.body)}>
+            <Navbar alignLinks='right' className={EditPanel.extendHeader ? theme.backgrounds.body : theme.backgrounds.editing} extendWith={EditPanel.extendHeader ? (
               <EditPanel serverStorage={serverStorage} theme={theme} animationLevel={animationLevel}
                 localStorage={localStorage} services={() => this.services}
                 privateSocket={editPanelContext.privateSocket} publicSockets={editPanelContext.publicSockets}
                 ref={(c) => { this._editPanelInstance = c }} highlightCloseButton={this.highlightCloseButton.bind(this)} />
-            </div>
-            <div className={cx('modal-footer', theme.backgrounds.body)}>
-              <a href='javascript:void(0)' onClick={this.closeEditPanel.bind(this)} className={cx('modal-action btn', {
-                'btn-flat': !editPanelButtonHighlight,
-                [theme.actions.edition]: editPanelButtonHighlight,
-                'waves-effect waves-green': (animationLevel >= 3) && !editPanelButtonHighlight,
-                'waves-effect waves-light': (animationLevel >= 3) && editPanelButtonHighlight
-              })}><Icon left>check</Icon> Ok</a>
-            </div>
+            ) : null} brand={
+              <span>
+                <i className={cx('material-icons small', EditPanel.icon)}>{EditPanel.icon}</i>
+                <span className='hide-on-small-only'>{EditPanel.label}</span>
+              </span>
+            }>
+              <NavItem href='javascript:void(0)' id='edit-panel-close-button'
+                className={cx({
+                  'btn': editPanelButtonHighlight,
+                  [theme.actions.edition]: editPanelButtonHighlight,
+                  'waves-effect waves-green': (animationLevel >= 3) && !editPanelButtonHighlight,
+                  'waves-effect waves-light': (animationLevel >= 3) && editPanelButtonHighlight
+                })}
+                onClick={this.closeEditPanel.bind(this)}
+              >
+                {editPanelButtonHighlight ? (<span><Icon left>check</Icon> Ok</span>) : 'Close'}
+              </NavItem>
+            </Navbar>
+            {EditPanel.extendHeader ? null : (
+              <div className='modal-content thin-scrollable'>
+                <EditPanel serverStorage={serverStorage} theme={theme} animationLevel={animationLevel}
+                  localStorage={localStorage} services={() => this.services}
+                  privateSocket={editPanelContext.privateSocket} publicSockets={editPanelContext.publicSockets}
+                  ref={(c) => { this._editPanelInstance = c }} highlightCloseButton={this.highlightCloseButton.bind(this)} />
+              </div>
+            )}
           </div>
         ) : null}
 
