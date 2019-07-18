@@ -57,7 +57,7 @@ class BrowserActionableScenarioEditForm extends React.Component {
     return (
       <div>
         <Row className='section card form hide-in-procedure'>
-          <TextInput placeholder='Give a name to quickly identify your scenario' s={12} label='Name' ref={(c) => { this._nameInput = c }}
+          <TextInput placeholder='Short name' s={12} ref={(c) => { this._nameInput = c }}
             id={`actionable-scenario-name-input-${this._nameInputId}`}
             defaultValue={name} onChange={(e) => { instance.data.name = e.currentTarget.value }} />
         </Row>

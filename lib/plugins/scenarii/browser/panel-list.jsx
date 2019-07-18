@@ -302,7 +302,7 @@ class PanelList extends React.Component {
           </a>
         ))}
       </Row>,
-      <br />
+      <br key={2} />
     ]
   }
 

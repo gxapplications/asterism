@@ -158,6 +158,8 @@ export default class SpeechManager {
     if (voices.length) {
       this.voice = voices[0]
       annyang.setLanguage(language)
+    } else {
+      this.available = false
     }
   }
 
@@ -206,11 +208,13 @@ export default class SpeechManager {
   }
 
   speak (text, callback) {
-    const ut = new window.SpeechSynthesisUtterance(text)
-    ut.voice = this.voice
-    window.speechSynthesis.speak(ut)
-    if (callback) {
-      ut.onend = callback
+    if (this.available) {
+      const ut = new window.SpeechSynthesisUtterance(text)
+      ut.voice = this.voice
+      window.speechSynthesis.speak(ut)
+      if (callback) {
+        ut.onend = callback
+      }
     }
   }
 

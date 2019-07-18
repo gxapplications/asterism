@@ -894,6 +894,9 @@
 .input-field > input[type=text]:focus + label {
   color: #fff !important;
 }
+.input-field ::placeholder {
+  color: rgba(255,255,255,0.7);
+}
 
 /* Grid Items: Dragging mode (only when "body > .rg-grid-item > .rg-item-wrapper") need some adjustments */
 
