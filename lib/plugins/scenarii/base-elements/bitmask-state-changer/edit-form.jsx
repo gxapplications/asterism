@@ -16,19 +16,6 @@ class BrowserBitmaskStateChangerEditForm extends React.Component {
   }
 
   componentDidMount () {
-    this.scenariiService.getStateInstances()
-    .then((instances) => {
-      if (instances.length === 1) {
-        this.props.instance.data.bitmaskStateId = instances[0].instanceId
-        this.nameChange()
-      } else {
-        if (!this.props.instance.data.bitmaskStateId) {
-          this.props.instance.data.bitmaskStateId = instances[0].instanceId
-          this.nameChange()
-        }
-        this.plugWidgets()
-      }
-    })
     this.plugWidgets()
   }
 
@@ -97,13 +84,14 @@ class BrowserBitmaskStateChangerEditForm extends React.Component {
 
     return (
       <Row className='section card form bitmaskStateChangerPanel'>
-        <div className='col s12'>
-          <StatesDropdown defaultStateId={instance.data.bitmaskStateId} onChange={this.bitmaskStateChanged.bind(this)}
-            theme={theme} animationLevel={animationLevel} services={services}
-            typeFilter={(e) => e.id === 'bitmask-state'} instanceFilter={(e) => e.typeId === 'bitmask-state'} />
-        </div>
+        <br />
+        <StatesDropdown defaultStateId={instance.data.bitmaskStateId} onChange={this.bitmaskStateChanged.bind(this)}
+          theme={theme} animationLevel={animationLevel} services={services} s={12} label='State to update'
+          typeFilter={(e) => e.id === 'bitmask-state'} instanceFilter={(e) => e.typeId === 'bitmask-state'} />
 
-        <Select s={12} m={3} label='Operation' icon='swap_vert' onChange={this.operationChanged.bind(this)}
+        <br />&nbsp;
+        <br />
+        <Select s={12} m={4} label='Operation' icon='swap_vert' onChange={this.operationChanged.bind(this)}
           defaultValue={instance.data.operation || 'set-position'}>
           <option key='set-position' value='set-position'>Set position (to 1)</option>
           <option key='unset-position' value='unset-position'>Unset position (to 0)</option>
@@ -113,7 +101,7 @@ class BrowserBitmaskStateChangerEditForm extends React.Component {
         </Select>
 
         {instance.data.operation.includes('-position') && (
-          <div className='col s12 m9 slider'>
+          <div className='col s12 m8 slider'>
             <div id={`position-slider-${instance.instanceId}`} />
           </div>
         )}

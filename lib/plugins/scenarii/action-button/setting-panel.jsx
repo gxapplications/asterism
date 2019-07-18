@@ -22,6 +22,16 @@ class ActionButtonSettingPanel extends ItemSettingPanel {
     }
   }
 
+  shouldComponentUpdate (nextProps, nextState) {
+    const comparator = (i) => [
+      i.params.action,
+      i.params.title,
+      i.params.color,
+      i.params.icon
+    ]
+    return JSON.stringify(comparator(this.state)) !== JSON.stringify(comparator(nextState))
+  }
+
   render () {
     const { theme, mainState } = this.props.context
     const { title = '', action = '', color = 'primary', icon = 'error' } = this.state.params
@@ -33,16 +43,12 @@ class ActionButtonSettingPanel extends ItemSettingPanel {
       <div id='actionButtonSettingDiv' className='clearing padded'>
         <Row className='padded card'>
           <ActionsDropdown defaultActionId={action} onChange={this.handleValueChange.bind(this, 'action')}
-            ref={(c) => { this._action = c }} theme={theme} animationLevel={animationLevel}
+            ref={(c) => { this._action = c }} theme={theme} animationLevel={animationLevel} label={null}
             services={() => this.props.context.services} />
 
-          <TextInput s={12} label='Label' ref={(c) => { this._title = c }} className='iconPicker'
-            value={title} onChange={this.handleEventChange.bind(this, 'title')}>
-            <div>
-              <IconPicker theme={theme} animationLevel={animationLevel} defaultIcon={icon}
-                onChange={this.handleValueChange.bind(this, 'icon')} />
-            </div>
-          </TextInput>
+          <IconPicker theme={theme} animationLevel={animationLevel} defaultIcon={icon} onChange={this.handleValueChange.bind(this, 'icon')} />
+          <TextInput s={12} m={10} l={10} label='Label' ref={(c) => { this._title = c }}
+            value={title} onChange={this.handleEventChange.bind(this, 'title')} />
         </Row>
 
         <ActionColorSwitch theme={theme} animationLevel={animationLevel} defaultColor={color}

@@ -20,20 +20,7 @@ class BrowserBitmaskStateTriggerEditForm extends React.Component {
   }
 
   componentDidMount () {
-    this.scenariiService.getStateInstances()
-    .then((instances) => {
-      if (instances.length === 1) {
-        this.props.instance.data.bitmaskStateId = instances[0].instanceId
-        this.plugWidgets()
-        this.nameChange()
-      } else {
-        if (!this.props.instance.data.bitmaskStateId) {
-          this.props.instance.data.bitmaskStateId = instances[0].instanceId
-          this.nameChange()
-        }
-        this.plugWidgets()
-      }
-    })
+    this.plugWidgets()
   }
 
   componentDidUpdate () {
@@ -103,13 +90,14 @@ class BrowserBitmaskStateTriggerEditForm extends React.Component {
 
     return (
       <Row className='section card form bitmask-state-trigger-panel'>
-        <div className='col s12'>
-          <StatesDropdown defaultStateId={bitmaskStateId} onChange={this.bitmaskStateChanged.bind(this)}
-            theme={theme} animationLevel={animationLevel} services={services}
-            typeFilter={(e) => e.id === 'bitmask-state'} instanceFilter={(e) => e.typeId === 'bitmask-state'} />
-        </div>
+        <br />
+        <StatesDropdown defaultStateId={bitmaskStateId} onChange={this.bitmaskStateChanged.bind(this)}
+          theme={theme} animationLevel={animationLevel} s={12} services={services} label='State that triggers'
+          typeFilter={(e) => e.id === 'bitmask-state'} instanceFilter={(e) => e.typeId === 'bitmask-state'} />
 
-        <Select key={0} s={12} label='Operator' icon='navigate_next' onChange={this.changeOperator.bind(this)} defaultValue={operator || 'position-move'}>
+        <br />&nbsp;
+        <br />
+        <Select key={0} s={12} m={5} label='Operator' icon='navigate_next' onChange={this.changeOperator.bind(this)} defaultValue={operator || 'position-move'}>
           <option key='position-move' value='position-move'>Specific position changed</option>
           <option key='position-set' value='position-set'>Specific position set (changed to 1)</option>
           <option key='position-unset' value='position-unset'>Specific position unset (changed to 0)</option>
@@ -119,7 +107,7 @@ class BrowserBitmaskStateTriggerEditForm extends React.Component {
         </Select>
 
         {operator.match(/^position-/) && (
-          <div className='col s12 m9 slider'>
+          <div className='col s12 m7 slider'>
             <div id={`bitmask-slider-${instance.instanceId}`} />
           </div>
         )}

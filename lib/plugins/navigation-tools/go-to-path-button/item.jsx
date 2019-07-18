@@ -7,6 +7,16 @@ import { Button, Icon } from 'react-materialize'
 import { Item } from 'asterism-plugin-library'
 
 class GoToPathButtonItem extends Item {
+  shouldComponentUpdate (nextProps, nextState) {
+    const comparator = (i) => [
+      i.params.title,
+      i.params.color,
+      i.params.icon,
+      i.params.path
+    ]
+    return JSON.stringify(comparator(this.state)) !== JSON.stringify(comparator(nextState))
+  }
+
   render () {
     const { mainState, theme } = this.props.context
     const { animationLevel } = mainState()

@@ -3,7 +3,7 @@
 /* global $ */
 import PropTypes from 'prop-types'
 import React from 'react'
-import { Row, Checkbox, Select } from 'react-materialize'
+import { Button, Icon, Row, Checkbox, Select, TimePicker } from 'react-materialize'
 import uuid from 'uuid'
 
 class BrowserTimeBasedTriggerEditForm extends React.Component {
@@ -21,29 +21,6 @@ class BrowserTimeBasedTriggerEditForm extends React.Component {
     }
 
     this._formId = `time-based-trigger-panel-${uuid.v4()}`
-  }
-
-  componentDidMount (prevProps, prevState) {
-    this.fixmeReactMaterialize()
-  }
-
-  componentDidUpdate (prevProps, prevState) {
-    this.fixmeReactMaterialize()
-  }
-
-  fixmeReactMaterialize () {
-    // FIXME: replace by <Input name='xxx' type='time' /> from react-materialize when it will work...
-    const afterHide = (i) => this.changeHourMinute.bind(this, i)
-    const hourMinutes = this.props.instance.data.hourMinute
-    $(`.until-${this.props.instance.instanceId} .timepicker`).each(function (i) {
-      $(this).pickatime({
-        twelvehour: false,
-        autoclose: true,
-        default: hourMinutes[i] || '12:00',
-        afterHide: afterHide(i),
-        cleartext: 'Remove'
-      })
-    })
   }
 
   renderDayAndMonthSelectors (dayAndMonth) {
@@ -152,6 +129,7 @@ class BrowserTimeBasedTriggerEditForm extends React.Component {
 
     return (
       <Row className='section card form time-based-trigger-panel' id={this._formId}>
+        <br />
         <Select key={0} s={12} label='Day / Date' icon='calendar_today' onChange={this.changeDayMode.bind(this)} defaultValue={dayMode}>
           <option key='everyday' value='everyday'>Every day</option>
           <option key='weekdays' value='weekdays'>Based on week days</option>
@@ -159,6 +137,7 @@ class BrowserTimeBasedTriggerEditForm extends React.Component {
           <option key='dayAndMonth' value='dayAndMonth'>Same dates each year</option>
           <option key='weekdayInMonth' value='weekdayInMonth'>Based on the nth weekday of the month</option>
         </Select>
+        <div className='col s12'>&nbsp;</div>
 
         {dayMode === 'weekdays' && [
           <Checkbox key={10} name='weekdays' value='0' label='Sunday' className='filled-in' checked={weekdays.includes(0)} onChange={this.changeWeekdays.bind(this)} />,
@@ -209,16 +188,20 @@ class BrowserTimeBasedTriggerEditForm extends React.Component {
         </Select>
 
         {timeMode === 'hourMinute' && [
-          hourMinute.map((hm, j) =>
-            <div key={`81-${j}`} className={`input-field col s12 m6 l4 until-${instance.instanceId}`}>
-              <input id={`${timePickerId}-${j}`} type='text' className='timepicker' defaultValue={hm} onChange={this.changeHourMinute.bind(this, j)} />
-              <label htmlFor={`${timePickerId}-${j}`}>Time</label>
+          ...hourMinute.map((hm, j) =>
+            <div key={`81-${j}`} className='input-field col s12 m6 l6 time-based-trigger-center-aligned'>
+              <div className={'col s4'}><Icon left>schedule</Icon>Time:</div>
+              <TimePicker s={4} id={`${timePickerId}-${j}`} options={{
+                twelveHour: false,
+                autoClose: true,
+                defaultTime: hm || '12:00',
+                showClearBtn: false
+              }} onChange={this.changeHourMinute.bind(this, j)} value={hm || '12:00'} />
+              <Button small s={4} onClick={this.changeHourMinute.bind(this, j, undefined, undefined)}>Remove</Button>
             </div>
           ),
-          hourMinute.length < 32 ? <div key={`81-${hourMinute.length}-a`} className={`input-field col s12 m6 l4 translucent-text until-${instance.instanceId}`}>
-            <input id={`${timePickerId}-${hourMinute.length}`} type='text' className='timepicker' defaultValue='' onChange={this.changeHourMinute.bind(this, hourMinute.length)} />
-            <label htmlFor={`${timePickerId}-${hourMinute.length}`}>Time</label>
-          </div> : null
+          (hourMinute.length < 32) && <div className='col s12 m6 l6 time-based-trigger-center-aligned'><Button key={`81-${hourMinute.length}-a`} small
+            className='col s6 m4 l3 offset-s3' onClick={this.changeHourMinute.bind(this, hourMinute.length, 12, 0)}>Add</Button></div>
         ]}
       </Row>
     )
@@ -334,22 +317,21 @@ class BrowserTimeBasedTriggerEditForm extends React.Component {
     })
   }
 
-  changeHourMinute (index) {
-    setTimeout(() => {
-      const element = $(`#${this._formId} .until-${this.props.instance.instanceId} .timepicker`)[index]
-      if (element.value !== '') {
-        this.props.instance.data.hourMinute[index] = element.value
-      } else {
-        this.props.instance.data.hourMinute = this.props.instance.data.hourMinute.filter((v, i) => i !== index)
-        if (this.props.instance.data.hourMinute.length === 0) {
-          this.props.instance.data.hourMinute = ['12:00']
-        }
+  changeHourMinute (index, hours, minutes) {
+    if (hours !== undefined && minutes !== undefined) {
+      hours = `${hours}`.padStart(2, '0')
+      minutes = `${minutes}`.padStart(2, '0')
+      this.props.instance.data.hourMinute[index] = `${hours}:${minutes}`
+    } else {
+      this.props.instance.data.hourMinute = this.props.instance.data.hourMinute.filter((v, i) => i !== index)
+      if (this.props.instance.data.hourMinute.length === 0) {
+        this.props.instance.data.hourMinute = ['12:00']
       }
-      this.nameChange()
-      return this.setState({
-        hourMinute: this.props.instance.data.hourMinute
-      })
-    }, 10)
+    }
+    this.nameChange()
+    return this.setState({
+      hourMinute: this.props.instance.data.hourMinute
+    })
   }
 
   changeWeekdayInMonth (index, occurrenceOrDay, event) {
@@ -450,7 +432,7 @@ class BrowserTimeBasedTriggerEditForm extends React.Component {
 
     switch (data.timeMode) {
       case 'hourMinute':
-        let times = data.hourMinute.sort().join(', ')
+        let times = [...data.hourMinute].sort().join(', ')
         if (data.hourMinute.length === 1) {
           name += ` at ${times}`
           break

@@ -146,6 +146,11 @@ class DomoticsSettings extends React.Component {
     }
   }
 
+  shouldComponentUpdate (nextProps, nextState) {
+    const comparator = (i) => [i.locationSearch, i.currentLocation, i.energyCosts]
+    return JSON.stringify(comparator(this.state)) !== JSON.stringify(comparator(nextState))
+  }
+
   render () {
     const { locationSearch, currentLocation, energyCosts } = this.state
 

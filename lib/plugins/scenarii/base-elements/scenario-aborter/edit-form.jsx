@@ -14,24 +14,14 @@ class BrowserScenarioAborterEditForm extends React.Component {
     this.scenariiService = props.services()['asterism-scenarii']
   }
 
-  componentDidMount () {
-    this.scenariiService.getScenarioInstances()
-    .then((instances) => {
-      if (instances.length === 1) {
-        this.props.instance.data.scenarioId = instances[0].instanceId
-        this.nameChange()
-      }
-    })
-  }
-
   render () {
     const { instance, animationLevel, theme, services } = this.props
     return (
       <Row className='section card form'>
-        <div className='col s12 m9'>
-          <ScenariiDropdown defaultScenarioId={instance.data.scenarioId} onChange={this.scenarioChanged.bind(this)}
-            theme={theme} animationLevel={animationLevel} services={services} noCreationPanel typeFilter={() => false} />
-        </div>
+        <br />
+        <ScenariiDropdown defaultScenarioId={instance.data.scenarioId} onChange={this.scenarioChanged.bind(this)}
+          theme={theme} animationLevel={animationLevel} services={services} noCreationPanel typeFilter={() => false}
+          s={12} label='Scenario to abort' />
       </Row>
     )
   }

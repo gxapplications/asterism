@@ -16,13 +16,6 @@ class BrowserLevelStateChangerEditForm extends React.Component {
   }
 
   componentDidMount () {
-    this.scenariiService.getStateInstances()
-    .then((instances) => {
-      if (instances.length === 1) {
-        this.props.instance.data.levelStateId = instances[0].instanceId
-        this.nameChange()
-      }
-    })
     this.plugWidgets()
   }
 
@@ -72,20 +65,21 @@ class BrowserLevelStateChangerEditForm extends React.Component {
 
     return (
       <Row className='section card form levelStateChangerPanel'>
-        <div className='col s12'>
-          <StatesDropdown defaultStateId={instance.data.levelStateId} onChange={this.levelStateChanged.bind(this)}
-            theme={theme} animationLevel={animationLevel} services={services}
-            typeFilter={(e) => e.id === 'level-state'} instanceFilter={(e) => e.typeId === 'level-state'} />
-        </div>
+        <br />
+        <StatesDropdown defaultStateId={instance.data.levelStateId} onChange={this.levelStateChanged.bind(this)}
+          theme={theme} animationLevel={animationLevel} services={services} s={12} label='State to update'
+          typeFilter={(e) => e.id === 'level-state'} instanceFilter={(e) => e.typeId === 'level-state'} />
 
-        <Select s={12} m={3} label='Operation' icon='swap_vert' onChange={this.operationChanged.bind(this)}
+        <br />&nbsp;
+        <br />
+        <Select s={12} m={4} label='Operation' icon='swap_vert' onChange={this.operationChanged.bind(this)}
           defaultValue={instance.data.operation || 'replace'}>
           <option key='replace' value='replace'>Set value</option>
           <option key='increment' value='increment'>Increment value</option>
           <option key='decrement' value='decrement'>Decrement value</option>
         </Select>
 
-        <div className='col s12 m9 slider'>
+        <div className='col s12 m8 slider'>
           <div id={`amount-slider-${instance.instanceId}`} />
         </div>
       </Row>

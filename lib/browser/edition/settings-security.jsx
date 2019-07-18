@@ -28,6 +28,15 @@ class SettingsSecurity extends React.Component {
     })
   }
 
+  shouldComponentUpdate (nextProps, nextState) {
+    const comparator = (i) => [
+      i.adminPatternExists,
+      i.readOnlyPatternExists,
+      i.currentPatternKey
+    ]
+    return JSON.stringify(comparator(this.state)) !== JSON.stringify(comparator(nextState))
+  }
+
   render () {
     const { theme, animationLevel } = this.props
     const waves = animationLevel >= 2 ? 'light' : undefined

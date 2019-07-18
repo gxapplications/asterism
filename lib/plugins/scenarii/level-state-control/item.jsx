@@ -39,6 +39,17 @@ class LevelStateControlItem extends Item {
     }
   }
 
+  shouldComponentUpdate (nextProps, nextState) {
+    const comparator = (i) => [
+      i.params.title,
+      i.params.color,
+      i.params.icons,
+      i.currentLevel,
+      i.levelState && i.levelState.instanceId
+    ]
+    return JSON.stringify(comparator(this.state)) !== JSON.stringify(comparator(nextState))
+  }
+
   render () {
     const { mainState, theme } = this.props.context
     const { animationLevel } = mainState()
@@ -66,7 +77,10 @@ class LevelStateControlItem extends Item {
         </Button>
       </div>
     ) : (
-      <div />
+      <Button waves={animationLevel >= 2 ? 'light' : null} className={cx(theme.feedbacks.warning, 'truncate fluid')} onClick={() => {}}>
+        <Icon left className='red-text'>healing</Icon>
+        No state set
+      </Button>
     )
   }
 

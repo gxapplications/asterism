@@ -242,7 +242,7 @@ class MainComponent extends React.Component {
     // If an EditPanel should be displayed
     if (this.state.EditPanel && !prevState.EditPanel) {
       $('#edit-panel-modal').modal({
-        dismissible: true,
+        dismissible: false,
         startingTop: '2%',
         endingTop: '6%',
         opacity: 0.5,

@@ -16,13 +16,6 @@ class BrowserLevelStateTriggerEditForm extends React.Component {
   }
 
   componentDidMount () {
-    this.scenariiService.getStateInstances()
-    .then((instances) => {
-      if (instances.length === 1) {
-        this.props.instance.data.levelStateId = instances[0].instanceId
-        this.nameChange()
-      }
-    })
     this.plugWidgets()
   }
 
@@ -71,13 +64,14 @@ class BrowserLevelStateTriggerEditForm extends React.Component {
 
     return (
       <Row className='section card form level-state-trigger-panel'>
-        <div className='col s12'>
-          <StatesDropdown defaultStateId={levelStateId} onChange={this.levelStateChanged.bind(this)}
-            theme={theme} animationLevel={animationLevel} services={services}
-            typeFilter={(e) => e.id === 'level-state'} instanceFilter={(e) => e.typeId === 'level-state'} />
-        </div>
+        <br />
+        <StatesDropdown defaultStateId={levelStateId} onChange={this.levelStateChanged.bind(this)}
+          theme={theme} animationLevel={animationLevel} services={services} s={12} label='State that triggers'
+          typeFilter={(e) => e.id === 'level-state'} instanceFilter={(e) => e.typeId === 'level-state'} />
 
-        <Select s={12} m={3} label='Way' icon='swap_vert' onChange={this.wayChanged.bind(this)}
+        <br />&nbsp;
+        <br />
+        <Select s={12} m={4} label='Way' icon='swap_vert' onChange={this.wayChanged.bind(this)}
           defaultValue={way || 'reach'}>
           <option key='reach' value='reach'>Level reached</option>
           <option key='upward' value='upward'>Level reached upward</option>
@@ -85,7 +79,7 @@ class BrowserLevelStateTriggerEditForm extends React.Component {
           <option key='left' value='left'>Level left</option>
         </Select>
 
-        <div className='col s12 m9 slider'>
+        <div className='col s12 m8 slider'>
           <div id={`level-slider-${instance.instanceId}`} />
         </div>
       </Row>

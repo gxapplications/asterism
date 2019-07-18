@@ -212,6 +212,7 @@ class PanelList extends React.Component {
             } : null
           }))
         })
+        super.forceUpdate()
       }
     })
   }
@@ -302,7 +303,7 @@ class PanelList extends React.Component {
           </a>
         ))}
       </Row>,
-      <br />
+      <br key={2} />
     ]
   }
 

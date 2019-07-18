@@ -30,9 +30,11 @@ class BrowserLevelStateEditForm extends React.Component {
 
     return (
       <Row className='section card form'>
-        <TextInput placeholder='Give a name to quickly identify your state' s={12} label='Name'
+        <TextInput placeholder='Short name' s={12}
           defaultValue={defaultValue} onChange={(e) => { instance.data.name = e.currentTarget.value; this.props.highlightCloseButton() }} />
 
+        <br />&nbsp;
+        <br />
         <div className='col s12'>Maximum level: {instance.data.max}</div>
         <div className='range-field col s12'>
           <input type='range' list='max' min='2' max='32' onChange={this.changeMaxValue.bind(this)}
@@ -74,7 +76,7 @@ class BrowserLevelStateEditForm extends React.Component {
 
         {instance.data.colors.map((color, idx) => (
           <Select s={6} m={4} l={3} key={idx} label={`Color for state ${idx + 1}`}
-            onChange={this.colorChange.bind(this, idx)} value={color} className={`${color}-text`}>
+            onChange={this.colorChange.bind(this, idx)} value={color} options={{ classes: `${color}-text select-top-marged` }}>
             {levelStateSchema.colors.map((color, idx2) => (
               <option key={`${idx}-${idx2}`} value={color}>{color}</option>
             ))}

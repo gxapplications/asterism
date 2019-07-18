@@ -27,6 +27,16 @@ class LevelStateControlSettingPanel extends ItemSettingPanel {
     }
   }
 
+  shouldComponentUpdate (nextProps, nextState) {
+    const comparator = (i) => [
+      i.params.title,
+      i.params.color,
+      i.params.icon,
+      i.params.levelState
+    ]
+    return JSON.stringify(comparator(this.state)) !== JSON.stringify(comparator(nextState))
+  }
+
   render () {
     const { theme, mainState } = this.props.context
     const { title = '', color = 'inconspicuous', icon = 'error', levelState = '' } = this.state.params
@@ -39,16 +49,12 @@ class LevelStateControlSettingPanel extends ItemSettingPanel {
         <Row className='padded card'>
           <StatesDropdown defaultStateId={levelState} onChange={this.stateChange.bind(this)}
             ref={(c) => { this._levelState = c }} theme={theme} animationLevel={animationLevel}
-            services={() => this.props.context.services}
+            services={() => this.props.context.services} label={null}
             typeFilter={(e) => e.id === 'level-state'} instanceFilter={(e) => e.typeId === 'level-state'} />
 
-          <TextInput s={12} label='Label' ref={(c) => { this._title = c }} className='iconPicker'
-            value={title} onChange={this.handleEventChange.bind(this, 'title')}>
-            <div>
-              <IconPicker theme={theme} animationLevel={animationLevel} defaultIcon={icon}
-                onChange={this.handleValueChange.bind(this, 'icon')} />
-            </div>
-          </TextInput>
+          <IconPicker theme={theme} animationLevel={animationLevel} defaultIcon={icon} onChange={this.handleValueChange.bind(this, 'icon')} />
+          <TextInput s={12} m={10} l={10} label='Label' ref={(c) => { this._title = c }}
+            value={title} onChange={this.handleEventChange.bind(this, 'title')} />
         </Row>
 
         <ActionColorSwitch theme={theme} animationLevel={animationLevel} defaultColor={color}

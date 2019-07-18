@@ -20,19 +20,6 @@ class BrowserBitmaskStateConditionEditForm extends React.Component {
   }
 
   componentDidMount () {
-    this.scenariiService.getStateInstances()
-    .then((instances) => {
-      if (instances.length === 1) {
-        this.props.instance.data.bitmaskStateId = instances[0].instanceId
-        this.nameChange()
-      } else {
-        if (!this.props.instance.data.bitmaskStateId) {
-          this.props.instance.data.bitmaskStateId = instances[0].instanceId
-          this.nameChange()
-        }
-        this.plugWidgets()
-      }
-    })
     this.plugWidgets()
   }
 
@@ -45,55 +32,57 @@ class BrowserBitmaskStateConditionEditForm extends React.Component {
     if (!domSlider) {
       return
     }
-    this.scenariiService.getStateInstance(this.props.instance.data.bitmaskStateId)
-    .then((bitmaskState) => {
-      if (!this._slider || !domSlider.noUiSlider) {
-        this._sliderCount = bitmaskState.data.count
-        this._slider = noUiSlider.create(domSlider, {
-          start: this.props.instance.data.position || 1,
-          connect: true,
-          step: 1,
-          animate: true,
-          range: {
-            'min': [1, 1],
-            'max': [this._sliderCount]
-          },
-          format: wNumb({
-            decimals: 1
-          }),
-          pips: { // Show a scale with the slider
-            mode: 'steps',
-            stepped: true,
-            density: 16
-          },
-          tooltips: wNumb({ decimals: 1, edit: (v) => `${v}`.split('.')[0] }), // decimals: 0 does not work...
-          behaviour: 'tap-drag',
-          orientation: 'horizontal'
-        })
-
-        this._slider.on('change', this.positionChanged.bind(this))
-      } else {
-        if (this._sliderCount !== bitmaskState.data.count) {
+    if (this.props.instance.data.bitmaskStateId) {
+      this.scenariiService.getStateInstance(this.props.instance.data.bitmaskStateId)
+      .then((bitmaskState) => {
+        if (!this._slider || !domSlider.noUiSlider) {
           this._sliderCount = bitmaskState.data.count
-          this._slider.updateOptions(
-            {
-              range: {
-                'min': [1, 1],
-                'max': [this._sliderCount]
-              }
+          this._slider = noUiSlider.create(domSlider, {
+            start: this.props.instance.data.position || 1,
+            connect: true,
+            step: 1,
+            animate: true,
+            range: {
+              'min': [1, 1],
+              'max': [this._sliderCount]
             },
-            true
-          )
-          domSlider.querySelector('.noUi-pips').remove()
-          this._slider.pips({
-            mode: 'steps',
-            stepped: true,
-            density: 16
+            format: wNumb({
+              decimals: 1
+            }),
+            pips: { // Show a scale with the slider
+              mode: 'steps',
+              stepped: true,
+              density: 16
+            },
+            tooltips: wNumb({decimals: 1, edit: (v) => `${v}`.split('.')[0]}), // decimals: 0 does not work...
+            behaviour: 'tap-drag',
+            orientation: 'horizontal'
           })
+
+          this._slider.on('change', this.positionChanged.bind(this))
+        } else {
+          if (this._sliderCount !== bitmaskState.data.count) {
+            this._sliderCount = bitmaskState.data.count
+            this._slider.updateOptions(
+              {
+                range: {
+                  'min': [1, 1],
+                  'max': [this._sliderCount]
+                }
+              },
+              true
+            )
+            domSlider.querySelector('.noUi-pips').remove()
+            this._slider.pips({
+              mode: 'steps',
+              stepped: true,
+              density: 16
+            })
+          }
+          this._slider.set(this.props.instance.data.position)
         }
-        this._slider.set(this.props.instance.data.position)
-      }
-    })
+      })
+    }
   }
 
   render () {
@@ -103,12 +92,14 @@ class BrowserBitmaskStateConditionEditForm extends React.Component {
 
     return (
       <Row className='section card form bitmask-state-condition-panel'>
-        <div className='col s12'>
-          <StatesDropdown defaultStateId={bitmaskStateId} onChange={this.bitmaskStateChanged.bind(this)}
-            theme={theme} animationLevel={animationLevel} services={services}
-            typeFilter={(e) => e.id === 'bitmask-state'} instanceFilter={(e) => e.typeId === 'bitmask-state'} />
-        </div>
 
+        <br />
+        <StatesDropdown s={12} defaultStateId={bitmaskStateId} onChange={this.bitmaskStateChanged.bind(this)}
+          theme={theme} animationLevel={animationLevel} services={services}
+          typeFilter={(e) => e.id === 'bitmask-state'} instanceFilter={(e) => e.typeId === 'bitmask-state'} />
+
+        <br />&nbsp;
+        <br />
         <Select key={0} s={12} label='Operator' icon='navigate_next' onChange={this.changeOperator.bind(this)} defaultValue={operator}>
           <option key='position-set' value='position-set'>Position is set (at 1)</option>
           <option key='position-unset' value='position-unset'>Position is unset (at 0)</option>
@@ -122,7 +113,7 @@ class BrowserBitmaskStateConditionEditForm extends React.Component {
         </Select>
 
         {operator.match(/^position-/) && (
-          <div className='col s12 m9 slider'>
+          <div className='col s12 slider'>
             <div id={`bitmask-slider-${instance.instanceId}`} />
           </div>
         )}

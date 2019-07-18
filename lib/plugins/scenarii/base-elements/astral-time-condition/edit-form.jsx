@@ -77,6 +77,7 @@ class BrowserAstralTimeConditionEditForm extends React.Component {
 
     return (
       <Row className='section card form astral-time-condition-panel'>
+        <br />
         <Select s={12} label='Sunlight condition' icon='brightness_4' onChange={this.changeEvent.bind(this)}
           defaultValue={event}>
           <option key='daylight' value='daylight'>Full daylight period</option>
@@ -88,11 +89,11 @@ class BrowserAstralTimeConditionEditForm extends React.Component {
         </Select>
 
         {event !== 'daylight' && event !== 'fewlight' && [
-          <div className='col s12'>&nbsp;</div>,
-          <div className='col s12'>
+          <div key={0} className='col s12'>&nbsp;</div>,
+          <div key={1} className='col s12'>
             Acceptable time before &amp; after event (in minutes):
           </div>,
-          <div className='col s12 slider'>
+          <div key={2} className='col s12 slider'>
             <div id={`timeshift-slider-${instance.instanceId}`} />
           </div>
         ]}
@@ -112,7 +113,6 @@ class BrowserAstralTimeConditionEditForm extends React.Component {
     this.setState({
       event
     })
-
     this.nameChange()
   }
 
@@ -127,14 +127,14 @@ class BrowserAstralTimeConditionEditForm extends React.Component {
 
   nameChange () {
     const data = this.props.instance.data
-    const timeShiftText = ` (+/- ${data.timeshift}mins)`
+    const timeShiftText = ` (± ${data.timeshift}mins)`
 
     switch (data.event) {
       case 'daylight':
         this.props.instance.data.name = 'full daylight'
         break
       case 'fewlight':
-        this.props.instance.data.name = 'few or full daylight'
+        this.props.instance.data.name = 'few / full daylight'
         break
       case 'sunrise':
         this.props.instance.data.name = 'around sunrise' + timeShiftText

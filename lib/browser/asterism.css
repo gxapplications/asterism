@@ -708,6 +708,9 @@
   display: inline-flex !important;
   padding: 1em 0.2em;
 }
+.actions-dropdown-edit-panel .modal-content .card {
+  background-color: rgba(255, 255, 255, 0.3) !important;
+}
 
 #settings-modal .collection .collection-item {
   background-color: rgba(255, 255, 255, 0.3);
@@ -838,9 +841,23 @@
   display: block;
   line-height: 2.5em;
 }
+.checkbox-spaced + span {
+  padding-right: 3rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+.range-field input[type='range'] {
+  border: none;
+}
+.select-top-marged {
+  margin-top: 1.2rem;
+}
+.select-top-marged + label {
+  top: 1.2rem !important;
+}
 
 .asterism .rg-grid-item .rg-item-wrapper .fluid,
-#item-setting-modal .modal-content .setting-panel .fluid {
+#item-setting-modal .modal-content .setting-panel .fluid:not(.btn-floating) {
   flex-grow: 1;
   height: 100%;
 }
@@ -880,19 +897,25 @@
 }
 
 /* Input text label and underline cannot be grey */
-.input-field > input[type=text]:not(:focus) {
+.input-field input[type=text]:not(:focus) {
   border-bottom: 1px solid rgba(255,255,255,0.4);
 }
-.input-field > input[type=text]:not(:focus) + label {
+.input-field input[type=text]:not(:focus) + label {
   color: rgba(255,255,255,0.4);
 }
-.input-field > input[type=text]:focus {
+.input-field input[type=text]:focus {
   border-bottom: 1px solid #fff !important;
   -webkit-box-shadow: 0 1px 0 0 #fff !important;
   box-shadow: 0 1px 0 0 #fff !important;
 }
-.input-field > input[type=text]:focus + label {
+.input-field input[type=text]:focus + label, .input-field div.select-wrapper + label {
   color: #fff !important;
+}
+.input-field ::placeholder {
+  color: rgba(255,255,255,0.7);
+}
+.input-field .helper-text {
+  min-height: 0;
 }
 
 /* Grid Items: Dragging mode (only when "body > .rg-grid-item > .rg-item-wrapper") need some adjustments */
@@ -902,4 +925,21 @@ body > .rg-grid-item > .rg-item-wrapper button.waves-effect {
 }
 body > .rg-grid-item > .rg-item-wrapper div.doubleBtn {
   position: inherit !important;
+}
+
+/* noUi slider fix */
+.slider .noUi-target, .slider .noUi-pips .noUi-marker {
+  background: #fff;
+}
+.slider .noUi-value {
+  color: #fff;
+}
+.slider .noUi-value-horizontal {
+  margin-top: 0.6rem;
+}
+.slider .noUi-horizontal .noUi-handle {
+  left: -7px;
+}
+.slider .noUi-horizontal .noUi-active.noUi-handle {
+  left: -2px;
 }
