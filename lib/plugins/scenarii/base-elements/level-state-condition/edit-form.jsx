@@ -22,13 +22,6 @@ class BrowserLevelStateConditionEditForm extends React.Component {
   }
 
   componentDidMount () {
-    this.scenariiService.getStateInstances()
-    .then((instances) => {
-      if (instances.length === 1) {
-        this.props.instance.data.levelStateId = instances[0].instanceId
-        this.nameChange()
-      }
-    })
     this.plugWidgets()
   }
 
@@ -107,12 +100,14 @@ class BrowserLevelStateConditionEditForm extends React.Component {
 
     return (
       <Row className='section card form level-state-condition-panel'>
-        <div className='col s12'>
-          <StatesDropdown defaultStateId={levelStateId} onChange={this.levelStateChanged.bind(this)}
-            theme={theme} animationLevel={animationLevel} services={services}
-            typeFilter={(e) => e.id === 'level-state'} instanceFilter={(e) => e.typeId === 'level-state'} />
-        </div>
 
+        <br />
+        <StatesDropdown defaultStateId={levelStateId} onChange={this.levelStateChanged.bind(this)}
+          theme={theme} animationLevel={animationLevel} services={services}
+          typeFilter={(e) => e.id === 'level-state'} instanceFilter={(e) => e.typeId === 'level-state'} />
+
+        <br />&nbsp;
+        <br />
         <Select key={0} s={12} label='Operator' icon='navigate_next' onChange={this.changeOperator.bind(this)} defaultValue={operator}>
           <option key='eq' value='eq'>Equal</option>
           <option key='lte' value='lte'>Less or equal</option>
@@ -121,13 +116,13 @@ class BrowserLevelStateConditionEditForm extends React.Component {
         </Select>
 
         {operator !== 'between' && (
-          <div className='col s12 m9 slider'>
+          <div className='col s12 slider'>
             <div id={`level-slider-${instance.instanceId}`} />
           </div>
         )}
 
         {operator === 'between' && (
-          <div className='col s12 m9 slider'>
+          <div className='col s12 slider'>
             <div id={`level2-slider-${instance.instanceId}`} />
           </div>
         )}

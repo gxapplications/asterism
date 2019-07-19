@@ -3,7 +3,7 @@
 /* global $, noUiSlider, wNumb */
 import PropTypes from 'prop-types'
 import React from 'react'
-import { Row, Checkbox, Select } from 'react-materialize'
+import { Row, Checkbox, Select, TimePicker } from 'react-materialize'
 import uuid from 'uuid'
 
 const minuter = (minutes) => {
@@ -31,23 +31,10 @@ class BrowserTimeBasedConditionEditForm extends React.Component {
 
   componentDidMount () {
     this.plugWidgets()
-    this.fixmeReactMaterialize()
   }
 
   componentDidUpdate () {
     this.plugWidgets()
-    this.fixmeReactMaterialize()
-  }
-
-  fixmeReactMaterialize () {
-    // FIXME: replace by <Input name='xxx' type='time' /> from react-materialize when it will work...
-    $(`.beforeAfter-${this.props.instance.instanceId} .timepicker`).pickatime({
-      twelvehour: false,
-      autoclose: true,
-      default: this.props.instance.data.timeBeforeAfter || '12:00',
-      afterHide: this.changeBeforeAfterTime.bind(this),
-      cleartext: '' // other way to avoid clear button?
-    })
   }
 
   plugWidgets () {
@@ -232,6 +219,7 @@ class BrowserTimeBasedConditionEditForm extends React.Component {
 
     return (
       <Row className='section card form time-based-condition-panel' id={this._formId}>
+        <br />
         <Select key={0} s={12} label='Day / Date' icon='calendar_today' onChange={this.changeDayMode.bind(this)} defaultValue={dayMode}>
           <option key='whatever' value='whatever'>Whatever the date</option>
           <option key='weekdays' value='weekdays'>Based on week days</option>
@@ -241,14 +229,16 @@ class BrowserTimeBasedConditionEditForm extends React.Component {
         </Select>
 
         {dayMode === 'weekdays' && [
-          <Checkbox key={10} name='weekdays' value='0' label='Sunday' className='filled-in' checked={weekdays.includes(0)} onChange={this.changeWeekdays.bind(this)} />,
-          <Checkbox key={11} name='weekdays' value='1' label='Monday' className='filled-in' checked={weekdays.includes(1)} onChange={this.changeWeekdays.bind(this)} />,
-          <Checkbox key={12} name='weekdays' value='2' label='Tuesday' className='filled-in' checked={weekdays.includes(2)} onChange={this.changeWeekdays.bind(this)} />,
-          <Checkbox key={13} name='weekdays' value='3' label='Wednesday' className='filled-in' checked={weekdays.includes(3)} onChange={this.changeWeekdays.bind(this)} />,
-          <Checkbox key={14} name='weekdays' value='4' label='Thursday' className='filled-in' checked={weekdays.includes(4)} onChange={this.changeWeekdays.bind(this)} />,
-          <Checkbox key={15} name='weekdays' value='5' label='Friday' className='filled-in' checked={weekdays.includes(5)} onChange={this.changeWeekdays.bind(this)} />,
-          <Checkbox key={16} name='weekdays' value='6' label='Saturday' className='filled-in' checked={weekdays.includes(6)} onChange={this.changeWeekdays.bind(this)} />
+          <Checkbox key={10} name='weekdays' value='0' label='Sunday' className='filled-in checkbox-spaced' checked={weekdays.includes(0)} onChange={this.changeWeekdays.bind(this)} />,
+          <Checkbox key={11} name='weekdays' value='1' label='Monday' className='filled-in checkbox-spaced' checked={weekdays.includes(1)} onChange={this.changeWeekdays.bind(this)} />,
+          <Checkbox key={12} name='weekdays' value='2' label='Tuesday' className='filled-in checkbox-spaced' checked={weekdays.includes(2)} onChange={this.changeWeekdays.bind(this)} />,
+          <Checkbox key={13} name='weekdays' value='3' label='Wednesday' className='filled-in checkbox-spaced' checked={weekdays.includes(3)} onChange={this.changeWeekdays.bind(this)} />,
+          <Checkbox key={14} name='weekdays' value='4' label='Thursday' className='filled-in checkbox-spaced' checked={weekdays.includes(4)} onChange={this.changeWeekdays.bind(this)} />,
+          <Checkbox key={15} name='weekdays' value='5' label='Friday' className='filled-in checkbox-spaced' checked={weekdays.includes(5)} onChange={this.changeWeekdays.bind(this)} />,
+          <Checkbox key={16} name='weekdays' value='6' label='Saturday' className='filled-in checkbox-spaced' checked={weekdays.includes(6)} onChange={this.changeWeekdays.bind(this)} />
         ]}
+
+        {(dayMode === 'dayInMonth' || dayMode === 'dayAndMonth' || dayMode === 'weekdayInMonth') && <div className='col s12'>&nbsp;</div>}
 
         {dayMode === 'dayInMonth' && [
           dayInMonth.map((d, j) =>
@@ -300,16 +290,26 @@ class BrowserTimeBasedConditionEditForm extends React.Component {
         ]}
 
         {timeMode === 'before' && [
-          <div key={9} className={`input-field col s12 m6 l4 beforeAfter-${instance.instanceId}`}>
-            <input id={timePickerId} type='text' className='timepicker' defaultValue={timeBeforeAfter} onChange={this.changeBeforeAfterTime.bind(this)} />
-            <label htmlFor={timePickerId}>Before time</label>
+          <div key={9} className={'input-field col s12 m8 l6'}>
+            <label className={'col s5'} htmlFor={timePickerId}>Before time:</label>
+            <TimePicker className={'col offset-s5 s7'} id={timePickerId} options={{
+              twelveHour: false,
+              autoClose: true,
+              defaultTime: timeBeforeAfter || '12:00',
+              showClearBtn: false
+            }} onChange={this.changeBeforeAfterTime.bind(this)} value={timeBeforeAfter || '12:00'} />
           </div>
         ]}
 
         {timeMode === 'after' && [
-          <div key={10} className={`input-field col s12 m6 l4 beforeAfter-${instance.instanceId}`}>
-            <input id={timePickerId} type='text' className='timepicker' defaultValue={timeBeforeAfter} onChange={this.changeBeforeAfterTime.bind(this)} />
-            <label htmlFor={timePickerId}>After time</label>
+          <div key={10} className={'input-field col s12 m6 l4'}>
+            <label className={'col s5'} htmlFor={timePickerId}>After time:</label>
+            <TimePicker className={'col offset-s5 s7'} id={timePickerId} options={{
+              twelveHour: false,
+              autoClose: true,
+              defaultTime: timeBeforeAfter || '12:00',
+              showClearBtn: false
+            }} onChange={this.changeBeforeAfterTime.bind(this)} value={timeBeforeAfter || '12:00'} />
           </div>
         ]}
       </Row>
@@ -487,19 +487,12 @@ class BrowserTimeBasedConditionEditForm extends React.Component {
     })
   }
 
-  changeBeforeAfterTime () {
-    setTimeout(() => {
-      const element = $(`#${this._formId} .beforeAfter-${this.props.instance.instanceId} .timepicker`)[0]
-      if (element.value !== '') {
-        this.props.instance.data.timeBeforeAfter = element.value
-      } else {
-        this.props.instance.data.timeBeforeAfter = '12:00'
-      }
-      this.nameChange()
-      return this.setState({
-        timeBeforeAfter: this.props.instance.data.timeBeforeAfter
-      })
-    }, 10)
+  changeBeforeAfterTime (hours, minutes) {
+    this.props.instance.data.timeBeforeAfter = `${hours}:${minutes}`
+    this.nameChange()
+    return this.setState({
+      timeBeforeAfter: this.props.instance.data.timeBeforeAfter
+    })
   }
 
   nameChange () {

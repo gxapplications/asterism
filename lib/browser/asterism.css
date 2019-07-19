@@ -838,6 +838,11 @@
   display: block;
   line-height: 2.5em;
 }
+.checkbox-spaced + span {
+  padding-right: 3rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
 
 .asterism .rg-grid-item .rg-item-wrapper .fluid,
 #item-setting-modal .modal-content .setting-panel .fluid {
@@ -905,4 +910,21 @@ body > .rg-grid-item > .rg-item-wrapper button.waves-effect {
 }
 body > .rg-grid-item > .rg-item-wrapper div.doubleBtn {
   position: inherit !important;
+}
+
+/* noUi slider fix */
+.slider .noUi-target, .slider .noUi-pips .noUi-marker {
+  background: #fff;
+}
+.slider .noUi-value {
+  color: #fff;
+}
+.slider .noUi-value-horizontal {
+  margin-top: 0.6rem;
+}
+.slider .noUi-horizontal .noUi-handle {
+  left: -7px;
+}
+.slider .noUi-horizontal .noUi-active.noUi-handle {
+  left: -2px;
 }

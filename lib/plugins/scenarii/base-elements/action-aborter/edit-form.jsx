@@ -28,10 +28,10 @@ class BrowserActionAborterEditForm extends React.Component {
     const { instance, animationLevel, theme, services } = this.props
     return (
       <Row className='section card form'>
-        <div className='col s12 m9'>
-          <ActionsDropdown defaultActionId={instance.data.actionId} onChange={this.actionChanged.bind(this)}
-            theme={theme} animationLevel={animationLevel} services={services} noCreationPanel typeFilter={() => false} />
-        </div>
+        <br />
+        <ActionsDropdown defaultActionId={instance.data.actionId} onChange={this.actionChanged.bind(this)}
+          theme={theme} animationLevel={animationLevel} services={services} noCreationPanel
+          instanceFilter={(e) => e.typeId !== 'action-aborter'} typeFilter={() => false} />
       </Row>
     )
   }

@@ -25,26 +25,7 @@ class BrowserActionableScenarioEditForm extends React.Component {
   }
 
   componentDidMount () {
-    if (!this.props.instance.data.executionTrigger.length) {
-      this.scenariiService.getTriggerInstances()
-      .then((instances) => {
-        if (instances[0]) {
-          this.props.instance.data.executionTrigger = instances[0].instanceId
-        }
-
-        if (!this.props.instance.data.action.length) {
-          this.scenariiService.getActionInstances()
-          .then((instances2) => {
-            if (instances2[0]) {
-              this.props.instance.data.action = instances2[0].instanceId
-              this.betterName()
-            }
-          })
-        } else {
-          this.betterName()
-        }
-      })
-    } else {
+    if (this.props.instance.data.executionTrigger.length) {
       this.betterName()
     }
   }
@@ -70,7 +51,7 @@ class BrowserActionableScenarioEditForm extends React.Component {
           <ConditionsDropdown onChange={this.setCondition.bind(this)} theme={theme} animationLevel={animationLevel}
             services={services} noCreationPanel defaultConditionId={executionCondition}
             typeFilter={() => false} icon={null} label='Set additional condition' dropdownId={uuid.v4()}>
-            <option key='no-condition-option' value={''}>No condition</option>
+            <option key='no-condition-option' value={'no-condition'}>No condition</option>
           </ConditionsDropdown>
         </Row>
         <Row className='section card form'>
@@ -109,7 +90,7 @@ class BrowserActionableScenarioEditForm extends React.Component {
   }
 
   setCondition (conditionId) {
-    this.props.instance.data.executionCondition = conditionId
+    this.props.instance.data.executionCondition = (conditionId === 'no-condition') ? '' : conditionId
     this.betterName()
   }
 
@@ -125,6 +106,9 @@ class BrowserActionableScenarioEditForm extends React.Component {
   }
 
   betterName () {
+    if (!this.props.instance.data.executionTrigger || !this.props.instance.data.action) {
+      return
+    }
     if (this.props.instance.data.name &&
         this.props.instance.data.name.length &&
         this.props.instance.data.name !== 'Unconfigured actionable scenario' &&
