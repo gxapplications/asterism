@@ -28,6 +28,10 @@ class ActionButtonItem extends Item {
     }
   }
 
+  shouldComponentUpdate (nextProps, nextState) {
+    return true // TODO !0
+  }
+
   render () {
     const { mainState, theme } = this.props.context
     const { animationLevel } = mainState()

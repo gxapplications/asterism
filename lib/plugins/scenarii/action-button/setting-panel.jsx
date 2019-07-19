@@ -22,13 +22,17 @@ class ActionButtonSettingPanel extends ItemSettingPanel {
     }
   }
 
+  shouldComponentUpdate (nextProps, nextState) {
+    return true // TODO !0
+  }
+
   render () {
     const { theme, mainState } = this.props.context
     const { title = '', action = '', color = 'primary', icon = 'error' } = this.state.params
     const { animationLevel } = mainState()
 
     const waves = animationLevel >= 2 ? 'light' : undefined
-
+// TODO !0: fix iconpicker placement !
     return (
       <div id='actionButtonSettingDiv' className='clearing padded'>
         <Row className='padded card'>

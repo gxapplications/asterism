@@ -173,11 +173,11 @@ class ScenariiEditPanel extends React.Component {
   }
 
   tabChanged (href) {
-    $(`#scenarii-edit-panel > div.row > div.col > ul.tabs > li.tab > a[href^='#']`).each((idx, el) => {
+    $(`#scenarii-edit-panel > ul.tabs > li.tab > a[href^='#']`).each((idx, el) => {
       if ($(el).attr('href') === `#tab_${href}`) {
         this.setState({ currentTab: idx })
         setTimeout(() => {
-          $(`#scenarii-edit-panel > div.row > div:eq(${idx + 1}) .search input`).focus()
+          $(`#scenarii-edit-panel > div.row > div:eq(${idx}) .search input`).focus()
         }, 300)
       }
     })
@@ -191,12 +191,16 @@ class ScenariiEditPanel extends React.Component {
       $('#scenarii-persistence-error-modal').modal('open')
     })
     .then(() => {
-      this._tabs.forEach((tab) => !!tab && tab.forceUpdate && tab.forceUpdate())
+      this._tabs[0].forceUpdate && this._tabs[0].forceUpdate()
+      this._tabs[this.state.currentTab].forceUpdate && this._tabs[this.state.currentTab].forceUpdate()
       this._editInstance = null
       if (this.state.EditForm) {
         this.setState({
           EditForm: null
         })
+        setTimeout(() => {
+          $(`#scenarii-edit-panel > div.row > div:eq(${this.state.currentTab}) .search input`).focus()
+        }, 300)
       }
     })
     .then(() => true) // modal will not close now

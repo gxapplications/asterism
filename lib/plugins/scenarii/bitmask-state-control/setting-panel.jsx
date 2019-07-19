@@ -41,6 +41,10 @@ class BitmaskStateControlSettingPanel extends ItemSettingPanel {
     }
   }
 
+  shouldComponentUpdate (nextProps, nextState) {
+    return true // TODO !0
+  }
+
   render () {
     const { theme, mainState } = this.props.context
     const { params, stateInstance } = this.state

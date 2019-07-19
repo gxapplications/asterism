@@ -229,13 +229,13 @@ class BrowserTimeBasedConditionEditForm extends React.Component {
         </Select>
 
         {dayMode === 'weekdays' && [
-          <Checkbox key={10} name='weekdays' value='0' label='Sunday' className='filled-in checkbox-spaced' checked={weekdays.includes(0)} onChange={this.changeWeekdays.bind(this)} />,
-          <Checkbox key={11} name='weekdays' value='1' label='Monday' className='filled-in checkbox-spaced' checked={weekdays.includes(1)} onChange={this.changeWeekdays.bind(this)} />,
-          <Checkbox key={12} name='weekdays' value='2' label='Tuesday' className='filled-in checkbox-spaced' checked={weekdays.includes(2)} onChange={this.changeWeekdays.bind(this)} />,
-          <Checkbox key={13} name='weekdays' value='3' label='Wednesday' className='filled-in checkbox-spaced' checked={weekdays.includes(3)} onChange={this.changeWeekdays.bind(this)} />,
-          <Checkbox key={14} name='weekdays' value='4' label='Thursday' className='filled-in checkbox-spaced' checked={weekdays.includes(4)} onChange={this.changeWeekdays.bind(this)} />,
-          <Checkbox key={15} name='weekdays' value='5' label='Friday' className='filled-in checkbox-spaced' checked={weekdays.includes(5)} onChange={this.changeWeekdays.bind(this)} />,
-          <Checkbox key={16} name='weekdays' value='6' label='Saturday' className='filled-in checkbox-spaced' checked={weekdays.includes(6)} onChange={this.changeWeekdays.bind(this)} />
+          <Checkbox key={10} value='0' label='Sunday' className='filled-in checkbox-spaced' checked={weekdays.includes(0)} onChange={this.changeWeekdays.bind(this)} />,
+          <Checkbox key={11} value='1' label='Monday' className='filled-in checkbox-spaced' checked={weekdays.includes(1)} onChange={this.changeWeekdays.bind(this)} />,
+          <Checkbox key={12} value='2' label='Tuesday' className='filled-in checkbox-spaced' checked={weekdays.includes(2)} onChange={this.changeWeekdays.bind(this)} />,
+          <Checkbox key={13} value='3' label='Wednesday' className='filled-in checkbox-spaced' checked={weekdays.includes(3)} onChange={this.changeWeekdays.bind(this)} />,
+          <Checkbox key={14} value='4' label='Thursday' className='filled-in checkbox-spaced' checked={weekdays.includes(4)} onChange={this.changeWeekdays.bind(this)} />,
+          <Checkbox key={15} value='5' label='Friday' className='filled-in checkbox-spaced' checked={weekdays.includes(5)} onChange={this.changeWeekdays.bind(this)} />,
+          <Checkbox key={16} value='6' label='Saturday' className='filled-in checkbox-spaced' checked={weekdays.includes(6)} onChange={this.changeWeekdays.bind(this)} />
         ]}
 
         {(dayMode === 'dayInMonth' || dayMode === 'dayAndMonth' || dayMode === 'weekdayInMonth') && <div className='col s12'>&nbsp;</div>}
@@ -335,7 +335,7 @@ class BrowserTimeBasedConditionEditForm extends React.Component {
   }
 
   changeWeekdays () {
-    const weekdays = $(`#${this._formId} input[name="weekdays"]`).map((i, e) => e.checked ? i : false).toArray().filter(v => v !== false)
+    const weekdays = $(`#${this._formId} input[type="checkbox"]`).map((i, e) => e.checked ? i : false).toArray().filter(v => v !== false)
     this.props.instance.data.weekdays = weekdays
     this.nameChange()
   }

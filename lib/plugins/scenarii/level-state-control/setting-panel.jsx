@@ -27,13 +27,17 @@ class LevelStateControlSettingPanel extends ItemSettingPanel {
     }
   }
 
+  shouldComponentUpdate (nextProps, nextState) {
+    return true // TODO !0
+  }
+
   render () {
     const { theme, mainState } = this.props.context
     const { title = '', color = 'inconspicuous', icon = 'error', levelState = '' } = this.state.params
     const { animationLevel } = mainState()
 
     const waves = animationLevel >= 2 ? 'light' : undefined
-
+// TODO !0: fix iconpicker placement !
     return (
       <div id='levelStateControlItemSettingDiv' className='clearing padded'>
         <Row className='padded card'>

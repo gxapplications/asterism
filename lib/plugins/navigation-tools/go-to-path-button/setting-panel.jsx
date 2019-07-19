@@ -25,7 +25,7 @@ class GoToPathButtonSettingPanel extends ItemSettingPanel {
     const { animationLevel } = mainState()
 
     const waves = animationLevel >= 2 ? 'light' : undefined
-
+// TODO !0: fix iconpicker placement !
     return (
       <div id='goToPathSettingDiv' className='clearing padded'>
         <Row className='padded card'>

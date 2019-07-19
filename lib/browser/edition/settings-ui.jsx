@@ -23,6 +23,10 @@ class SettingsUserInterface extends React.Component {
     this.colors = props.theme.palette
   }
 
+  shouldComponentUpdate (nextProps, nextState) {
+    return true // TODO !0
+  }
+
   render () {
     const { theme, animationLevel } = this.props
     const { currentColor, continuousRecognition, animation, mainLanguage } = this.state

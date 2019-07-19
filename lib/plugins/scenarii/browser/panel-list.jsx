@@ -212,6 +212,7 @@ class PanelList extends React.Component {
             } : null
           }))
         })
+        super.forceUpdate()
       }
     })
   }

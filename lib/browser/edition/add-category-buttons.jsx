@@ -162,6 +162,10 @@ class AddCategoryButtons extends React.Component {
     })
   }
 
+  shouldComponentUpdate (nextProps, nextState) {
+    return true // TODO !0
+  }
+
   render () {
     const { theme, animationLevel, itemFactories } = this.props
     const { modal } = this.state

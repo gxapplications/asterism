@@ -28,6 +28,10 @@ class SettingsSecurity extends React.Component {
     })
   }
 
+  shouldComponentUpdate (nextProps, nextState) {
+    return true // TODO !0
+  }
+
   render () {
     const { theme, animationLevel } = this.props
     const waves = animationLevel >= 2 ? 'light' : undefined

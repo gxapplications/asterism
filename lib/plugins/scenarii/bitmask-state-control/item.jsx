@@ -39,6 +39,10 @@ class BitmaskStateControlItem extends Item {
     }
   }
 
+  shouldComponentUpdate (nextProps, nextState) {
+    return true // TODO !0
+  }
+
   render () {
     const { theme } = this.props.context
     const { title = '', titles = [], icons = [] } = this.state.params

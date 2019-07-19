@@ -18,6 +18,10 @@ class ItemSetting extends React.Component {
     })
   }
 
+  shouldComponentUpdate (nextProps, nextState) {
+    return true // TODO !0
+  }
+
   render () {
     const { icon, title, theme, children, animationLevel } = this.props
     return (
