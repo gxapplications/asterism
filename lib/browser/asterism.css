@@ -708,6 +708,9 @@
   display: inline-flex !important;
   padding: 1em 0.2em;
 }
+.actions-dropdown-edit-panel .modal-content .card {
+  background-color: rgba(255, 255, 255, 0.3) !important;
+}
 
 #settings-modal .collection .collection-item {
   background-color: rgba(255, 255, 255, 0.3);
@@ -842,6 +845,15 @@
   padding-right: 3rem;
   margin-top: 0.5rem;
   margin-bottom: 0.5rem;
+}
+.range-field input[type='range'] {
+  border: none;
+}
+.select-top-marged {
+  margin-top: 1.2rem;
+}
+.select-top-marged + label {
+  top: 1.2rem !important;
 }
 
 .asterism .rg-grid-item .rg-item-wrapper .fluid,

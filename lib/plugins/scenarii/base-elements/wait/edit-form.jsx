@@ -3,7 +3,7 @@
 /* global $, noUiSlider, wNumb */
 import PropTypes from 'prop-types'
 import React from 'react'
-import { Select, Row } from 'react-materialize'
+import { Select, Row, TimePicker } from 'react-materialize'
 import uuid from 'uuid'
 
 class BrowserWaitEditForm extends React.Component {
@@ -17,12 +17,10 @@ class BrowserWaitEditForm extends React.Component {
   }
 
   componentDidMount (prevProps, prevState) {
-    this.fixmeReactMaterialize()
     this.plugWidgets()
   }
 
   componentDidUpdate (prevProps, prevState) {
-    this.fixmeReactMaterialize()
     this.plugWidgets()
   }
 
@@ -67,23 +65,13 @@ class BrowserWaitEditForm extends React.Component {
     }
   }
 
-  fixmeReactMaterialize () {
-    // FIXME: replace by <Input name='xxx' type='time' /> from react-materialize when it will work...
-    $(`#until-${this.props.instance.instanceId} .timepicker`).pickatime({
-      twelvehour: false,
-      autoclose: true,
-      default: this.props.instance.data.until || '12:00',
-      afterHide: this.changeUntil.bind(this),
-      cleartext: 'Now'
-    })
-  }
-
   render () {
     const { instance } = this.props
     const { waitMode, amountUnit, until, untilOccurrence, untilQuarter } = instance.data
     const timePickerId = uuid.v4()
     return (
       <Row className='section card form waitPanel'>
+        <br />
         <Select key={0} s={12} label='Mode' icon={waitMode === 'amount' ? 'timer' : (waitMode === 'until' ? 'timelapse' : 'av_timer')} onChange={this.changeWaitMode.bind(this)}
           defaultValue={waitMode}>
           <option key='amount' value='amount'>Wait a lapse of time</option>
@@ -107,11 +95,17 @@ class BrowserWaitEditForm extends React.Component {
         ]}
 
         {waitMode === 'until' && [
-          <div key={3} className='input-field col s12 m5 l4' id={`until-${instance.instanceId}`}>
-            <input id={timePickerId} type='text' className='timepicker' defaultValue={until} onChange={this.changeUntil.bind(this)} />
-            <label htmlFor={timePickerId}>Time</label>
+          <div key={3} className='input-field col s12 m8 l6'>
+            <label className={'col s5'} htmlFor={timePickerId}>Time:</label>
+            <TimePicker className={'col offset-s5 s7'} id={timePickerId} options={{
+              twelveHour: false,
+              autoClose: true,
+              defaultTime: until || '12:00',
+              showClearBtn: false
+            }} onChange={this.changeUntil.bind(this)} value={until || '12:00'} />
           </div>,
-          <Select key={4} s={12} m={7} l={8} label='Occurrence' icon='timelapse' onChange={this.changeUntilOccurrence.bind(this)}
+          <div className='col s12'>&nbsp;</div>,
+          <Select key={4} s={12} label='Occurrence' icon='timelapse' onChange={this.changeUntilOccurrence.bind(this)}
             defaultValue={untilOccurrence}>
             <option key='first' value='first'>at first occurrence of this moment</option>
             <option key='tomorrow' value='tomorrow'>tomorrow</option>
@@ -154,18 +148,9 @@ class BrowserWaitEditForm extends React.Component {
     this.nameChange()
   }
 
-  changeUntil () {
-    setTimeout(() => {
-      const element = $(`#until-${this.props.instance.instanceId} .timepicker`)[0]
-      if (element.value !== '') {
-        this.props.instance.data.until = element.value
-      } else {
-        const now = new Date()
-        this.props.instance.data.until = `${now.getHours()}:${`${now.getMinutes()}`.padStart(2, '0')}`
-        $(`#until-${this.props.instance.instanceId} .timepicker`).val(this.props.instance.data.until)
-      }
-      this.nameChange()
-    }, 10)
+  changeUntil (hours, minutes) {
+    this.props.instance.data.until = `${hours}:${minutes}`
+    this.nameChange()
   }
 
   changeUntilOccurrence (event) {

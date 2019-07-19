@@ -31,9 +31,11 @@ class BrowserBitmaskStateEditForm extends React.Component {
 
     return (
       <Row className='section card form'>
-        <TextInput placeholder='Give a name to quickly identify your state' s={12} label='Name'
+        <TextInput placeholder='Short name' s={12}
           defaultValue={defaultValue} onChange={(e) => { instance.data.name = e.currentTarget.value; this.props.highlightCloseButton() }} />
 
+        <br />&nbsp;
+        <br />
         <div className='col s12'>Positions count: {instance.data.count}</div>
         <div className='range-field col s12'>
           <input type='range' list='count' min='1' max='8' onChange={this.changeCountValue.bind(this)}

@@ -56,13 +56,14 @@ class BrowserProcedureEditForm extends React.Component {
     return (
       <div>
         <Row className='section card form hide-in-procedure'>
-          <TextInput placeholder='Give a name to quickly identify your action' s={12} label='Name'
-            defaultValue={defaultValue} onChange={(e) => { instance.data.name = e.currentTarget.value; this.props.highlightCloseButton() }} />
+          <TextInput placeholder='Short name' s={12} defaultValue={defaultValue}
+            onChange={(e) => { instance.data.name = e.currentTarget.value; this.props.highlightCloseButton() }} />
         </Row>
 
         <Row className='section procedurePanel'>
           {this.renderScript(instance.data.script)}
         </Row>
+        <br />
       </div>
     )
   }
@@ -132,7 +133,7 @@ class BrowserProcedureEditForm extends React.Component {
             <ActionsDropdown onChange={this.addAction.bind(this, sequence)} theme={theme} animationLevel={animationLevel}
               services={services} parentIdForNewInstance={instance.instanceId} noCreationPanel
               typeFilter={(e) => e.id !== 'base-procedure'} instanceFilter={(e) => e.typeId !== 'base-procedure'}
-              icon={null} label='Add an action' dropdownId={uuid.v4()} />
+              icon={null} label='' dropdownId={uuid.v4()} />
           </li>
         ) : null}
         {scriptsOrActions.length < 32 ? (

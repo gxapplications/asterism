@@ -14,23 +14,13 @@ class BrowserActionAborterEditForm extends React.Component {
     this.scenariiService = props.services()['asterism-scenarii']
   }
 
-  componentDidMount () {
-    this.scenariiService.getActionInstances()
-    .then((instances) => {
-      if (instances.length === 1) {
-        this.props.instance.data.actionId = instances[0].instanceId
-        this.nameChange()
-      }
-    })
-  }
-
   render () {
     const { instance, animationLevel, theme, services } = this.props
     return (
       <Row className='section card form'>
         <br />
         <ActionsDropdown defaultActionId={instance.data.actionId} onChange={this.actionChanged.bind(this)}
-          theme={theme} animationLevel={animationLevel} services={services} noCreationPanel
+          theme={theme} animationLevel={animationLevel} services={services} noCreationPanel label='Action to abort'
           instanceFilter={(e) => e.typeId !== 'action-aborter'} typeFilter={() => false} />
       </Row>
     )

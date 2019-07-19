@@ -188,6 +188,14 @@
     border-bottom: 1px solid transparent;
     border-radius: 3px;
 
+    & li {
+      float: inherit;
+    }
+
+    & i.material-icons {
+      font-size: 1.1em !important;
+    }
+
     & > li:not(.add) {
       position: relative;
       border: 2px solid white;
@@ -217,11 +225,12 @@
       & > i.material-icons {
         vertical-align: middle;
         font-size: inherit;
+        float: left;
       }
     }
   }
 
-  & > ul.script {
+  & > ul.script { /* first level script only */
     padding: 0;
     border-left: none;
   }
@@ -271,8 +280,8 @@
         display: inline-block;
         padding: 0 9px;
         position: absolute;
-        left: 0.2rem;
-        top: 3rem;
+        left: 0.1rem;
+        top: 2.8rem;
         z-index: 3;
       }
 
@@ -282,6 +291,7 @@
       }
 
       & > .globalizeAction:not(.disabled) {
+        font-size: 0.8em;
         display: inline-block;
         position: absolute;
         padding: 0 9px;
@@ -290,6 +300,7 @@
       }
 
       & > .globalizeAction.disabled {
+        font-size: 0.8em;
         z-index: 2;
         display: block;
         position: absolute;
@@ -304,11 +315,12 @@
 
         & i.material-icons {
           vertical-align: middle;
+          display: inline;
         }
       }
 
       &:nth-last-of-type(3) > .globalizeAction.disabled {
-        bottom: 1.2em;
+        bottom: 1.5em;
       }
 
       & > div:first-of-type:not(.orderHandler) { /* Action EditForm root */
@@ -331,16 +343,17 @@
       background-color: rgba(242, 242, 242, 0.1);
       border-radius: 5px;
       list-style-type: none;
-      height: 4.8rem;
+      height: 3.5rem;
+      width: -webkit-fill-available;
 
       &:first-of-type {
         margin: 0.2rem;
       }
 
       &.script {
-        margin: 0 0 0 0.3rem;
+        margin: 0.6rem 0 0 0.3rem;
         vertical-align: baseline;
-        line-height: 3.7rem;
+        line-height: 2.4rem;
       }
 
       &.action {
@@ -355,6 +368,7 @@
       & > i.material-icons {
         vertical-align: middle;
         font-size: inherit;
+        float: left;
       }
     }
   }
