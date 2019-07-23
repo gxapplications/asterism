@@ -1,6 +1,6 @@
 {
   "name": "asterism",
-  "version": "1.0.6",
+  "version": "1.1.0",
   "description": "Extensible & dynamic dashboard platform",
   "author": "Xavier Gouley <gxapplications@gmail.com>",
   "contributors": [],
@@ -36,8 +36,8 @@
     "domotics"
   ],
   "engines": {
-    "node": ">= 8.9.4",
-    "npm": ">= 5.6.0"
+    "node": ">= 8.11.1",
+    "npm": ">= 6.4.1"
   },
   "babel": {
     "presets": [
@@ -95,7 +95,7 @@
     "ajv": "6.2.x",
     "all-the-cities": "2.0.x",
     "annyang": "^2.6.0",
-    "asterism-plugin-library": "^2.1.9",
+    "asterism-plugin-library": "^2.2.0",
     "babel-loader": "7.1.4",
     "babel-plugin-css-modules-transform": "1.5.0",
     "babel-plugin-transform-object-rest-spread": "6.23.x",
@@ -106,7 +106,7 @@
     "camelopard": "0.7.x",
     "classnames": "2.2.x",
     "colors": "1.1.x",
-    "cookie-parser": "^1.4.4",
+    "cookie-parser": "1.4.x",
     "css-loader": "0.28.x",
     "debounce": "1.x",
     "expose-loader": "0.7.x",
@@ -123,7 +123,7 @@
     "materialize-css": "1.0.0",
     "moment": "^2.22.0",
     "moment-timer": "^1.2.3",
-    "node-forge": "^0.8.5",
+    "node-forge": "0.8.x",
     "node-sass": "4.9.x",
     "nosql": "6.1.x",
     "object-path": "0.11.x",
