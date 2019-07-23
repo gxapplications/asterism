@@ -48,12 +48,12 @@
   animation-iteration-count: 1;
 }
 
-.asterism .navbar-fixed li.notification-item {
+.asterism .navbar-fixed .notification-item {
   border-radius: 50%;
   transform: scale(0.8);
 }
 
-.asterism .navbar-fixed li.notification-item-speech {
+.asterism .navbar-fixed .notification-item-speech {
   overflow: visible;
 }
 
@@ -66,7 +66,7 @@
   height: 48px;
 }
 
-.asterism .navbar-fixed ul.side-nav li.notification-item {
+.asterism .navbar-fixed ul.side-nav .notification-item {
   width: fit-content;
 }
 
@@ -614,6 +614,8 @@
 
 #edit-panel-modal .modal-content {
   overflow-y: auto;
+  width: -webkit-fill-available;
+  height: calc(100% - 4.5rem);
 }
 
 #settings-modal span.brand-logo, #edit-panel-modal span.brand-logo {
@@ -672,7 +674,7 @@
 }
 
 #settings-modal .card:not(.form),
-#edit-panel-modal .card:not(.form) {
+#edit-panel-modal > .card:not(.form) {
   background: none !important;
   margin: 0 !important;
   height: calc(100% - 12px);
@@ -821,7 +823,7 @@
   bottom: 0;
   left: 0;
   right: 0.5rem;
-  height: 5.4vh;
+  height: 3.5rem;
   z-index: 1;
 }
 
@@ -916,6 +918,9 @@
 }
 .input-field .helper-text {
   min-height: 0;
+}
+.select-wrapper + label {
+  top: 0;
 }
 
 /* Grid Items: Dragging mode (only when "body > .rg-grid-item > .rg-item-wrapper") need some adjustments */
