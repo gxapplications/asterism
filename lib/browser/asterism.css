@@ -857,7 +857,7 @@
 }
 
 .asterism .rg-grid-item .rg-item-wrapper .fluid,
-#item-setting-modal .modal-content .setting-panel .fluid {
+#item-setting-modal .modal-content .setting-panel .fluid:not(.btn-floating) {
   flex-grow: 1;
   height: 100%;
 }
@@ -897,22 +897,25 @@
 }
 
 /* Input text label and underline cannot be grey */
-.input-field > input[type=text]:not(:focus) {
+.input-field input[type=text]:not(:focus) {
   border-bottom: 1px solid rgba(255,255,255,0.4);
 }
-.input-field > input[type=text]:not(:focus) + label {
+.input-field input[type=text]:not(:focus) + label {
   color: rgba(255,255,255,0.4);
 }
-.input-field > input[type=text]:focus {
+.input-field input[type=text]:focus {
   border-bottom: 1px solid #fff !important;
   -webkit-box-shadow: 0 1px 0 0 #fff !important;
   box-shadow: 0 1px 0 0 #fff !important;
 }
-.input-field > input[type=text]:focus + label {
+.input-field input[type=text]:focus + label, .input-field div.select-wrapper + label {
   color: #fff !important;
 }
 .input-field ::placeholder {
   color: rgba(255,255,255,0.7);
+}
+.input-field .helper-text {
+  min-height: 0;
 }
 
 /* Grid Items: Dragging mode (only when "body > .rg-grid-item > .rg-item-wrapper") need some adjustments */

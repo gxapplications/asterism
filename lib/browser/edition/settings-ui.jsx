@@ -24,7 +24,15 @@ class SettingsUserInterface extends React.Component {
   }
 
   shouldComponentUpdate (nextProps, nextState) {
-    return true // TODO !0
+    const comparator = (i) => [
+      i.animation,
+      i.colorField,
+      i.continuousRecognition,
+      i.constructor,
+      i.mainLanguage,
+      i.theme
+    ]
+    return JSON.stringify(comparator(this.state)) !== JSON.stringify(comparator(nextState))
   }
 
   render () {
@@ -144,6 +152,7 @@ class SettingsUserInterface extends React.Component {
 
     // close .card-reveal div
     $('#settings-modal .card .card-reveal .card-title').click()
+    setTimeout(this.forceUpdate.bind(this), 50)
   }
 
   setAnimationLevel (event) {

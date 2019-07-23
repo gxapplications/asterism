@@ -2,7 +2,7 @@
 
 import cx from 'classnames'
 import React from 'react'
-import { Icon, Row } from 'react-materialize'
+import { Button, Icon, Row } from 'react-materialize'
 
 import { Item } from 'asterism-plugin-library'
 
@@ -40,11 +40,19 @@ class BitmaskStateControlItem extends Item {
   }
 
   shouldComponentUpdate (nextProps, nextState) {
-    return true // TODO !0
+    const comparator = (i) => [
+      i.params.title,
+      i.params.titles,
+      i.params.icons,
+      i.currentValue,
+      i.bitmaskState && i.bitmaskState.instanceId
+    ]
+    return JSON.stringify(comparator(this.state)) !== JSON.stringify(comparator(nextState))
   }
 
   render () {
-    const { theme } = this.props.context
+    const { theme, mainState } = this.props.context
+    const { animationLevel } = mainState()
     const { title = '', titles = [], icons = [] } = this.state.params
     const { bitmaskState, currentValue } = this.state
 
@@ -80,7 +88,10 @@ class BitmaskStateControlItem extends Item {
         </Row>
       </div>
     ) : (
-      <div />
+      <Button waves={animationLevel >= 2 ? 'light' : null} className={cx(theme.feedbacks.warning, 'truncate fluid')} onClick={() => {}}>
+        <Icon left className='red-text'>healing</Icon>
+        No state set
+      </Button>
     )
   }
 

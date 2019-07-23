@@ -29,26 +29,34 @@ class ActionButtonItem extends Item {
   }
 
   shouldComponentUpdate (nextProps, nextState) {
-    return true // TODO !0
+    const comparator = (i) => [
+      i.params.title,
+      i.params.color,
+      i.params.icon,
+      i.params.action,
+      i.action && i.action.instanceId,
+      i.actionExecuting
+    ]
+    return JSON.stringify(comparator(this.state)) !== JSON.stringify(comparator(nextState))
   }
 
   render () {
     const { mainState, theme } = this.props.context
     const { animationLevel } = mainState()
     const { title = '', icon = 'error', color = 'primary' } = this.state.params
-    const { actionExecuting } = this.state
+    const { actionExecuting, action } = this.state
 
-    const btnColor = actionExecuting
+    const btnColor = !action ? theme.feedbacks.warning : (actionExecuting
         ? theme.feedbacks.progressing
-        : (actionExecuting === undefined ? theme.feedbacks.warning : theme.actions[color])
+        : (actionExecuting === undefined ? theme.feedbacks.warning : theme.actions[color]))
 
     return (
       <Button waves={animationLevel >= 2 ? 'light' : null}
         className={cx(btnColor, 'truncate fluid')} onClick={this.click.bind(this)}
       >
-        {actionExecuting ? (<Icon left className='red-text'>cancel</Icon>) : null}
+        {(!action || actionExecuting) && <Icon left className='red-text'>{!action ? 'healing' : 'cancel'}</Icon>}
         <Icon right>{icon}</Icon>
-        {actionExecuting ? (<span className='red-text'>Cancel&nbsp;</span>) : ''}{title || (this.state.action && this.state.action.data && this.state.action.data.name)}
+        {actionExecuting ? (<span className='red-text'>Cancel&nbsp;</span>) : ''}{!action ? 'No action set' : title || (this.state.action && this.state.action.data && this.state.action.data.name)}
       </Button>
     )
   }

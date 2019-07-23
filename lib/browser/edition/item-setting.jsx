@@ -19,7 +19,7 @@ class ItemSetting extends React.Component {
   }
 
   shouldComponentUpdate (nextProps, nextState) {
-    return true // TODO !0
+    return false
   }
 
   render () {

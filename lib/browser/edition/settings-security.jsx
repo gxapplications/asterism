@@ -29,7 +29,12 @@ class SettingsSecurity extends React.Component {
   }
 
   shouldComponentUpdate (nextProps, nextState) {
-    return true // TODO !0
+    const comparator = (i) => [
+      i.adminPatternExists,
+      i.readOnlyPatternExists,
+      i.currentPatternKey
+    ]
+    return JSON.stringify(comparator(this.state)) !== JSON.stringify(comparator(nextState))
   }
 
   render () {

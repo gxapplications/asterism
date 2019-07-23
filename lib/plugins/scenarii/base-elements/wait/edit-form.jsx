@@ -104,7 +104,7 @@ class BrowserWaitEditForm extends React.Component {
               showClearBtn: false
             }} onChange={this.changeUntil.bind(this)} value={until || '12:00'} />
           </div>,
-          <div className='col s12'>&nbsp;</div>,
+          <div key={6} className='col s12'>&nbsp;</div>,
           <Select key={4} s={12} label='Occurrence' icon='timelapse' onChange={this.changeUntilOccurrence.bind(this)}
             defaultValue={untilOccurrence}>
             <option key='first' value='first'>at first occurrence of this moment</option>

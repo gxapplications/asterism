@@ -3,7 +3,7 @@
 /* global $ */
 import PropTypes from 'prop-types'
 import React from 'react'
-import { Button, Row, Checkbox, Select, TimePicker } from 'react-materialize'
+import { Button, Icon, Row, Checkbox, Select, TimePicker } from 'react-materialize'
 import uuid from 'uuid'
 
 class BrowserTimeBasedTriggerEditForm extends React.Component {
@@ -189,21 +189,22 @@ class BrowserTimeBasedTriggerEditForm extends React.Component {
 
         {timeMode === 'hourMinute' && [
           ...hourMinute.map((hm, j) =>
-            <div key={`81-${j}`} className='input-field col s12 m6 l6'>
-              <label className={'col s5'} htmlFor={`${timePickerId}-${j}`}>Time:</label>
-              <TimePicker className={'col offset-s5 s7'} id={`${timePickerId}-${j}`} options={{
+            <div key={`81-${j}`} className='input-field col s12 m6 l6 time-based-trigger-center-aligned'>
+              <div className={'col s4'}><Icon left>schedule</Icon>Time:</div>
+              <TimePicker s={4} id={`${timePickerId}-${j}`} options={{
                 twelveHour: false,
                 autoClose: true,
                 defaultTime: hm || '12:00',
                 showClearBtn: false
               }} onChange={this.changeHourMinute.bind(this, j)} value={hm || '12:00'} />
+              <Button small s={4} onClick={this.changeHourMinute.bind(this, j, undefined, undefined)}>Remove</Button>
             </div>
           ),
-          (hourMinute.length < 32) && <Button flat key={`81-${hourMinute.length}-a`} s={6} m={4} l={3} onClick={this.changeHourMinute.bind(this, hourMinute.length, 12, 0)}>Add</Button>
+          (hourMinute.length < 32) && <div className='col s12 m6 l6 time-based-trigger-center-aligned'><Button key={`81-${hourMinute.length}-a`} small
+            className='col s6 m4 l3 offset-s3' onClick={this.changeHourMinute.bind(this, hourMinute.length, 12, 0)}>Add</Button></div>
         ]}
       </Row>
     )
-    // TODO !1: add a 'remove' on each item of hourMinute... calling this.changeHourMinute.bind(this, index, undefined, undefined)
   }
 
   changeDayMode (event) {

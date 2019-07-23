@@ -12,7 +12,7 @@ import UserInterface from './settings-ui'
 class Settings extends React.Component {
   constructor (props) {
     super(props)
-    this._activeTabIndex = 0 // TODO !0: pas sur que ce soit encore necessiare !
+    this._activeTabIndex = 0
 
     // Plugin settings panels
     this.pluginSettingsPanels = (process.env.ASTERISM_SETTINGS_PANELS || []).map((toRequire) => {

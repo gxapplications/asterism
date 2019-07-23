@@ -163,7 +163,7 @@ class AddCategoryButtons extends React.Component {
   }
 
   shouldComponentUpdate (nextProps, nextState) {
-    return true // TODO !0
+    return true // cannot filter on states, will bring a refresh bug on the fab button.
   }
 
   render () {

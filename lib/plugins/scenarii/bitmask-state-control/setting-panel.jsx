@@ -23,10 +23,11 @@ class BitmaskStateControlSettingPanel extends ItemSettingPanel {
     .then((stateInstance) => {
       this.setState({ stateInstance })
     })
+    .catch(() => {})
   }
 
   componentWillUpdate (nextProps, nextState) {
-    // Because of react-materialize bad behaviors...
+    // FIXME: Here and elsewhere maybe... Because of react-materialize bad behaviors...
     if (this.state.params.title !== nextState.params.title) {
       this._title.setState({ value: nextState.params.title })
     }
@@ -42,7 +43,7 @@ class BitmaskStateControlSettingPanel extends ItemSettingPanel {
   }
 
   shouldComponentUpdate (nextProps, nextState) {
-    return true // TODO !0
+    return true // needed for titles loop to work...
   }
 
   render () {
@@ -58,7 +59,7 @@ class BitmaskStateControlSettingPanel extends ItemSettingPanel {
         <Row className='padded card'>
           <StatesDropdown defaultStateId={bitmaskState} onChange={this.stateChange.bind(this)}
             ref={(c) => { this._bitmaskState = c }} theme={theme} animationLevel={animationLevel}
-            services={() => this.props.context.services}
+            services={() => this.props.context.services} label={null}
             typeFilter={(e) => e.id === 'bitmask-state'} instanceFilter={(e) => e.typeId === 'bitmask-state'} />
 
           <TextInput s={12} label='Label' ref={(c) => { this._title = c }}
@@ -67,14 +68,10 @@ class BitmaskStateControlSettingPanel extends ItemSettingPanel {
 
         {stateInstance && stateInstance.data.colors.map((color, idx) => (
           <Row key={idx} className='padded card'>
-            <TextInput s={12} label='Label' ref={(c) => { this[`_title_${idx}`] = c }} className='iconPicker'
-              value={titles[idx] || ''} onChange={this.handleTitleChange.bind(this, idx)}>
-              <div>
-                <IconPicker theme={{ ...theme, actions: { ...theme.actions, inconspicuous: `${color} lighten-1 black-text` } }}
-                  animationLevel={animationLevel} defaultIcon={icons[idx] || ''}
-                  onChange={this.handleIconChange.bind(this, idx)} />
-              </div>
-            </TextInput>
+            <IconPicker theme={{ ...theme, actions: { ...theme.actions, inconspicuous: `${color} lighten-1 black-text` } }}
+              animationLevel={animationLevel} defaultIcon={icons[idx] || ''} onChange={this.handleIconChange.bind(this, idx)} />
+            <TextInput s={12} m={10} l={10} label='Label' ref={(c) => { this[`_title_${idx}`] = c }}
+              value={titles[idx] || ''} onChange={this.handleTitleChange.bind(this, idx)} />
           </Row>
         ))}
 

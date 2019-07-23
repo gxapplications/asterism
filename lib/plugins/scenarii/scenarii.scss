@@ -592,6 +592,11 @@
   z-index: 1011 !important;
 }
 
+.time-based-trigger-center-aligned {
+  display: flex;
+  align-items: center;
+  height: 3.5rem;
+}
 
 /* Bitmask State control item customs */
 .bitmaskStateItem {
