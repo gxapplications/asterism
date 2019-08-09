@@ -67,7 +67,7 @@ class MainComponent extends React.Component {
           try {
             const id = $(`#${tabId}`).parent().attr('id')
             setTimeout(() => {
-              $('#settings-modal ul.tabs').tabs('select_tab', id)
+              $('#settings-modal ul.tabs').tabs('select', id)
             }, 400)
           } catch (error) {
             console.error(error)

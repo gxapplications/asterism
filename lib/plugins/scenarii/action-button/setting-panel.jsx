@@ -15,7 +15,7 @@ class ActionButtonSettingPanel extends ItemSettingPanel {
     // Because of react-materialize bad behaviors...
     if (this.state.params.title !== nextState.params.title) {
       this._title.setState({ value: nextState.params.title })
-    }
+    } // TODO !0: still needed?
 
     if (this.state.params.action !== nextState.params.action) {
       this._action.setState({ currentId: nextState.params.action })
