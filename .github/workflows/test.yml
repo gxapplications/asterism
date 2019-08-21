@@ -3,7 +3,7 @@ name: CI
 on: [push, release, pull-request]
 
 jobs:
-  build:
+  dist:
     runs-on: ubuntu-latest
     
     steps:
@@ -12,9 +12,15 @@ jobs:
       with:
         node-version: 8
     - name: Install asterism, alone
-      run: npm ci
+      run: npm install
+    - name: Check syntax with lint
+      run: npm lint
+    - name: Try a dist:compact command
+      run: npm dist:compact
+    - name: Try a classical dist command
+      run: npm dist
     - name: Run automated tests
-      run: npm test
+      run: npm test:rerun
 
 
 #  publish-npm:
