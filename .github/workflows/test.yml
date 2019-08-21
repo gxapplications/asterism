@@ -25,7 +25,8 @@ jobs:
       run: npm run dist
     - name: Run automated tests
       env:
-        TZ: /usr/share/zoneinfo/Europe/Paris
+        # Set Europe/Paris timezone, but without summer time offset: equiv to Algiers
+        TZ: /usr/share/zoneinfo/Africa/Algiers
       run: npm run test:rerun
       
 
