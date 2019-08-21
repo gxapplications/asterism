@@ -24,9 +24,10 @@ jobs:
     - name: Try a classical dist command
       run: npm run dist
     - name: Run automated tests
-      run: npm run test:rerun
-      with:
+      env:
         TZ: /usr/share/zoneinfo/Europe/Paris
+      run: npm run test:rerun
+      
 
 
 #  publish-npm:
