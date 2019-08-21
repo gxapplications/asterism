@@ -2,15 +2,18 @@ name: CI
 
 on: [push, release, pull-request]
 
+strategy:
+  matrix:
+    node: [8, 10]
+    
 jobs:
   dist:
     runs-on: ubuntu-latest
-    
     steps:
     - uses: actions/checkout@v1
     - uses: actions/setup-node@v1
       with:
-        node-version: 8
+        node-version: ${{ matrix.node }}
     - name: Install asterism, alone
       run: npm install
     - name: Check syntax with lint
@@ -21,6 +24,8 @@ jobs:
       run: npm run dist
     - name: Run automated tests
       run: npm run test:rerun
+      with:
+        TZ: /usr/share/zoneinfo/Europe/Paris
 
 
 #  publish-npm:
