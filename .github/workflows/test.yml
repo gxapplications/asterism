@@ -14,13 +14,13 @@ jobs:
     - name: Install asterism, alone
       run: npm install
     - name: Check syntax with lint
-      run: npm lint
+      run: npm run lint
     - name: Try a dist:compact command
-      run: npm dist:compact
+      run: npm run dist:compact
     - name: Try a classical dist command
-      run: npm dist
+      run: npm run dist
     - name: Run automated tests
-      run: npm test:rerun
+      run: npm run test:rerun
 
 
 #  publish-npm:
