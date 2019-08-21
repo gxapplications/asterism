@@ -2,12 +2,13 @@ name: CI
 
 on: [push, release, pull-request]
 
-strategy:
-  matrix:
-    node: [8, 10]
+
     
 jobs:
   dist:
+    strategy:
+      matrix:
+        node: [8, 10]
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
