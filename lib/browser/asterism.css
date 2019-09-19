@@ -144,6 +144,12 @@
   background-color: rgba(8, 8, 8, 0.15);
 }
 
+.asterism .rg-grid-item .rg-item-wrapper.card.no-card {
+  background-color: transparent;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+
 .asterism .rg-grid-item .rg-item-wrapper {
   display: flex;
 }
