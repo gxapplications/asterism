@@ -12,11 +12,6 @@ const { ActionsDropdown } = Scenarii
 
 class ActionButtonSettingPanel extends ItemSettingPanel {
   componentWillUpdate (nextProps, nextState) {
-    // Because of react-materialize bad behaviors...
-    if (this.state.params.title !== nextState.params.title) {
-      this._title.setState({ value: nextState.params.title })
-    } // TODO !0: still needed?
-
     if (this.state.params.action !== nextState.params.action) {
       this._action.setState({ currentId: nextState.params.action })
     }
@@ -47,7 +42,7 @@ class ActionButtonSettingPanel extends ItemSettingPanel {
             services={() => this.props.context.services} />
 
           <IconPicker theme={theme} animationLevel={animationLevel} defaultIcon={icon} onChange={this.handleValueChange.bind(this, 'icon')} />
-          <TextInput s={12} m={10} l={10} label='Label' ref={(c) => { this._title = c }}
+          <TextInput s={12} m={10} l={10} label='Label'
             value={title} onChange={this.handleEventChange.bind(this, 'title')} />
         </Row>
 

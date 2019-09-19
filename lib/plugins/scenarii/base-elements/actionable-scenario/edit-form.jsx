@@ -44,10 +44,12 @@ class BrowserActionableScenarioEditForm extends React.Component {
         </Row>
         <Row className='section card form'>
           <h5>When:</h5>
+          <div className='col s12'>&nbsp;</div>
           <TriggersDropdown onChange={this.setTrigger.bind(this)} theme={theme} animationLevel={animationLevel}
             services={services} noCreationPanel defaultTriggerId={executionTrigger}
             typeFilter={() => false} icon={null} label='Set a trigger' dropdownId={uuid.v4()} />
           <h5>With additional condition:</h5>
+          <div className='col s12'>&nbsp;</div>
           <ConditionsDropdown onChange={this.setCondition.bind(this)} theme={theme} animationLevel={animationLevel}
             services={services} noCreationPanel defaultConditionId={executionCondition}
             typeFilter={() => false} icon={null} label='Set additional condition' dropdownId={uuid.v4()}>
@@ -56,6 +58,7 @@ class BrowserActionableScenarioEditForm extends React.Component {
         </Row>
         <Row className='section card form'>
           <h5>Then:</h5>
+          <div className='col s12'>&nbsp;</div>
           <ActionsDropdown onChange={this.setAction.bind(this)} theme={theme} animationLevel={animationLevel}
             services={services} noCreationPanel defaultActionId={action}
             typeFilter={() => false} icon={null} label='Set an action' dropdownId={uuid.v4()} />
@@ -65,6 +68,7 @@ class BrowserActionableScenarioEditForm extends React.Component {
           {(advancedExpanded && (
             <span>
               <h5>Abort when:</h5>
+              <div className='col s12'>&nbsp;</div>
               <TriggersDropdown onChange={this.setAbortTrigger.bind(this)} theme={theme} animationLevel={animationLevel}
                 services={services} noCreationPanel defaultTriggerId={abortTrigger}
                 typeFilter={() => false} icon={null} label='Set a trigger' dropdownId={uuid.v4()}>
@@ -106,6 +110,7 @@ class BrowserActionableScenarioEditForm extends React.Component {
   }
 
   betterName () {
+    this.props.highlightCloseButton()
     if (!this.props.instance.data.executionTrigger || !this.props.instance.data.action) {
       return
     }
@@ -132,8 +137,6 @@ class BrowserActionableScenarioEditForm extends React.Component {
         $(`#actionable-scenario-name-input-${this._nameInputId}`).val(this.props.instance.data.name)
       }
     })
-
-    this.props.highlightCloseButton()
   }
 }
 

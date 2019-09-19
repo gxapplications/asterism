@@ -12,8 +12,7 @@
     & .collection-header {
       padding: 4rem 3rem;
       text-align: center;
-      color: white;
-      background-color: rgba(255,255,255,0.5);
+      background-color: rgba(255, 255, 255, 0.3);
 
       & .material-icons {
         font-size: 4rem !important;
@@ -32,7 +31,56 @@
           height: 42px !important;
           font-size: 1.8em !important;
           line-height: 1.5em !important;
+
+          &:after {
+            position: absolute;
+            top: -0.17rem;
+            left: 0.25rem;
+            line-height: 0.7em;
+            font-size: 1em;
+            font-weight: bolder;
+            content: '+';
+            opacity: 0.8;
+          }
         }
+      }
+
+      &.adder {
+        background-color: rgba(255, 255, 255, 0.5) !important;
+      }
+
+      &.separator {
+        min-height: inherit;
+        padding: 1px;
+        background-color: rgba(255, 255, 255, 0.9) !important;
+        border: none;
+      }
+
+      &.group {
+        font-size: 1.25em;
+        font-weight: bolder;
+        background-color: rgba(255, 255, 255, 0.5) !important;
+
+        &.expanded:before {
+          content: '▾';
+          padding-right: 1rem;
+        }
+
+        &:not(.expanded):before {
+          content: '▹';
+          padding-right: 1rem;
+        }
+
+        &:not(.expanded) + span .sub-item {
+          padding-top: 0;
+          padding-bottom: 0;
+          height: 0;
+          border: none;
+        }
+      }
+
+      & + span .sub-item {
+        padding-left: 3rem;
       }
     }
 
@@ -84,10 +132,23 @@
     }
 
     & .form.card {
-      background-color: rgba(255,255,255,0.5);
+      background-color: rgba(255, 255, 255, 0.5);
 
       & .input-field .helper-text {
         min-height: 0;
+      }
+    }
+
+    & .group {
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+      width: 15rem;
+
+      & .input-field > label:not(.label-icon).active {
+        -webkit-transform: translateX(-56px) translateY(15px) scale(0.8);
+        transform: translateX(-56px) translateY(15px) scale(0.8);
+        -webkit-transform-origin: 0 0;
+        transform-origin: 0 0;
       }
     }
   }
@@ -103,6 +164,7 @@
     margin: -0.5rem -0.7rem 1rem -0.7rem;
     padding-top: 0.6rem;
     border-radius: 0;
+    height: 4rem;
 
     & .input-field {
       & input {

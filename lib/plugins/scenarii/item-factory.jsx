@@ -11,6 +11,9 @@ import LevelStateControlSettingPanel from './level-state-control/setting-panel'
 import BitmaskStateControlItem from './bitmask-state-control/item'
 import BitmaskStateControlSettingPanel from './bitmask-state-control/setting-panel'
 
+import TemperatureProgrammerItem from './temperature-programmer/item'
+import TemperatureProgrammerSettingPanel from './temperature-programmer/setting-panel'
+
 const builder = new ItemFactoryBuilder()
 .newItemType('action_button', AdditionalItem.categories.DOMOTICS)
   .withDescription('Action button', 'A button that launches an action')
@@ -48,6 +51,20 @@ const builder = new ItemFactoryBuilder()
     { w: 1, h: 2 },
     { w: 2, h: 2 },
     { w: 3, h: 2 }
+  ])
+  .build()
+.newItemType('temperature_programmer', AdditionalItem.categories.DOMOTICS)
+  .withDescription('Temperature programmer', 'Programmer interface linked to a programmable dual mode scenario')
+  .settingPanelWithHeader('Temperature programmer settings', 'av_timer') // optional override, but always before *Instance*() calls...
+  .newInstanceFromInitialSetting(5, 2, TemperatureProgrammerSettingPanel)
+  .existingInstance(TemperatureProgrammerItem, TemperatureProgrammerSettingPanel)
+  .acceptDimensions([
+    { w: 2, h: 3 },
+    { w: 2, h: 4 },
+    { w: 2, h: 5 },
+    { w: 3, h: 3 },
+    { w: 3, h: 4 },
+    { w: 3, h: 5 }
   ])
   .build()
 
