@@ -56,7 +56,7 @@ const builder = new ItemFactoryBuilder()
 .newItemType('temperature_programmer', AdditionalItem.categories.DOMOTICS)
   .withDescription('Temperature programmer', 'Programmer interface linked to a programmable dual mode scenario')
   .settingPanelWithHeader('Temperature programmer settings', 'av_timer') // optional override, but always before *Instance*() calls...
-  .newInstanceFromInitialSetting(3, 5, TemperatureProgrammerSettingPanel)
+  .newInstanceFromInitialSetting(2, 5, TemperatureProgrammerSettingPanel)
   .existingInstance(TemperatureProgrammerItem, TemperatureProgrammerSettingPanel)
   .acceptDimensions([
     { w: 2, h: 3 },
