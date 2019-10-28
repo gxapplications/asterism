@@ -17,9 +17,23 @@ class TemperatureProgrammerItem extends Item {
     // TODO
     return (
       <TemperatureProgrammer theme={theme} animationLevel={animationLevel}
-        scaleOffset={14} scaleAmplitude={8} title={'pouet'} temperaturesGetter={() => {}}
-        plannerGetter={() => {}} onTemperaturesChange={() => {}} onPlannerChange={() => {}}
-        onForceModeChange={() => {}}
+        scaleOffset={14} scaleAmplitude={8} title={'pouet'}
+        temperaturesGetter={() => Promise.resolve({ ecoTemperature: 16, comfortTemperature: 19 })}
+        plannerGetter={() => Promise.resolve({
+          plannings: [
+            (new Array(48)).fill(1),
+            (new Array(48)).fill(0),
+            (new Array(48)).fill(1),
+            (new Array(48)).fill(0),
+            (new Array(48)).fill(1),
+            (new Array(48)).fill(0),
+            (new Array(48)).fill(1)
+          ],
+          todayOverridenPlanning: (new Array(48)).fill(1)
+        })}
+        onTemperaturesChange={(eco, comfort) => { console.log('##', eco, comfort) }}
+        onPlannerChange={(plannings, todayOverridenPlanning) => { console.log('## ##', plannings, todayOverridenPlanning) }}
+        onForceModeChange={(forceMode, duration) => { console.log('## ## ##', forceMode, duration) }}
       />
     )
   }
