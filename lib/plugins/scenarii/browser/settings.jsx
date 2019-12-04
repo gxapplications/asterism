@@ -140,7 +140,7 @@ class DomoticsSettings extends React.Component {
       }
     })
 
-    if (this.state.currentLocation.name.length) {
+    if (this.state.currentLocation.name && this.state.currentLocation.name.length) {
       $('#domotics_settings .location-field label').addClass('active')
       $('#domotics_settings .autocomplete').val(this.state.currentLocation.name)
     }
@@ -333,6 +333,8 @@ class DomoticsSettings extends React.Component {
 
       i++
     }
+
+    // TODO !0: bug: should reload knobs, else cannot add/remove knobs...
 
     this.props.serverStorage.setItem('settings-domotics-energy-costs', this.state.energyCosts)
     this.setState({

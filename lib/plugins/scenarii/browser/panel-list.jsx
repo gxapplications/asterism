@@ -18,6 +18,23 @@ const _sorter = (a, b) => {
   }
 }
 
+const _groupSorter = (a, b) => {
+  try {
+    if (!a.name) {
+      return 1
+    }
+    if (!b.name) {
+      return -1
+    }
+    if (a.name.toLowerCase() < b.name.toLowerCase()) {
+      return -1
+    }
+    return (a.name.toLowerCase() > b.name.toLowerCase()) ? 1 : 0
+  } catch (error) {
+    return 0
+  }
+}
+
 const _typeSorter = (a, b) => {
   const aName = a.type.shortLabel || a.type.fullLabel || a.type.name
   const bName = b.type.shortLabel || b.type.fullLabel || b.type.name
@@ -27,11 +44,14 @@ const _typeSorter = (a, b) => {
   return (aName.toLowerCase() > bName.toLowerCase()) ? 1 : 0
 }
 
-const _filter = (s) => (i) => {
+const _filter = (s, supportGroups = false) => (i) => {
   if (s === '') {
     return true
   }
-  return i.instance.name.toLowerCase().includes(s.toLowerCase())
+
+  return supportGroups
+    ? i.instance.name.toLowerCase().includes(s.toLowerCase()) || (i.instance.group || 'Unclassified').toLowerCase().includes(s.toLowerCase())
+    : i.instance.name.toLowerCase().includes(s.toLowerCase())
 }
 
 const _typeFilter = (s) => (t) => {
@@ -57,7 +77,7 @@ class PanelList extends React.Component {
   }
 
   editInstance (instance) {
-    this.props.applyEditForm(instance)
+    this.props.applyEditForm(instance, this.props.supportGroups)
   }
 
   componentDidMount () {
@@ -237,7 +257,7 @@ class PanelList extends React.Component {
 
   render () {
     const { instances, types, deleteConfirm, search } = this.state
-    const { animationLevel, theme } = this.props
+    const { animationLevel, theme, supportGroups } = this.props
     const waves = animationLevel >= 2 ? 'waves-effect waves-light' : undefined
     const deleteWaves = animationLevel >= 2 ? 'btn-flat waves-effect waves-red' : 'btn-flat'
     const deleteWavesConfirm = (animationLevel >= 2 ? 'btn waves-effect waves-light' : 'btn') + ` ${theme.actions.negative}`
@@ -248,13 +268,71 @@ class PanelList extends React.Component {
     if (instances === null || types.length === 0) {
       return (<div />)
     }
+
+    // Split by groups if supported. Anyway, filter and sort instances
+    const groupedInstances = supportGroups ? instances.filter(_filter(search, supportGroups)).sort(_sorter).reduce(
+      (groups, { instance, ...instanceStuff }, idx) => {
+        const group = instance.group || undefined
+        if (!groups.find(g => g.name === group)) {
+          groups.push({ name: group, id: idx, instances: [] })
+        }
+        groups.find(g => g.name === group).instances.push({ instance, ...instanceStuff })
+        return groups
+      }, []
+    ).sort(_groupSorter) : instances.filter(_filter(search)).sort(_sorter)
+
     return [
       <Row key={0} className='card form search'>
-        <TextInput s={12} m={10} l={8} icon='search' placeholder='Search by name' onChange={this.searchChanged.bind(this)} defaultValue={search} />
+        <TextInput s={12} m={10} l={8} icon='search' placeholder={supportGroups ? 'Search by name / group' : 'Search by name'} onChange={this.searchChanged.bind(this)} defaultValue={search} />
       </Row>,
       <Row key={1} className={cx('collection', { 'with-header': instances.length === 0 && search.length === 0 })}>
         {instances.length === 0 && search.length === 0 ? this.props.children : null}
-        {instances.filter(_filter(search)).sort(_sorter).map(({ instance, onClick, onDelete, onTest, testing, onStop, onActivateSwitch }, idx) => instance ? (
+
+        {supportGroups ? groupedInstances.map(group => [
+          <a key={group.id || 'unclassified'} href='javascript:void(0)' onClick={this.groupClick.bind(this, group.id)} className={cx('collection-item group')}>
+            {group.name || 'Unclassified'} ({group.instances.length})
+          </a>,
+          <span key={group.id + '_items'}>
+            {group.instances.map(({ instance, onClick, onDelete, onTest, testing, onStop, onActivateSwitch }) => (
+              <a key={instance.instanceId} href='javascript:void(0)' onClick={onClick}
+                className={cx('collection-item sub-item', waves)}>
+                <div onClick={onDelete}
+                  className={cx('secondary-content', (deleteConfirm === instance) ? deleteWavesConfirm : deleteWaves)}>
+                  <i className='material-icons'>delete</i>
+                </div>
+                {onStop && (
+                  <div href='javascript:void(0)' onClick={onStop}
+                    className={cx(
+                      'secondary-content',
+                      testing === true ? testingWavesPositive : (testing === false ? testingWavesNegative : (typeof testing === 'string' ? testingWaves : `btn-flat ${waves}`))
+                    )}>
+                    <i className='material-icons'>stop</i>
+                  </div>
+                )}
+                {onTest && (
+                  <div href='javascript:void(0)' onClick={onTest}
+                    className={cx(
+                      'secondary-content',
+                      testing === true ? testingWavesPositive : (testing === false ? testingWavesNegative : (typeof testing === 'string' ? testingWaves : `btn-flat ${waves}`))
+                    )}>
+                    <i className='material-icons'>play_arrow</i>
+                  </div>
+                )}
+                {onActivateSwitch && (
+                  <div className='secondary-content switch' onClick={onActivateSwitch}>
+                    <label>
+                      <input type='checkbox' checked={instance.data.activated} onChange={() => {}} />
+                      <span className='lever' />
+                      {instance.data.activated ? 'ON' : 'OFF'}
+                    </label>
+                  </div>
+                )}
+                <span className='primary-content title truncate'>{instance.name}</span>
+                <span className='primary-content truncate'>{instance.fullLabel}</span>
+              </a>
+            ))}
+          </span>
+        ]) : groupedInstances.map(({ instance, onClick, onDelete, onTest, testing, onStop, onActivateSwitch }) => (
           <a key={instance.instanceId} href='javascript:void(0)' onClick={onClick}
             className={cx('collection-item', waves)}>
             <div onClick={onDelete}
@@ -291,11 +369,13 @@ class PanelList extends React.Component {
             <span className='primary-content title truncate'>{instance.name}</span>
             <span className='primary-content truncate'>{instance.fullLabel}</span>
           </a>
-        ) : null)}
+        ))}
+
+        <hr key={'separator'} className={cx('collection-item separator')} />
         {types.filter(_typeFilter(search)).sort(_typeSorter).map(({ type, onClick }, idx) => (
           <a key={type.name} href='javascript:void(0)' onClick={onClick}
-            className={cx('collection-item active avatar', waves)}>
-            <i className='material-icons circle'>add</i>
+            className={cx('collection-item adder active avatar', waves)}>
+            <i className='material-icons circle'>warning</i>
             <span className='title truncate'>{type.shortLabel || type.fullLabel || type.name}</span>
             {(type.shortLabel && type.fullLabel) ? (
               <span>{type.fullLabel}</span>
@@ -310,6 +390,15 @@ class PanelList extends React.Component {
   searchChanged (event) {
     this.setState({ search: event.currentTarget.value || '' })
   }
+
+  groupClick (group, ev) {
+    const groupElement = $(ev.currentTarget)
+    if (groupElement.hasClass('expanded')) {
+      groupElement.removeClass('expanded')
+    } else {
+      groupElement.addClass('expanded')
+    }
+  }
 }
 
 PanelList.propTypes = {
@@ -322,13 +411,15 @@ PanelList.propTypes = {
   testInstance: PropTypes.func,
   abortInstance: PropTypes.func,
   activateInstance: PropTypes.func,
-  applyEditForm: PropTypes.func.isRequired
+  applyEditForm: PropTypes.func.isRequired,
+  supportGroups: PropTypes.bool
 }
 
 PanelList.defaultProps = {
   testInstance: null,
   abortInstance: null,
-  activateInstance: null
+  activateInstance: null,
+  supportGroups: false
 }
 
 export default PanelList

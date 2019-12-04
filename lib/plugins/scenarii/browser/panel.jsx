@@ -4,7 +4,7 @@
 import cx from 'classnames'
 import PropTypes from 'prop-types'
 import React from 'react'
-import { Icon, Modal, Tab, Tabs } from 'react-materialize'
+import { Autocomplete, Icon, Modal, Tab, Tabs } from 'react-materialize'
 
 import PanelList from './panel-list'
 
@@ -21,10 +21,13 @@ class ScenariiEditPanel extends React.Component {
 
     this.state = {
       EditForm: null,
+      supportGroup: false,
+      currentGroupName: '',
       currentTab: 0
     }
 
     this._listenerId = null
+    this._groups = {}
   }
 
   componentDidMount () {
@@ -42,6 +45,9 @@ class ScenariiEditPanel extends React.Component {
         this._tabs[4].forceUpdate()
       }
     })
+
+    this.fetchGroups()
+    // TODO !0: ici ou pas, il faut décaler le title sur l'autocomplete
   }
 
   componentWillUnmount () {
@@ -57,7 +63,7 @@ class ScenariiEditPanel extends React.Component {
 
   render () {
     const { theme, animationLevel, services, highlightCloseButton } = this.props
-    const { EditForm, currentTab } = this.state
+    const { EditForm, supportGroup, currentTab, currentGroupName } = this.state
     return (
       <div id='scenarii-edit-panel' className={cx({ 'editFormOpened': !!EditForm }, 'ScenariiEditPanel', styles.ScenariiEditPanel)}>
         <Tabs onChange={this.tabChanged.bind(this)} className={theme.backgrounds.editing}>
@@ -73,7 +79,7 @@ class ScenariiEditPanel extends React.Component {
               applyEditForm={this.applyEditForm.bind(this)}
               ref={(c) => { this._tabs[0] = c }}>
               <div className='collection-header'>
-                <Icon>lightbulb_outline</Icon>
+                <Icon>offline_pin</Icon>
                 No scenario yet.<br /><br />
                 A scenario is a complex structure you can trigger or (de)activate.<br />
                 Most common scenario will be triggered by an event to run an action.<br />
@@ -91,7 +97,7 @@ class ScenariiEditPanel extends React.Component {
               applyEditForm={this.applyEditForm.bind(this)}
               ref={(c) => { this._tabs[1] = c }}>
               <div className='collection-header'>
-                <Icon>lightbulb_outline</Icon>
+                <Icon>help</Icon>
                 No condition yet.<br /><br />
                 A condition is a configured test you can use in a scenario to run an action or not.<br />
                 You can add one choosing a condition type below.
@@ -106,10 +112,10 @@ class ScenariiEditPanel extends React.Component {
               deleteInstance={this.scenariiService.deleteActionInstance.bind(this.scenariiService)}
               testInstance={this.scenariiService.executeActionInstance.bind(this.scenariiService)}
               abortInstance={this.scenariiService.abortActionInstance.bind(this.scenariiService)}
-              applyEditForm={this.applyEditForm.bind(this)}
+              applyEditForm={this.applyEditForm.bind(this)} supportGroups
               ref={(c) => { this._tabs[2] = c }}>
               <div className='collection-header'>
-                <Icon>lightbulb_outline</Icon>
+                <Icon>error</Icon>
                 No action yet.<br /><br />
                 An action is a configured intent you can trigger via a button, a dashboard item or a scenario.<br />
                 You can add one choosing an action type below.
@@ -125,7 +131,7 @@ class ScenariiEditPanel extends React.Component {
               applyEditForm={this.applyEditForm.bind(this)}
               ref={(c) => { this._tabs[3] = c }}>
               <div className='collection-header'>
-                <Icon>lightbulb_outline</Icon>
+                <Icon>play_circle_filled</Icon>
                 No trigger yet.<br /><br />
                 A trigger is a configured event you can use in a scenario to launch the scenario.<br />
                 You can add one choosing a trigger type below.
@@ -141,7 +147,7 @@ class ScenariiEditPanel extends React.Component {
               applyEditForm={this.applyEditForm.bind(this)}
               ref={(c) => { this._tabs[4] = c }}>
               <div className='collection-header'>
-                <Icon>lightbulb_outline</Icon>
+                <Icon>monetization_on</Icon>
                 No state yet.<br /><br />
                 A state is like a variable that can be changed by actions.<br />
                 When a state changes, it sends an event for other elements.<br />
@@ -151,17 +157,21 @@ class ScenariiEditPanel extends React.Component {
           </Tab>
         </Tabs>
         <div className={cx('editForm', theme.backgrounds.body)}>
-          {EditForm ? (
-            <h5 className='title'>{EditForm.label} - Edition</h5>
-          ) : null}
-          {EditForm ? (
+          {EditForm && supportGroup && <div className='right section group'><Autocomplete placeholder='Unclassified' title='Group' options={{
+            data: this._groups,
+            limit: 64,
+            minLength: 2,
+            onAutocomplete: this.groupAutocompleted.bind(this)
+          }} onChange={this.groupChanged.bind(this)} value={currentGroupName} /></div>}
+          {EditForm && <h5 className='title'>{EditForm.label} - Edition</h5>}
+          {EditForm &&
             <EditForm ref={(c) => { this._editFormInstance = c }}
               instance={this._editInstance} services={services}
               theme={theme} animationLevel={animationLevel}
               highlightCloseButton={highlightCloseButton}
               privateSocket={this._socket}
             />
-          ) : null}
+          }
         </div>
 
         <Modal id='scenarii-persistence-error-modal'
@@ -184,7 +194,8 @@ class ScenariiEditPanel extends React.Component {
   }
 
   saveInstance (instance) {
-    const save = (instance.presave) ? instance.presave(this.props.services).then(() => instance.save()) : instance.save()
+    const group = this.state.currentGroupName || undefined
+    const save = (instance.presave) ? instance.presave(this.props.services).then(() => instance.save(undefined, group)) : instance.save(undefined, group)
     return save
     .catch((error) => {
       $('#scenarii-persistence-error-modal p').html(error ? error.message : 'Unknown error saving element!')
@@ -196,22 +207,27 @@ class ScenariiEditPanel extends React.Component {
       this._editInstance = null
       if (this.state.EditForm) {
         this.setState({
-          EditForm: null
+          EditForm: null,
+          currentGroupName: ''
         })
         setTimeout(() => {
           $(`#scenarii-edit-panel > div.row > div:eq(${this.state.currentTab}) .search input`).focus()
         }, 300)
       }
+      this.fetchGroups()
     })
     .then(() => true) // modal will not close now
   }
 
-  applyEditForm (instance) {
+  applyEditForm (instance, supportGroup) {
     if (instance.EditForm) {
+      this.fetchGroups()
       // open the EditForm sliding card
       this._editInstance = instance
       this.setState({
-        EditForm: instance.EditForm
+        EditForm: instance.EditForm,
+        supportGroup,
+        currentGroupName: instance.group
       })
     } else {
       // directly save the instance, and refresh list
@@ -232,6 +248,36 @@ class ScenariiEditPanel extends React.Component {
     } else {
       return this.saveInstance(this._editInstance)
     }
+  }
+
+  fetchGroups () {
+    return Promise.all([
+      this.scenariiService.getActionInstances(),
+      this.scenariiService.getConditionInstances(),
+      this.scenariiService.getTriggerInstances(),
+      this.scenariiService.getScenarioInstances()
+    ])
+    .then(([actions, conditions, triggers, scenarios]) => {
+      actions.forEach(i => { this._groups[i.group] = null })
+      conditions.forEach(i => { this._groups[i.group] = null })
+      triggers.forEach(i => { this._groups[i.group] = null })
+      scenarios.forEach(i => { this._groups[i.group] = null })
+    })
+  }
+
+  groupChanged (event) {
+    const groupName = event.currentTarget.value.trim() || ''
+    this.setState({
+      currentGroupName: groupName
+    })
+    this.props.highlightCloseButton()
+  }
+
+  groupAutocompleted (groupName) {
+    this.setState({
+      currentGroupName: groupName
+    })
+    this.props.highlightCloseButton()
   }
 }
 
