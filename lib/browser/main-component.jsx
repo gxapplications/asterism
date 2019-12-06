@@ -157,6 +157,7 @@ class MainComponent extends React.Component {
     $.initialize('.input-field input', function () {
       if ($(this).val().length) {
         $(this).parent().next('label').addClass('active')
+        $(this).nextAll('label').addClass('active') // useful for autocomplete components
       }
     })
 
