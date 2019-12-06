@@ -47,7 +47,6 @@ class ScenariiEditPanel extends React.Component {
     })
 
     this.fetchGroups()
-    // TODO !0: ici ou pas, il faut décaler le title sur l'autocomplete
   }
 
   componentWillUnmount () {
@@ -76,7 +75,7 @@ class ScenariiEditPanel extends React.Component {
               testInstance={this.scenariiService.forceTriggerScenarioInstance.bind(this.scenariiService)}
               abortInstance={this.scenariiService.forceAbortScenarioInstance.bind(this.scenariiService)}
               activateInstance={this.scenariiService.setActivationScenarioInstance.bind(this.scenariiService)}
-              applyEditForm={this.applyEditForm.bind(this)}
+              applyEditForm={this.applyEditForm.bind(this)} supportGroups
               ref={(c) => { this._tabs[0] = c }}>
               <div className='collection-header'>
                 <Icon>offline_pin</Icon>
@@ -94,7 +93,7 @@ class ScenariiEditPanel extends React.Component {
               createInstance={this.scenariiService.createConditionInstance.bind(this.scenariiService)}
               deleteInstance={this.scenariiService.deleteConditionInstance.bind(this.scenariiService)}
               testInstance={this.scenariiService.testConditionInstance.bind(this.scenariiService)}
-              applyEditForm={this.applyEditForm.bind(this)}
+              applyEditForm={this.applyEditForm.bind(this)} supportGroups
               ref={(c) => { this._tabs[1] = c }}>
               <div className='collection-header'>
                 <Icon>help</Icon>
@@ -128,7 +127,7 @@ class ScenariiEditPanel extends React.Component {
               getTypes={this.scenariiService.getTriggerTypes.bind(this.scenariiService)}
               createInstance={this.scenariiService.createTriggerInstance.bind(this.scenariiService)}
               deleteInstance={this.scenariiService.deleteTriggerInstance.bind(this.scenariiService)}
-              applyEditForm={this.applyEditForm.bind(this)}
+              applyEditForm={this.applyEditForm.bind(this)} supportGroups
               ref={(c) => { this._tabs[3] = c }}>
               <div className='collection-header'>
                 <Icon>play_circle_filled</Icon>

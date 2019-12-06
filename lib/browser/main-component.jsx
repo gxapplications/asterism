@@ -7,6 +7,7 @@ import React from 'react'
 import { Gridifier } from 'react-gridifier/dist/materialize'
 import { Icon, Navbar, NavItem } from 'react-materialize'
 import { TransitionGroup } from 'react-transition-group'
+import debounce from 'debounce'
 
 import AddCategoryButtons from './edition/add-category-buttons'
 import DefaultMaterialTheme from './default-material-theme'
@@ -14,12 +15,12 @@ import DefaultLocalStorage from './default-local-storage'
 import DefaultServerStorage from './default-server-storage'
 import ItemManager from './item-manager'
 import ItemSetting from './edition/item-setting'
-// import logger from './logger'
+import logger from './logger'
 import NotificationManager from './notification-manager'
 import Settings from './edition/settings'
 import SocketManager from './socket-manager'
 import SpeechManager from './speech-manager'
-import { thenSleep, sleep } from './tools'
+import { thenSleep, sleep, hasCookie, deleteCookie } from './tools'
 
 import 'react-gridifier/dist/styles.css'
 import './asterism.css'
@@ -27,29 +28,17 @@ import 'asterism-plugin-library/styles.css'
 
 const localStorage = new DefaultLocalStorage('asterism')
 
-const hasCookie = (name) => {
-  var value = '; ' + window.document.cookie
-  var parts = value.split('; ' + name + '=')
-  return (parts.length === 2)
-}
-
-const deleteCookie = (name) => {
-  window.document.cookie = name + '=; Max-Age=-99999999;'
-}
-
 class MainComponent extends React.Component {
   constructor (props) {
     super(props)
 
-    this.logger = console // logger(this)
+    this.logger = logger(this)
 
     this.readOnly = hasCookie('readOnly-access-token')
     this.securityOn = hasCookie('readOnly-access-token') || hasCookie('admin-access-token')
 
     this.notificationManager = new NotificationManager(this, this.logger)
     this.socketManager = new SocketManager(this.notificationManager, this.logger)
-    this.speechManager = new SpeechManager(this, props.localStorage, this.logger)
-
     // Instantiate orderHandler and initial items for this.state (need to be sync)
     this.itemManager = new ItemManager(props.localStorage, props.serverStorage, this)
 
@@ -76,6 +65,32 @@ class MainComponent extends React.Component {
         this.setState({ editMode: true })
       }
     }
+    mainState.logout = this.logout.bind(this)
+
+    // PWA install prompt
+    window.addEventListener('beforeinstallprompt', event => {
+      this.logger.log('beforeinstallprompt triggered!')
+      // event.preventDefault() // to avoid classical install webAPK banner
+      this.setState({ deferredInstallPrompt: {
+        event,
+        clean: () => this.setState({ deferredInstallPrompt: null }),
+        prompt: () => {
+          event.prompt()
+          return event.userChoice.then((choiceResult) => {
+            // https://web.dev/customize-install
+            if (choiceResult.outcome === 'accepted') {
+              this.logger.log('User accepted the install prompt')
+              this.state.deferredInstallPrompt && this.state.deferredInstallPrompt.clean()
+            } else {
+              this.logger.log('User dismissed the install prompt')
+            }
+            return choiceResult.outcome === 'accepted'
+          })
+        }
+      } })
+    })
+
+    this.speechManager = new SpeechManager(this, props.localStorage, this.logger, mainState)
 
     this.services = (process.env.ASTERISM_SERVICES || []).reduce((map, toRequire) => {
       if (!toRequire) {
@@ -139,7 +154,8 @@ class MainComponent extends React.Component {
       animationFlow: null,
       notifications: [], // not directly used to render, but to trigger a render() when modified
       messageModal: null,
-      speechDialog: null
+      speechDialog: null,
+      deferredInstallPrompt: null
       // logs: []
     }
   }
@@ -157,6 +173,7 @@ class MainComponent extends React.Component {
     $.initialize('.input-field input', function () {
       if ($(this).val().length) {
         $(this).parent().next('label').addClass('active')
+        $(this).nextAll('label').addClass('active') // useful for autocomplete components
       }
     })
 
@@ -169,12 +186,24 @@ class MainComponent extends React.Component {
       })
     }
 
-    sleep(200)
-    .then(() => Promise.all(this.itemManager.getAllItems()))
-    .then((items) => {
-      console.log(`Restoring ${items.length} items in the grid...`)
-      this.setState({ items })
+    // On some window events, refresh items or freeze them
+    const debouncerRefreshItems = debounce(this.refreshItems.bind(this), 5000, true)
+    window.addEventListener('pageshow',
+      () => this.state.items.length ? debouncerRefreshItems() : null)
+    window.addEventListener('focus', debouncerRefreshItems)
+    window.addEventListener('online', debouncerRefreshItems)
+    window.addEventListener('offline', (event) => {
+      debouncerRefreshItems.clear()
+      this.freezeItems(event)
     })
+    window.addEventListener('pagehide', (event) => {
+      debouncerRefreshItems.clear()
+      this.freezeItems(event)
+    })
+
+    // Instantiate items
+    sleep(320).then(this.instantiateItems.bind(this))
+    $('div.asterism .navbar-fixed > nav').css('height', 'inherit')
   }
 
   componentDidUpdate (prevProps, prevState) {
@@ -272,7 +301,7 @@ class MainComponent extends React.Component {
   render () {
     const { theme, localStorage, serverStorage } = this.props
     const { editMode, animationLevel, itemFactories, editPanels, EditPanel, items, itemSettingPanel, messageModal,
-      speechDialog, editPanelButtonHighlight } = this.state
+      speechDialog, editPanelButtonHighlight, logs } = this.state
     const SpeechStatus = this.speechManager.getComponent()
     const notifications = this.notificationManager.getComponents({ animationLevel, theme })
     const editPanelContext = EditPanel ? editPanels.find((ep) => ep.Panel === EditPanel) : {}
@@ -315,13 +344,13 @@ class MainComponent extends React.Component {
           </NavItem>) : null}
         </Navbar>
 
-        { /* <pre className='logger'>
+        {false && <pre className='logger'>
           <ul>
             {logs.map((log, idx) => (
               <li key={idx}>{log}</li>
             ))}
           </ul>
-        </pre> */ }
+        </pre>}
 
         {items.length ? (
           <Gridifier editable={editMode} sortDispersion orderHandler={this.itemManager.orderHandler}
@@ -341,7 +370,8 @@ class MainComponent extends React.Component {
 
         {editMode ? (
           <Settings animationLevel={animationLevel} localStorage={localStorage} serverStorage={serverStorage}
-            itemManager={this.itemManager} socketManager={this.socketManager} theme={theme} />
+            itemManager={this.itemManager} socketManager={this.socketManager} theme={theme}
+            mainState={this.getState.bind(this)} />
         ) : null}
 
         {editMode && itemSettingPanel ? (
@@ -425,23 +455,21 @@ class MainComponent extends React.Component {
             <div className='bubble hide'>
               <Icon className='animation microphone'>mic</Icon>
             </div>
-            {speechDialog ? (
-              <div id='speech-popup-dialog-container' className='hide'>
-                <div className='dialog hide'>
-                  <div className='content'>
-                    <Icon className='animation microphone'>mic</Icon>
-                    <span className='title'>{speechDialog.question}</span>
-                    <div className='sub-content'>
-                      <ul>
-                        {speechDialog.alternatives.map((alt, idx) => (
-                          <li key={idx}>{alt}</li>
-                        ))}
-                      </ul>
-                    </div>
+            <div id='speech-popup-dialog-container' className='hide'>
+              <div className='dialog hide'>
+                <div className='content'>
+                  <Icon className='animation microphone'>mic</Icon>
+                  <span className='title'>{speechDialog && speechDialog.question}</span>
+                  <div className='sub-content'>
+                    <ul>
+                      {speechDialog && speechDialog.alternatives.map((alt, idx) => (
+                        <li key={idx}>{alt}</li>
+                      ))}
+                    </ul>
                   </div>
                 </div>
               </div>
-            ) : null}
+            </div>
           </div>
         ) : null}
       </div>
@@ -505,6 +533,42 @@ class MainComponent extends React.Component {
 
   getState () {
     return this.state
+  }
+
+  instantiateItems () {
+    return Promise.all(this.itemManager.getAllItems())
+    .then((items) => {
+      console.log(`Restoring ${items.length} items in the grid...`)
+      this.setState({ items })
+    })
+  }
+
+  refreshItems (event) {
+    this.logger.log('refreshItems' + (event && event.type))
+
+    const items = this.state.items
+    if (!items || items.length === 0) {
+      return Promise.resolve()
+    }
+
+    return Promise.all(items.map((item) => {
+      // Warning, to adapt if itemManager.encapsulateItem changes its children order!
+      return item.props.children[0].props.initialParams.refresh(event)
+    }))
+  }
+
+  freezeItems (event) {
+    this.logger.log('freezeItems' + (event && event.type))
+
+    const items = this.state.items
+    if (!items || items.length === 0) {
+      return Promise.resolve()
+    }
+
+    return Promise.all(items.map((item) => {
+      // Warning, to adapt if itemManager.encapsulateItem changes its children order!
+      return item.props.children[0].props.initialParams.freeze(event)
+    }))
   }
 }
 

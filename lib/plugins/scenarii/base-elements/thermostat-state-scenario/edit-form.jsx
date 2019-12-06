@@ -166,7 +166,7 @@ class BrowserThermostatStateScenarioEditForm extends React.Component {
             title={this.computeModeText()}
             temperaturesGetter={() => ({ ecoTemperature: lowTemperature || 15, comfortTemperature: highTemperature || 19 })}
 
-            onTemperaturesChange={(eco, comfort) => { console.log('##', eco, comfort) /* TODO !1 */ }}
+            onTemperaturesChange={(eco, comfort) => { console.log('####', eco, comfort) /* TODO !1 */ }}
           />
         </Row>
         <br />&nbsp;<br />&nbsp;<br />
@@ -273,6 +273,9 @@ class BrowserThermostatStateScenarioEditForm extends React.Component {
 
   changePlanner (program, overriddenProgram) {
     this.props.instance.data.program = program
+    if (overriddenProgram && (!this.props.instance.data.overriddenProgram || overriddenProgram.forEach((v, k) => v === this.props.instance.data.overriddenProgram[k]))) {
+      this.props.instance.data.overrideEnd = Date.now() + (23 * 60 * 60000) + (30 * 60000) // +23hr30
+    }
     this.props.instance.data.overriddenProgram = overriddenProgram
     this.props.highlightCloseButton()
   }

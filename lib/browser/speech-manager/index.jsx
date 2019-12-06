@@ -6,28 +6,32 @@ import cx from 'classnames'
 import CommandManager from './command-manager'
 import { NavItem, Icon } from 'react-materialize'
 import React from 'react'
-import { hellos, listens, errors } from './thesaurus'
+import { listens, errors } from './thesaurus'
 
 export default class SpeechManager {
-  constructor (mainComponent, localStorage, logger) {
+  constructor (mainComponent, localStorage, logger, mainState) {
     this.mainComponent = mainComponent
     this.logger = logger
+    this.mainState = mainState
     this.available = (('SpeechRecognition' in window) || ('webkitSpeechRecognition' in window)) &&
       ('speechSynthesis' in window)
     this.voice = false
-    this.voiceReady = false
     this.continuousMode = localStorage.getItem('settings-speech-continuous-recognition') || false
 
     if (this.available) {
-      this.commandManager = new CommandManager(
-        this.initEngines(localStorage),
-        this.continuousMode,
-        this.speak.bind(this),
-        this.setLanguage.bind(this),
-        this.continueDialog.bind(this),
-        this.stopDialog.bind(this),
-        logger
-      )
+      window.speechSynthesis.getVoices()
+      setTimeout(() => {
+        this.commandManager = new CommandManager(
+          this.initEngines(localStorage),
+          this.continuousMode,
+          this.mainState,
+          this.speak.bind(this),
+          this.setLanguage.bind(this),
+          this.continueDialog.bind(this),
+          this.stopDialog.bind(this),
+          logger
+        )
+      }, 200)
     }
 
     this.resultAnimating = false
@@ -44,10 +48,6 @@ export default class SpeechManager {
     this.setLanguage(defaultLanguage)
     window.speechSynthesis.onvoiceschanged = (e) => {
       this.setLanguage(defaultLanguage)
-      if (!this.voiceReady) {
-        this.speak(hellos[defaultLanguage])
-        this.voiceReady = true
-      }
     }
 
     // Events to manage UI
@@ -80,7 +80,7 @@ export default class SpeechManager {
             $('#speech-popup .bubble').removeClass('red-text')
             setTimeout(() => $('#speech-popup').addClass('hide'), 200)
             this.resultAnimating = false
-          }, 1500)
+          }, 1100)
         }
         if (!this.resultAnimating) {
           $('#speech-popup .bubble').addClass('hide')
@@ -91,7 +91,7 @@ export default class SpeechManager {
         setTimeout(() => {
           $('#speech-popup-dialog-container').addClass('hide')
           $('#speech-popup').addClass('hide')
-        }, 200)
+        }, 150)
       }
     })
     recognition.onspeechstart = () => {
@@ -108,13 +108,13 @@ export default class SpeechManager {
           $('#speech-popup .bubble').removeClass('green-text')
           setTimeout(() => $('#speech-popup').addClass('hide'), 200)
           this.resultAnimating = false
-        }, 1500)
+        }, 1100)
       } else {
         $('#speech-popup-dialog-container .dialog').addClass('hide')
         setTimeout(() => {
           $('#speech-popup-dialog-container').addClass('hide')
           $('#speech-popup').addClass('hide')
-        }, 200)
+        }, 150)
       }
     })
 
@@ -159,6 +159,7 @@ export default class SpeechManager {
       this.voice = voices[0]
       annyang.setLanguage(language)
     } else {
+      this.logger.warn(`Speech-manager: setLanguage cannot find language: searched ${language}. Available: [${window.speechSynthesis.getVoices().join(',')}]`)
       this.available = false
     }
   }
@@ -169,7 +170,6 @@ export default class SpeechManager {
     }
     this.logger.log('startRecognition step 0.')
     this.speak(listens[this.voice.lang])
-    this.logger.log('startRecognition step 1.')
 
     if (animationLevel >= 3 && !this.dialogMode) {
       const bubbleContainer = $('.navbar-fixed ul.hide-on-med-and-down .speech-bubble-container')
@@ -182,17 +182,22 @@ export default class SpeechManager {
       setTimeout(() => {
         bubbleContainer.removeClass('go')
         $('.speech-bubble', bubbleContainer).css({ left: '1px', top: '1px' })
-      }, 460)
+      }, 600)
 
-      setTimeout(() => { this.commandManager.start() }, 400)
+      setTimeout(() => { this.commandManager.start() }, 600)
     } else {
-      setTimeout(() => { this.commandManager.start() }, 100)
+      setTimeout(() => { this.commandManager.start() }, 90)
     }
   }
 
   continueDialog (question, alternatives) {
     this.dialogMode = { question: question || this.dialogMode.question, alternatives: alternatives || this.dialogMode.alternatives }
     this.mainComponent.setState({ speechDialog: this.dialogMode })
+    $('#speech-popup').removeClass('hide')
+    $('#speech-popup-dialog-container').removeClass('hide')
+    setTimeout(() => {
+      $('#speech-popup-dialog-container .dialog').removeClass('hide')
+    }, 10)
     this.commandManager.start()
   }
 
@@ -208,6 +213,7 @@ export default class SpeechManager {
   }
 
   speak (text, callback) {
+    annyang.abort()
     if (this.available) {
       const ut = new window.SpeechSynthesisUtterance(text)
       ut.voice = this.voice

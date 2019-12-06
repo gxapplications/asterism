@@ -27,11 +27,6 @@ class BitmaskStateControlSettingPanel extends ItemSettingPanel {
   }
 
   componentWillUpdate (nextProps, nextState) {
-    // FIXME: Here and elsewhere maybe... Because of react-materialize bad behaviors...
-    if (this.state.params.title !== nextState.params.title) {
-      this._title.setState({ value: nextState.params.title })
-    }
-
     if (this.state.params.bitmaskState !== nextState.params.bitmaskState) {
       this._bitmaskState.setState({ currentId: nextState.params.bitmaskState })
 

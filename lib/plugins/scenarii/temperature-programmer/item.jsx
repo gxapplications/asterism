@@ -30,14 +30,20 @@ class TemperatureProgrammerItem extends Item {
           if (!this._mounted || (params.scenario !== instanceId)) {
             return
           }
+          const hadOverriddenProgram = this.state.scenario.data.overriddenProgram
           this.state.scenario.data = data
           this._updateModeText()
           this._programmer && this._programmer.doubleKnob && this._programmer.doubleKnob.setCenter(
             this._programmer.centerText[data.forceModeEnd ? 1 : 0],
-            data.forceModeEnd
+            !!data.forceModeEnd
           )
+
+          if (data.overriddenProgram !== hadOverriddenProgram) {
+            this.forceUpdate()
+          }
         })
       })
+      .catch(() => {})
     }
   }
 
@@ -102,7 +108,7 @@ class TemperatureProgrammerItem extends Item {
         title={this.computeModeText()}
         temperaturesGetter={() => ({ ecoTemperature: lowTemperature || 15, comfortTemperature: highTemperature || 19 })}
 
-        onTemperaturesChange={(eco, comfort) => { console.log('##', eco, comfort) /* TODO !1 */ }}
+        onTemperaturesChange={(eco, comfort) => { console.log('####', eco, comfort) /* TODO !1 */ }}
       />
     )
   }
@@ -114,11 +120,11 @@ class TemperatureProgrammerItem extends Item {
 
     if (!activated) {
       modeText = 'INACTIVE'
-    } else if (new Date(forceModeEnd).getTime() > Date.now()) {
+    } else if (forceModeEnd) {
       modeText = 'FORCED comf.'
     } else {
       const currentDay = now.getDay()
-      const currentHourStep = now.getHours() * 2 + (now.getMinutes() > 30 ? 1 : 0)
+      const currentHourStep = now.getHours() * 2 + (now.getMinutes() >= 30 ? 1 : 0)
       const currentProgram = overriddenProgram || program[currentDay]
       const currentMode = currentProgram[currentHourStep]
       modeText = (currentMode === 0) ? 'economic' : ((currentMode === 1) ? 'comfort' : 'OFF')
@@ -129,6 +135,9 @@ class TemperatureProgrammerItem extends Item {
 
   changePlanner (program, overriddenProgram) {
     this.state.scenario.data.program = program
+    if (overriddenProgram && (!this.state.scenario.data.overriddenProgram || overriddenProgram.forEach((v, k) => v === this.state.scenario.data.overriddenProgram[k]))) {
+      this.state.scenario.data.overrideEnd = Date.now() + (23 * 60 * 60000) + (30 * 60000) // +23hr30
+    }
     this.state.scenario.data.overriddenProgram = overriddenProgram
     this.state.scenario.save()
     this._updateModeText()
@@ -146,6 +155,11 @@ class TemperatureProgrammerItem extends Item {
 
   _updateModeText () {
     this._programmer && this._programmer.doubleKnob && this._programmer.doubleKnob.setTitle(this.computeModeText())
+  }
+
+  refresh (event) {
+    // TODO !1: a lot of things to do, huh ?
+    return Promise.resolve()
   }
 }
 

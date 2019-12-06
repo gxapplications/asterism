@@ -30,6 +30,7 @@ class LevelStateControlItem extends Item {
           stateListenerId: this.scenariiService.addStateListener(levelState, this.updateLevel.bind(this))
         })
       })
+      .catch(() => {})
     }
   }
 
@@ -101,6 +102,19 @@ class LevelStateControlItem extends Item {
     .catch((error) => {
       console.log(error)
     })
+  }
+
+  refresh () {
+    if (this.state.params.levelState) {
+      this.scenariiService.getStateInstance(this.state.params.levelState)
+      .then((levelState) => {
+        this.setState({
+          levelState,
+          currentLevel: levelState.data.state
+        })
+      })
+      .catch(() => {})
+    }
   }
 }
 

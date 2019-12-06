@@ -104,6 +104,10 @@ class SocketLoggerItem extends Item {
   refreshPage () {
     window.location.reload()
   }
+
+  refresh () {
+    return Promise.resolve()
+  }
 }
 
 export default SocketLoggerItem

@@ -24,6 +24,10 @@
     & .collection-item {
       background-color: rgba(255, 255, 255, 0.3);
 
+      &:not(.group):not(.avatar) {
+        padding-left: 5.9rem;
+      }
+
       &.avatar {
         min-height: inherit;
 
@@ -31,18 +35,18 @@
           height: 42px !important;
           font-size: 1.8em !important;
           line-height: 1.5em !important;
-
-          &:after {
-            position: absolute;
-            top: -0.17rem;
-            left: 0.25rem;
-            line-height: 0.7em;
-            font-size: 1em;
-            font-weight: bolder;
-            content: '+';
-            opacity: 0.8;
-          }
         }
+      }
+
+      &.adder.avatar i:after {
+        position: absolute;
+        top: -0.05rem;
+        left: 0.32rem;
+        line-height: 0.7em;
+        font-size: 0.7em;
+        font-weight: bolder;
+        content: '+';
+        opacity: 0.8;
       }
 
       &.adder {
@@ -79,8 +83,41 @@
         }
       }
 
+      & > i.material-icons {
+        position: absolute;
+        width: 42px;
+        height: 42px !important;
+        font-size: 1.8em !important;
+        line-height: 1.5em !important;
+        overflow: hidden;
+        display: inline-block;
+        vertical-align: middle;
+        left: 15px;
+        color: #fff;
+        background-color: #999;
+        text-align: center;
+        border-radius: 50%;
+        background-size: 50%;
+      }
+
       & + span .sub-item {
-        padding-left: 3rem;
+        padding-left: 5.9rem;
+
+        & > i.material-icons {
+          position: absolute;
+          width: 42px;
+          height: 42px !important;
+          font-size: 1.8em !important;
+          line-height: 1.5em !important;
+          overflow: hidden;
+          display: inline-block;
+          vertical-align: middle;
+          left: 1.7rem;
+          color: #fff;
+          background-color: #999;
+          text-align: center;
+          border-radius: 50%;
+        }
       }
     }
 

@@ -8,13 +8,18 @@
   z-index: 998;
 }
 
+.asterism .navbar-fixed nav {
+  height: 100vh;
+}
+
 .asterism .navbar-fixed .nav-wrapper .button-collapse {
   margin: 0;
   padding: 0 18px;
 }
 
 .asterism .navbar-fixed nav.animated {
-  transition: background-color 0.4s ease-in-out;
+  transition: background-color 0.4s ease-in-out,
+    height 0.4s ease-out;
 }
 
 .asterism .navbar-fixed nav.animated .nav-wrapper ul {
@@ -148,6 +153,12 @@
   background-color: transparent;
   -webkit-box-shadow: none;
   box-shadow: none;
+}
+
+.asterism .rg-grid-item > .rg-drag-handler,
+.asterism .rg-grid-item > .rg-remove-handler,
+.asterism .rg-grid-item > .rg-settings-handler {
+  opacity: 0.7;
 }
 
 .asterism .rg-grid-item .rg-item-wrapper {
@@ -587,7 +598,7 @@
     top 0.35s ease-in,
     left 0.35s ease-out,
     transform 0.35s linear;
-  z-index: 1004;
+  z-index: 1008;
 }
 
 #category-modal .additional-items-list {
@@ -753,7 +764,7 @@
 #additional-item-rect {
   position: absolute;
   display: none;
-  z-index: 1004;
+  z-index: 1008;
   top: -100px;
   left: -100px;
   width: 10px;

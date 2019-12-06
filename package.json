@@ -1,19 +1,20 @@
 {
   "name": "asterism",
-  "version": "1.1.5",
+  "version": "1.2.23",
   "description": "Extensible & dynamic dashboard platform",
-  "author": "Xavier Gouley <gxapplications@gmail.com>",
+  "author": "Xavier Gouley <gxapplications@gmail.com> (asterism.tk)",
   "contributors": [],
   "license": "CC-BY-NC-SA-4.0",
   "scripts": {
     "start:dist": "npm run dist:compact && cross-env NODE_ENV=production node example/dist.js -- --build",
-    "start": "cross-env NODE_ENV=development nodemon --watch lib/server --watch lib/plugins example/hot-reload.js -- --build",
+    "start": "cross-env NODE_ENV=development nodemon --watch lib/server --watch lib/plugins example/hot-reload.js -- --build --toto='basta'",
     "start:debug": "cross-env NODE_ENV=development DEBUG=* nodemon --watch lib/server example/hot-reload.js -- --build",
     "start:no-build": "cross-env NODE_ENV=development nodemon --watch lib/server --watch lib/plugins example/hot-reload.js",
     "dist": "rimraf dist && babel lib --comments=true --compact=false --retainLines=true --out-dir dist",
     "dist:compact": "rimraf dist && babel lib --comments=false --compact=true --out-dir dist",
     "prepublishOnly": "npm run dist:compact",
     "gen:cert": "./generate-certificates.sh",
+    "gen:webPush": "./generate-webPush-keys.sh",
     "lint": "standard --verbose | snazzy",
     "test": "npm run dist && cross-env NODE_ENV=test mocha --require ignore-styles",
     "test:rerun": "cross-env NODE_ENV=test mocha --require ignore-styles",
@@ -37,7 +38,7 @@
     "domotics"
   ],
   "engines": {
-    "node": ">= 8.11.1",
+    "node": "8.13.0 - 8.17.0",
     "npm": ">= 6.4.1"
   },
   "babel": {
@@ -93,10 +94,10 @@
     "test"
   ],
   "dependencies": {
-    "ajv": "6.2.x",
+    "ajv": "^6.9.1",
     "all-the-cities": "2.0.x",
     "annyang": "^2.6.0",
-    "asterism-plugin-library": "^2.2.31",
+    "asterism-plugin-library": "^2.3.4",
     "babel-loader": "7.1.4",
     "babel-plugin-css-modules-transform": "1.5.0",
     "babel-plugin-transform-object-rest-spread": "6.23.x",
@@ -108,6 +109,7 @@
     "classnames": "2.2.x",
     "colors": "1.1.x",
     "cookie-parser": "1.4.x",
+    "cron": "^1.7.2",
     "css-loader": "0.28.x",
     "debounce": "1.x",
     "expose-loader": "0.7.x",
@@ -125,13 +127,13 @@
     "moment": "^2.22.0",
     "moment-timer": "^1.2.3",
     "node-forge": "0.8.x",
-    "node-sass": "4.9.x",
+    "node-sass": "4.13.x",
     "nosql": "6.1.x",
     "object-path": "0.11.x",
     "prop-types": "15.6.x",
     "react": "16.2.x",
     "react-color": "2.13.x",
-    "react-gridifier": "^1.0.0",
+    "react-gridifier": "^1.1.0",
     "react-hot-loader": "3.1.x",
     "react-materialize": "3.3.3",
     "react-transition-group": "1.2.x",
@@ -143,6 +145,7 @@
     "tsort": "0.0.1",
     "uuid": "3.x",
     "validate-npm-package-name": "3.x",
+    "web-push": "^3.4.3",
     "webpack": "3.x",
     "webpack-dev-middleware": "1.12.x",
     "webpack-hot-middleware": "2.x"
@@ -169,6 +172,5 @@
   "directories": {
     "lib": "./lib",
     "dist": "./dist"
-  },
-  "config": {}
+  }
 }

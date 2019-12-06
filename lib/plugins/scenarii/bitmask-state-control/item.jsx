@@ -30,6 +30,7 @@ class BitmaskStateControlItem extends Item {
           stateListenerId: this.scenariiService.addStateListener(bitmaskState, this.updateState.bind(this))
         })
       })
+      .catch(() => {})
     }
   }
 
@@ -116,6 +117,19 @@ class BitmaskStateControlItem extends Item {
       bitmaskState: Object.assign(this.state.bitmaskState, bitmaskState),
       currentValue: value
     })
+  }
+
+  refresh () {
+    if (this.state.params.bitmaskState) {
+      this.scenariiService.getStateInstance(this.state.params.bitmaskState)
+      .then((bitmaskState) => {
+        this.setState({
+          bitmaskState,
+          currentValue: bitmaskState.data.state
+        })
+      })
+      .catch(() => {})
+    }
   }
 }
 

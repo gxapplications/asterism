@@ -60,7 +60,7 @@ class Settings extends React.Component {
   }
 
   render () {
-    const { theme, localStorage, serverStorage, itemManager, animationLevel } = this.props
+    const { theme, localStorage, serverStorage, itemManager, animationLevel, mainState } = this.props
 
     const tabs = (
       <Tabs className={theme.backgrounds.editing}>
@@ -72,7 +72,8 @@ class Settings extends React.Component {
         <Tab title='User interface' active={this._activeTabIndex === 1}>
           <UserInterface localStorage={localStorage} theme={theme} animationLevel={animationLevel}
             itemManager={itemManager} serverStorage={serverStorage}
-            showRefreshButton={this.showRefreshButton.bind(this)} />
+            showRefreshButton={this.showRefreshButton.bind(this)}
+            mainState={mainState} />
         </Tab>
         {this.pluginSettingsPanels.map(({ Panel, privateSocket, publicSockets, serverStorage }, idx) => (
           <Tab title={Panel.tabName || idx} key={idx + 2} active={this._activeTabIndex === idx + 2}>
@@ -133,7 +134,8 @@ Settings.propTypes = {
   localStorage: PropTypes.object.isRequired,
   serverStorage: PropTypes.object.isRequired,
   itemManager: PropTypes.object.isRequired,
-  animationLevel: PropTypes.number.isRequired
+  animationLevel: PropTypes.number.isRequired,
+  mainState: PropTypes.func.isRequired
 }
 
 export default Settings

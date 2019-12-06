@@ -334,7 +334,8 @@ class DomoticsSettings extends React.Component {
       i++
     }
 
-    // TODO !0: bug: should reload knobs, else cannot add/remove knobs...
+    this.plugWidgets()
+    this.forceUpdate()
 
     this.props.serverStorage.setItem('settings-domotics-energy-costs', this.state.energyCosts)
     this.setState({

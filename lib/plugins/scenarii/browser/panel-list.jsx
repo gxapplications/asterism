@@ -296,6 +296,10 @@ class PanelList extends React.Component {
             {group.instances.map(({ instance, onClick, onDelete, onTest, testing, onStop, onActivateSwitch }) => (
               <a key={instance.instanceId} href='javascript:void(0)' onClick={onClick}
                 className={cx('collection-item sub-item', waves)}>
+                <i className={cx(
+                    'material-icons circle white-text',
+                    (instance.constructor && instance.constructor.type && instance.constructor.type.icon) || 'bubble_chart'
+                )}>{(instance.constructor && instance.constructor.type && instance.constructor.type.icon) || 'bubble_chart'}</i>
                 <div onClick={onDelete}
                   className={cx('secondary-content', (deleteConfirm === instance) ? deleteWavesConfirm : deleteWaves)}>
                   <i className='material-icons'>delete</i>
@@ -335,6 +339,7 @@ class PanelList extends React.Component {
         ]) : groupedInstances.map(({ instance, onClick, onDelete, onTest, testing, onStop, onActivateSwitch }) => (
           <a key={instance.instanceId} href='javascript:void(0)' onClick={onClick}
             className={cx('collection-item', waves)}>
+            <i className={cx('material-icons circle white-text', instance.constructor.type.icon || 'bubble_chart')}>{instance.constructor.type.icon || 'bubble_chart'}</i>
             <div onClick={onDelete}
               className={cx('secondary-content', (deleteConfirm === instance) ? deleteWavesConfirm : deleteWaves)}>
               <i className='material-icons'>delete</i>
@@ -375,7 +380,7 @@ class PanelList extends React.Component {
         {types.filter(_typeFilter(search)).sort(_typeSorter).map(({ type, onClick }, idx) => (
           <a key={type.name} href='javascript:void(0)' onClick={onClick}
             className={cx('collection-item adder active avatar', waves)}>
-            <i className='material-icons circle'>warning</i>
+            <i className={cx('material-icons circle white-text', type.icon || 'bubble_chart')}>{type.icon || 'bubble_chart'}</i>
             <span className='title truncate'>{type.shortLabel || type.fullLabel || type.name}</span>
             {(type.shortLabel && type.fullLabel) ? (
               <span>{type.fullLabel}</span>

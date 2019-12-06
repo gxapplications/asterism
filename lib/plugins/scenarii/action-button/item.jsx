@@ -24,7 +24,7 @@ class ActionButtonItem extends Item {
       .then((action) => {
         this.setState({ params, action })
       })
-      .catch(console.error)
+      .catch(() => {})
     }
   }
 
@@ -96,6 +96,20 @@ class ActionButtonItem extends Item {
         })
       })
     }
+  }
+
+  refresh () {
+    if (this.state.actionExecuting === false) {
+      return Promise.resolve()
+    }
+    this.scenariiService.actionExecutionState(this.state.actionExecuting)
+    .then((executing) => {
+      if (!executing) {
+        this.setState({
+          actionExecuting: false
+        })
+      }
+    })
   }
 }
 
