@@ -29,7 +29,7 @@ const builder = new ItemFactoryBuilder()
   .build()
 .newItemType('level_state_control', AdditionalItem.categories.DOMOTICS)
   .withDescription('Level state control', 'A control to change level state')
-  .settingPanelWithHeader('Level state control settings', 'touch_app') // optional override, but always before *Instance*() calls...
+  .settingPanelWithHeader('Level state control settings', 'speed') // optional override, but always before *Instance*() calls...
   .newInstanceFromInitialSetting(3, 1, LevelStateControlSettingPanel)
   .existingInstance(LevelStateControlItem, LevelStateControlSettingPanel)
   .acceptDimensions([
@@ -55,7 +55,7 @@ const builder = new ItemFactoryBuilder()
   .build()
 .newItemType('temperature_programmer', AdditionalItem.categories.DOMOTICS)
   .withDescription('Temperature programmer', 'Programmer interface linked to a programmable dual mode scenario')
-  .settingPanelWithHeader('Temperature programmer settings', 'av_timer') // optional override, but always before *Instance*() calls...
+  .settingPanelWithHeader('Temperature programmer settings', 'filter_tilt_shift') // optional override, but always before *Instance*() calls...
   .newInstanceFromInitialSetting(5, 2, TemperatureProgrammerSettingPanel)
   .existingInstance(TemperatureProgrammerItem, TemperatureProgrammerSettingPanel)
   .acceptDimensions([

@@ -36,6 +36,9 @@ class TemperatureProgrammerItem extends Item {
             this._programmer.centerText[data.forceModeEnd ? 1 : 0],
             data.forceModeEnd
           )
+          // TODO !0: ICI, si le overriddenProgramm est supprimé, il faut refresh !
+
+          // TODO !0: dans la lib du double knob, le cadre rouge ne se décale pas à xxh30...
         })
       })
     }
@@ -102,7 +105,7 @@ class TemperatureProgrammerItem extends Item {
         title={this.computeModeText()}
         temperaturesGetter={() => ({ ecoTemperature: lowTemperature || 15, comfortTemperature: highTemperature || 19 })}
 
-        onTemperaturesChange={(eco, comfort) => { console.log('##', eco, comfort) /* TODO !1 */ }}
+        onTemperaturesChange={(eco, comfort) => { console.log('####', eco, comfort) /* TODO !1 */ }}
       />
     )
   }
@@ -129,6 +132,9 @@ class TemperatureProgrammerItem extends Item {
 
   changePlanner (program, overriddenProgram) {
     this.state.scenario.data.program = program
+    if (overriddenProgram && (!this.state.scenario.data.overriddenProgram || overriddenProgram.forEach((v, k) => v === this.state.scenario.data.overriddenProgram[k]))) {
+      this.state.scenario.data.overrideEnd = Date.now() + (23 * 60 * 60000) + (30 * 60000) // +23hr30
+    }
     this.state.scenario.data.overriddenProgram = overriddenProgram
     this.state.scenario.save()
     this._updateModeText()
