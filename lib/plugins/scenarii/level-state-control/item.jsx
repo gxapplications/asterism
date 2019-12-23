@@ -30,6 +30,7 @@ class LevelStateControlItem extends Item {
           stateListenerId: this.scenariiService.addStateListener(levelState, this.updateLevel.bind(this))
         })
       })
+      .catch(() => {})
     }
   }
 

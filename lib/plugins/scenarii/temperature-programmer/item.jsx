@@ -30,17 +30,20 @@ class TemperatureProgrammerItem extends Item {
           if (!this._mounted || (params.scenario !== instanceId)) {
             return
           }
+          const hadOverriddenProgram = this.state.scenario.data.overriddenProgram
           this.state.scenario.data = data
           this._updateModeText()
           this._programmer && this._programmer.doubleKnob && this._programmer.doubleKnob.setCenter(
             this._programmer.centerText[data.forceModeEnd ? 1 : 0],
             data.forceModeEnd
           )
-          // TODO !0: ICI, si le overriddenProgramm est supprimé, il faut refresh !
 
-          // TODO !0: dans la lib du double knob, le cadre rouge ne se décale pas à xxh30...
+          if (data.overriddenProgram !== hadOverriddenProgram) {
+            this.forceUpdate() // TODO !0: see if enough to refresh!
+          }
         })
       })
+      .catch(() => {})
     }
   }
 

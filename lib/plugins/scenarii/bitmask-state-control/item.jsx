@@ -30,6 +30,7 @@ class BitmaskStateControlItem extends Item {
           stateListenerId: this.scenariiService.addStateListener(bitmaskState, this.updateState.bind(this))
         })
       })
+      .catch(() => {})
     }
   }
 
