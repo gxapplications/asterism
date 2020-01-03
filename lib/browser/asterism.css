@@ -587,7 +587,7 @@
     top 0.35s ease-in,
     left 0.35s ease-out,
     transform 0.35s linear;
-  z-index: 1004;
+  z-index: 1008;
 }
 
 #category-modal .additional-items-list {
@@ -753,7 +753,7 @@
 #additional-item-rect {
   position: absolute;
   display: none;
-  z-index: 1004;
+  z-index: 1008;
   top: -100px;
   left: -100px;
   width: 10px;

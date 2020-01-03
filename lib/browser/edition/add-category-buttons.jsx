@@ -163,7 +163,9 @@ class AddCategoryButtons extends React.Component {
   }
 
   shouldComponentUpdate (nextProps, nextState) {
-    return true // cannot filter on states, will bring a refresh bug on the fab button.
+    // TODO !1: have a deep look on that behavior, just optimized, but an old warning seems to tell I should not.
+    return (this.state.modal !== nextState.modal)
+    // return true // cannot filter on states, will bring a refresh bug on the fab button.
   }
 
   render () {

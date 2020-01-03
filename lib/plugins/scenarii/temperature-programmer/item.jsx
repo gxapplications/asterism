@@ -35,11 +35,11 @@ class TemperatureProgrammerItem extends Item {
           this._updateModeText()
           this._programmer && this._programmer.doubleKnob && this._programmer.doubleKnob.setCenter(
             this._programmer.centerText[data.forceModeEnd ? 1 : 0],
-            data.forceModeEnd
+            !!data.forceModeEnd
           )
 
           if (data.overriddenProgram !== hadOverriddenProgram) {
-            this.forceUpdate() // TODO !0: see if enough to refresh!
+            this.forceUpdate()
           }
         })
       })
@@ -120,11 +120,11 @@ class TemperatureProgrammerItem extends Item {
 
     if (!activated) {
       modeText = 'INACTIVE'
-    } else if (new Date(forceModeEnd).getTime() > Date.now()) {
+    } else if (forceModeEnd) {
       modeText = 'FORCED comf.'
     } else {
       const currentDay = now.getDay()
-      const currentHourStep = now.getHours() * 2 + (now.getMinutes() > 30 ? 1 : 0)
+      const currentHourStep = now.getHours() * 2 + (now.getMinutes() >= 30 ? 1 : 0)
       const currentProgram = overriddenProgram || program[currentDay]
       const currentMode = currentProgram[currentHourStep]
       modeText = (currentMode === 0) ? 'economic' : ((currentMode === 1) ? 'comfort' : 'OFF')
