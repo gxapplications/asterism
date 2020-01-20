@@ -150,6 +150,12 @@
   box-shadow: none;
 }
 
+.asterism .rg-grid-item > .rg-drag-handler,
+.asterism .rg-grid-item > .rg-remove-handler,
+.asterism .rg-grid-item > .rg-settings-handler {
+  opacity: 0.7;
+}
+
 .asterism .rg-grid-item .rg-item-wrapper {
   display: flex;
 }
