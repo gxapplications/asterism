@@ -14,7 +14,7 @@ import DefaultLocalStorage from './default-local-storage'
 import DefaultServerStorage from './default-server-storage'
 import ItemManager from './item-manager'
 import ItemSetting from './edition/item-setting'
-// import logger from './logger'
+import logger from './logger'
 import NotificationManager from './notification-manager'
 import Settings from './edition/settings'
 import SocketManager from './socket-manager'
@@ -41,7 +41,7 @@ class MainComponent extends React.Component {
   constructor (props) {
     super(props)
 
-    this.logger = console // logger(this)
+    this.logger = logger(this)
 
     this.readOnly = hasCookie('readOnly-access-token')
     this.securityOn = hasCookie('readOnly-access-token') || hasCookie('admin-access-token')
@@ -139,8 +139,8 @@ class MainComponent extends React.Component {
       animationFlow: null,
       notifications: [], // not directly used to render, but to trigger a render() when modified
       messageModal: null,
-      speechDialog: null
-      // logs: []
+      speechDialog: null,
+      logs: []
     }
   }
 
@@ -169,6 +169,29 @@ class MainComponent extends React.Component {
         outDuration: this.state.animationLevel >= 2 ? 300 : 0
       })
     }
+
+    // Try some window events
+    // TODO !0: test and remove unwanted ones
+    window.oncanplay = () => { this.logger.log('oncanplay') }
+    window.onfocus = () => { this.logger.log('onfocus') }
+    window.ononline = () => { this.logger.log('ononline') }
+    window.onoffline = () => { this.logger.log('onoffline') }
+    window.onpageshow = () => { this.logger.log('onpageshow') }
+    window.onpagehide = () => { this.logger.log('onpagehide') }
+    window.onpause = () => { this.logger.log('onpause') }
+    window.onseeking = () => { this.logger.log('onseeking') }
+    window.onsuspend = () => { this.logger.log('onsuspend') }
+    window.ondeviceproximity = () => { this.logger.log('ondeviceproximity') }
+    window.onuserproximity = () => { this.logger.log('onuserproximity') }
+    window.onvrdisplayactivate = () => { this.logger.log('onvrdisplayactivate') }
+    window.onvrdisplayblur = () => { this.logger.log('onvrdisplayblur') }
+    window.onvrdisplayconnect = () => { this.logger.log('onvrdisplayconnect') }
+    window.onvrdisplaydeactivate = () => { this.logger.log('onvrdisplaydeactivate') }
+    window.onvrdisplaydisconnect = () => { this.logger.log('onvrdisplaydisconnect') }
+    window.onvrdisplayfocus = () => { this.logger.log('onvrdisplayfocus') }
+    window.onvrdisplaypointerrestricted = () => { this.logger.log('onvrdisplaypointerrestricted') }
+    window.onvrdisplaypointerunrestricted = () => { this.logger.log('onvrdisplaypointerunrestricted') }
+    window.onvrdisplaypresentchange = () => { this.logger.log('onvrdisplaypresentchange') }
 
     sleep(200)
     .then(() => Promise.all(this.itemManager.getAllItems()))
@@ -273,7 +296,7 @@ class MainComponent extends React.Component {
   render () {
     const { theme, localStorage, serverStorage } = this.props
     const { editMode, animationLevel, itemFactories, editPanels, EditPanel, items, itemSettingPanel, messageModal,
-      speechDialog, editPanelButtonHighlight } = this.state
+      speechDialog, editPanelButtonHighlight, logs } = this.state
     const SpeechStatus = this.speechManager.getComponent()
     const notifications = this.notificationManager.getComponents({ animationLevel, theme })
     const editPanelContext = EditPanel ? editPanels.find((ep) => ep.Panel === EditPanel) : {}
@@ -316,13 +339,13 @@ class MainComponent extends React.Component {
           </NavItem>) : null}
         </Navbar>
 
-        { /* <pre className='logger'>
+        <pre className='logger'>
           <ul>
             {logs.map((log, idx) => (
               <li key={idx}>{log}</li>
             ))}
           </ul>
-        </pre> */ }
+        </pre>
 
         {items.length ? (
           <Gridifier editable={editMode} sortDispersion orderHandler={this.itemManager.orderHandler}
@@ -426,23 +449,21 @@ class MainComponent extends React.Component {
             <div className='bubble hide'>
               <Icon className='animation microphone'>mic</Icon>
             </div>
-            {speechDialog ? (
-              <div id='speech-popup-dialog-container' className='hide'>
-                <div className='dialog hide'>
-                  <div className='content'>
-                    <Icon className='animation microphone'>mic</Icon>
-                    <span className='title'>{speechDialog.question}</span>
-                    <div className='sub-content'>
-                      <ul>
-                        {speechDialog.alternatives.map((alt, idx) => (
-                          <li key={idx}>{alt}</li>
-                        ))}
-                      </ul>
-                    </div>
+            <div id='speech-popup-dialog-container' className='hide'>
+              <div className='dialog hide'>
+                <div className='content'>
+                  <Icon className='animation microphone'>mic</Icon>
+                  <span className='title'>{speechDialog && speechDialog.question}</span>
+                  <div className='sub-content'>
+                    <ul>
+                      {speechDialog && speechDialog.alternatives.map((alt, idx) => (
+                        <li key={idx}>{alt}</li>
+                      ))}
+                    </ul>
                   </div>
                 </div>
               </div>
-            ) : null}
+            </div>
           </div>
         ) : null}
       </div>

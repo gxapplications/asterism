@@ -37,7 +37,6 @@ export default class NotificationManager {
     this.logger = logger
     this.navItems = []
     this.webPushParams = process.env.ASTERISM_WEB_PUSH_PARAMS || {}
-    console.log('######', process.env.ASTERISM_WEB_PUSH_PARAMS, navigator.serviceWorker)
     if ('serviceWorker' in navigator && this.webPushParams.publicVapidKey) {
       this.registerWebPushServiceWorker().catch(console.error)
     }
