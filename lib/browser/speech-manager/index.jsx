@@ -9,9 +9,10 @@ import React from 'react'
 import { listens, errors } from './thesaurus'
 
 export default class SpeechManager {
-  constructor (mainComponent, localStorage, logger) {
+  constructor (mainComponent, localStorage, logger, mainState) {
     this.mainComponent = mainComponent
     this.logger = logger
+    this.mainState = mainState
     this.available = (('SpeechRecognition' in window) || ('webkitSpeechRecognition' in window)) &&
       ('speechSynthesis' in window)
     this.voice = false
@@ -23,6 +24,7 @@ export default class SpeechManager {
         this.commandManager = new CommandManager(
           this.initEngines(localStorage),
           this.continuousMode,
+          this.mainState,
           this.speak.bind(this),
           this.setLanguage.bind(this),
           this.continueDialog.bind(this),

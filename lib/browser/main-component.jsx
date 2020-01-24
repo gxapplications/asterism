@@ -48,8 +48,6 @@ class MainComponent extends React.Component {
 
     this.notificationManager = new NotificationManager(this, this.logger)
     this.socketManager = new SocketManager(this.notificationManager, this.logger)
-    this.speechManager = new SpeechManager(this, props.localStorage, this.logger)
-
     // Instantiate orderHandler and initial items for this.state (need to be sync)
     this.itemManager = new ItemManager(props.localStorage, props.serverStorage, this)
 
@@ -76,6 +74,9 @@ class MainComponent extends React.Component {
         this.setState({ editMode: true })
       }
     }
+    mainState.logout = this.logout.bind(this)
+
+    this.speechManager = new SpeechManager(this, props.localStorage, this.logger, mainState)
 
     this.services = (process.env.ASTERISM_SERVICES || []).reduce((map, toRequire) => {
       if (!toRequire) {
