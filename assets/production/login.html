@@ -143,6 +143,7 @@
 
         <form id="form" method="post" enctype="application/x-www-form-urlencoded">
             <input type="hidden" value="" id="password" name="password" />
+            <input type="hidden" value="" id="pwaInstalled" name="pwaInstalled" />
             <div id="pattern-outer"><div id="pattern-inner" /></div>
         </form>
 
@@ -156,6 +157,7 @@
             $(document).ready(function() {
                 var encoder = decodeURIComponent(getCookie('password-encoder'));
                 encoder = forge.pki.publicKeyFromPem(encoder);
+                const isPwaInstalled = navigator.standalone || matchMedia('(display-mode: standalone)').matches;
 
                 const height = $('#pattern-outer').width();
                 // http://ignitersworld.com/lab/patternLock.html#documentation
@@ -178,6 +180,8 @@
                         }, 300);
                         setTimeout(function() {
                             $('#password').val(pattern);
+                            $('#pwaInstalled').val(isPwaInstalled ? '1' : ''); // TODO !0:! mettre '1' ou '' selon PWA installée ou pas.
+
                             $('#form').submit();
                         }, 1500);
                     }

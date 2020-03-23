@@ -141,6 +141,7 @@ class MainComponent extends React.Component {
       notifications: [], // not directly used to render, but to trigger a render() when modified
       messageModal: null,
       speechDialog: null,
+      deferredInstallPrompt: null,
       logs: []
     }
   }
@@ -173,26 +174,40 @@ class MainComponent extends React.Component {
 
     // Try some window events
     // TODO !0: test and remove unwanted ones
-    window.oncanplay = () => { this.logger.log('oncanplay') }
-    window.onfocus = () => { this.logger.log('onfocus') }
-    window.ononline = () => { this.logger.log('ononline') }
-    window.onoffline = () => { this.logger.log('onoffline') }
+    window.onfocus = () => { this.logger.log('onfocus') } /// keep
+    window.ononline = () => { this.logger.log('ononline') } /// keep
+    window.onoffline = () => { this.logger.log('onoffline') } /// keep
+
     window.onpageshow = () => { this.logger.log('onpageshow') }
     window.onpagehide = () => { this.logger.log('onpagehide') }
     window.onpause = () => { this.logger.log('onpause') }
-    window.onseeking = () => { this.logger.log('onseeking') }
-    window.onsuspend = () => { this.logger.log('onsuspend') }
     window.ondeviceproximity = () => { this.logger.log('ondeviceproximity') }
     window.onuserproximity = () => { this.logger.log('onuserproximity') }
-    window.onvrdisplayactivate = () => { this.logger.log('onvrdisplayactivate') }
-    window.onvrdisplayblur = () => { this.logger.log('onvrdisplayblur') }
-    window.onvrdisplayconnect = () => { this.logger.log('onvrdisplayconnect') }
-    window.onvrdisplaydeactivate = () => { this.logger.log('onvrdisplaydeactivate') }
-    window.onvrdisplaydisconnect = () => { this.logger.log('onvrdisplaydisconnect') }
-    window.onvrdisplayfocus = () => { this.logger.log('onvrdisplayfocus') }
-    window.onvrdisplaypointerrestricted = () => { this.logger.log('onvrdisplaypointerrestricted') }
-    window.onvrdisplaypointerunrestricted = () => { this.logger.log('onvrdisplaypointerunrestricted') }
-    window.onvrdisplaypresentchange = () => { this.logger.log('onvrdisplaypresentchange') }
+
+    // PWA install prompt
+    window.addEventListener('beforeinstallprompt', event => {
+      event.preventDefault()
+      this.setState({ deferredInstallPrompt: {
+        event,
+        clean: () => this.setState({ deferredInstallPrompt: null }),
+        prompt: () => {
+          event.prompt()
+          event.userChoice.then((choiceResult) => {
+            // TODO !0: provide custom install experience.
+            // https://web.dev/customize-install
+            if (choiceResult.outcome === 'accepted') {
+              console.log('User accepted the install prompt')
+            } else {
+              console.log('User dismissed the install prompt')
+            }
+          })
+          window.addEventListener('appinstalled', (evt) => {
+            // TODO !0: provide custom install experience.
+            console.log('app installed')
+          })
+        }
+      } })
+    })
 
     sleep(200)
     .then(() => Promise.all(this.itemManager.getAllItems()))
@@ -366,7 +381,8 @@ class MainComponent extends React.Component {
 
         {editMode ? (
           <Settings animationLevel={animationLevel} localStorage={localStorage} serverStorage={serverStorage}
-            itemManager={this.itemManager} socketManager={this.socketManager} theme={theme} />
+            itemManager={this.itemManager} socketManager={this.socketManager} theme={theme}
+            mainState={this.getState.bind(this)} />
         ) : null}
 
         {editMode && itemSettingPanel ? (

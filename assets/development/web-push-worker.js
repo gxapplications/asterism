@@ -1,7 +1,45 @@
-/* global self, clients */
-self.addEventListener('install', () => {
+/* global self, clients, caches, fetch */
+
+const CACHE_VERSION = '1.2.9'
+const FILES_TO_CACHE = ['/offline.html', '/']
+
+self.addEventListener('install', ev => {
   console.log(`Installing new web-push worker version...`)
+
+  ev.waitUntil(
+    caches.open(CACHE_VERSION).then((cache) => {
+      console.log('[ServiceWorker] Pre-caching offline page')
+      return cache.addAll(FILES_TO_CACHE)
+    })
+  )
+
   return self.skipWaiting()
+})
+
+self.addEventListener('activate', ev => {
+  ev.waitUntil(
+    caches.keys().then((keyList) => {
+      return Promise.all(keyList.map((key) => {
+        if (key !== CACHE_VERSION) {
+          console.log('[ServiceWorker] Removing old cache', key)
+          return caches.delete(key)
+        }
+      }))
+    })
+  )
+
+  return self.clients.claim()
+})
+
+self.addEventListener('fetch', ev => {
+  ev.respondWith(
+    // Try the cache
+    caches.match(ev.request).then(response => {
+      return response || fetch(ev.request)
+    }).catch(() => {
+      return caches.match('/offline.html')
+    })
+  )
 })
 
 self.addEventListener('push', ev => {

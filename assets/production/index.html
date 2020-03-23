@@ -9,7 +9,7 @@
             body {
                 background-color: #9e9e9e;
             }
-            #reloader {
+            #reloader, #noscript {
                 position: fixed;
                 bottom: 0;
                 top: 0;
@@ -26,7 +26,7 @@
                 opacity: 0;
                 transition: opacity 1s 0.1s ease-out;
             }
-            #reloader > div {
+            #reloader > div, #noscript > div {
                 color: #fff;
                 text-align: center;
                 display: block;
@@ -62,14 +62,30 @@
 
         <script type="text/javascript">
             $(document).ready(function() {
-                setTimeout(function() {
-                    if ($('#app').children().length === 0) {
-                        console.error('Need to reload bootstrap. Asterism is not responding...');
-                        $('#reloader').show();
-                        $('#reloader').css('opacity', 1);
-                    }
-                }, 3000);
+              setTimeout(function() {
+                if ($('#app').children().length === 0) {
+                  console.error('Need to reload bootstrap. Asterism is not responding...');
+                  $('#reloader').show();
+                  $('#reloader').css('opacity', 1);
+                }
+              }, 3000);
             });
+
+            if ('serviceWorker' in navigator) {
+              window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/web-push-worker.js')
+                .catch(function(err) {
+                  console.log('[ServiceWorker] did not register correctly.', err)
+                });
+              });
+            }
         </script>
+
+        <noscript id="noscript">
+            <div>
+                <h1>Error</h1>
+                Javascript support is required for this application to work.
+            </div>
+        </noscript>
     </body>
 </html>

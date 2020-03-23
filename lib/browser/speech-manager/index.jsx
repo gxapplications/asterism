@@ -52,7 +52,6 @@ export default class SpeechManager {
 
     // Events to manage UI
     annyang.addCallback('start', () => {
-      console.log('### START')
       if (!this.dialogMode) {
         $('#speech-popup').removeClass('hide')
         this.justStarted = true
@@ -69,7 +68,6 @@ export default class SpeechManager {
       }
     })
     annyang.addCallback('end', () => {
-      console.log('### END')
       if (!this.dialogMode) {
         if (this.justStarted) {
           // too short, maybe blocked...
@@ -103,7 +101,6 @@ export default class SpeechManager {
       $('#speech-popup i.material-icons.microphone').removeClass('viber')
     }
     annyang.addCallback('result', () => {
-      console.log('### RESULT')
       if (!this.dialogMode) {
         $('#speech-popup .bubble').addClass('green-text')
         this.resultAnimating = setTimeout(() => {
@@ -122,8 +119,6 @@ export default class SpeechManager {
     })
 
     annyang.addCallback('error', () => {
-      console.log('### ERROR')
-
       $('#speech-popup .bubble').addClass('hide')
       $('#speech-popup .bubble').removeClass('green-text')
       $('#speech-popup .bubble').removeClass('red-text')
