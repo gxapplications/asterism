@@ -34,7 +34,7 @@
             }
         </style>
 
-        <link rel="manifest" href="manifest.json">
+        <link rel="manifest" href="/manifest.json">
         <link href="/assets/material-icons.css" rel="stylesheet" />
         <link type="text/css" rel="stylesheet" href="/materialize-css/css/materialize.min.css"
               media="screen,projection" />
@@ -61,24 +61,24 @@
         <script src="/build/bundle.js" onerror="window.location.reload(true)" type="text/javascript"></script>
 
         <script type="text/javascript">
-            $(document).ready(function() {
-              setTimeout(function() {
-                if ($('#app').children().length === 0) {
-                  console.error('Need to reload bootstrap. Asterism is not responding...');
-                  $('#reloader').show();
-                  $('#reloader').css('opacity', 1);
-                }
-              }, 3000);
-            });
-
-            if ('serviceWorker' in navigator) {
-              window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/web-push-worker.js')
-                .catch(function(err) {
-                  console.log('[ServiceWorker] did not register correctly.', err)
-                });
+          if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+              navigator.serviceWorker.register('/web-push-worker.js')
+              .catch(function(err) {
+                console.log('[ServiceWorker] did not register correctly.', err)
               });
-            }
+            });
+          }
+
+          $(document).ready(function() {
+            setTimeout(function() {
+              if ($('#app').children().length === 0) {
+                console.error('Need to reload bootstrap. Asterism is not responding...');
+                $('#reloader').show();
+                $('#reloader').css('opacity', 1);
+              }
+            }, 3000);
+          });
         </script>
 
         <noscript id="noscript">
