@@ -2,6 +2,7 @@
 <html>
     <head>
         <meta charset="utf-8" />
+        <meta name="theme-color" content="#009688" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
         <title>Asterism</title>
 
@@ -62,11 +63,9 @@
 
         <script type="text/javascript">
           if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-              navigator.serviceWorker.register('/web-push-worker.js')
-              .catch(function(err) {
-                console.log('[ServiceWorker] did not register correctly.', err)
-              });
+            navigator.serviceWorker.register('/web-push-worker.js', { scope: '' })
+            .catch(function(err) {
+              console.log('[ServiceWorker] did not register correctly.', err)
             });
           }
 

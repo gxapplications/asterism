@@ -76,6 +76,33 @@ class MainComponent extends React.Component {
     }
     mainState.logout = this.logout.bind(this)
 
+    // PWA install prompt
+    window.addEventListener('beforeinstallprompt', event => {
+      this.logger.log('beforeinstallprompt')
+
+      // event.preventDefault()
+      this.setState({ deferredInstallPrompt: {
+        event,
+        clean: () => this.setState({ deferredInstallPrompt: null }),
+        prompt: () => {
+          event.prompt()
+          event.userChoice.then((choiceResult) => {
+            // TODO !0: provide custom install experience.
+            // https://web.dev/customize-install
+            if (choiceResult.outcome === 'accepted') {
+              console.log('User accepted the install prompt')
+            } else {
+              console.log('User dismissed the install prompt')
+            }
+          })
+          window.addEventListener('appinstalled', (evt) => {
+            // TODO !0: provide custom install experience.
+            console.log('app installed')
+          })
+        }
+      } })
+    })
+
     this.speechManager = new SpeechManager(this, props.localStorage, this.logger, mainState)
 
     this.services = (process.env.ASTERISM_SERVICES || []).reduce((map, toRequire) => {
@@ -183,31 +210,6 @@ class MainComponent extends React.Component {
     window.onpause = () => { this.logger.log('onpause') }
     window.ondeviceproximity = () => { this.logger.log('ondeviceproximity') }
     window.onuserproximity = () => { this.logger.log('onuserproximity') }
-
-    // PWA install prompt
-    window.addEventListener('beforeinstallprompt', event => {
-      event.preventDefault()
-      this.setState({ deferredInstallPrompt: {
-        event,
-        clean: () => this.setState({ deferredInstallPrompt: null }),
-        prompt: () => {
-          event.prompt()
-          event.userChoice.then((choiceResult) => {
-            // TODO !0: provide custom install experience.
-            // https://web.dev/customize-install
-            if (choiceResult.outcome === 'accepted') {
-              console.log('User accepted the install prompt')
-            } else {
-              console.log('User dismissed the install prompt')
-            }
-          })
-          window.addEventListener('appinstalled', (evt) => {
-            // TODO !0: provide custom install experience.
-            console.log('app installed')
-          })
-        }
-      } })
-    })
 
     sleep(200)
     .then(() => Promise.all(this.itemManager.getAllItems()))
