@@ -44,15 +44,21 @@ class SettingsUserInterface extends React.Component {
     return (
       <div className='card'>
         {deferredInstallPrompt && (<div className='section left-align'>
-          <h5><Icon left>add_to_home_screen</Icon>Application for mobiles</h5>
+          <h5><Icon left>add_to_home_screen</Icon>Application for mobile</h5>
           <p>
-            Add this page as an application on your mobile device.
+            Add the application as a WebAPK on your mobile device.
           </p>
-          <Button waves={animationLevel >= 2 ? 'light' : null}
-            className={cx(' marged col s12 m5', theme.actions.secondary)}
-            onClick={deferredInstallPrompt.prompt}>
-            Install app
-          </Button>
+          <p className='row'>
+            <Button waves={waves} className={cx('marged col s12 m5 l7', theme.actions.secondary)}
+              onClick={() => deferredInstallPrompt.prompt().then(accepted => {
+                if (accepted) {
+                  this.forceUpdate()
+                }
+              })}>
+              <Icon left>add_to_home_screen</Icon>
+              Install app !
+            </Button>
+          </p>
         </div>)}
         <div className='section left-align'>
           <h5><Icon left>view_quilt</Icon>Components ordering</h5>
@@ -125,6 +131,7 @@ class SettingsUserInterface extends React.Component {
             <br />
           </div>
         </div>
+        <br />
         <div className={cx('card-reveal', theme.backgrounds.body)}>
           <span className='card-title'>Choose a color<Icon right>close</Icon></span>
           <div className='center-align circle-picker-container'>

@@ -1,6 +1,6 @@
 /* global self, clients, caches, fetch, URL */
 
-const CACHE_VERSION = '1.2.9.2'
+const CACHE_VERSION = '1.2.18'
 const FILES_TO_CACHE = ['', '/',
   '/web-push-worker.js',
   '/manifest.json',

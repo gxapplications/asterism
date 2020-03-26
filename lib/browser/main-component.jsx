@@ -78,26 +78,26 @@ class MainComponent extends React.Component {
 
     // PWA install prompt
     window.addEventListener('beforeinstallprompt', event => {
-      this.logger.log('beforeinstallprompt')
-
-      // event.preventDefault()
+      this.logger.log('beforeinstallprompt triggered!')
+      // event.preventDefault() // to avoid classical install webAPK banner
       this.setState({ deferredInstallPrompt: {
         event,
         clean: () => this.setState({ deferredInstallPrompt: null }),
         prompt: () => {
           event.prompt()
-          event.userChoice.then((choiceResult) => {
-            // TODO !0: provide custom install experience.
+          window.addEventListener('appinstalled', (evt) => {
+            // TODO !0: what to do here ?
+            this.logger.log('app installed')
+          })
+          return event.userChoice.then((choiceResult) => {
             // https://web.dev/customize-install
             if (choiceResult.outcome === 'accepted') {
-              console.log('User accepted the install prompt')
+              this.logger.log('User accepted the install prompt')
+              this.state.deferredInstallPrompt && this.state.deferredInstallPrompt.clean()
             } else {
-              console.log('User dismissed the install prompt')
+              this.logger.log('User dismissed the install prompt')
             }
-          })
-          window.addEventListener('appinstalled', (evt) => {
-            // TODO !0: provide custom install experience.
-            console.log('app installed')
+            return choiceResult.outcome === 'accepted'
           })
         }
       } })
