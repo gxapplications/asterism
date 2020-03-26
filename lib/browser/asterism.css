@@ -8,13 +8,18 @@
   z-index: 998;
 }
 
+.asterism .navbar-fixed nav {
+  height: 100vh;
+}
+
 .asterism .navbar-fixed .nav-wrapper .button-collapse {
   margin: 0;
   padding: 0 18px;
 }
 
 .asterism .navbar-fixed nav.animated {
-  transition: background-color 0.4s ease-in-out;
+  transition: background-color 0.4s ease-in-out,
+    height 0.4s ease-out;
 }
 
 .asterism .navbar-fixed nav.animated .nav-wrapper ul {

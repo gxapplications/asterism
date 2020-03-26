@@ -200,23 +200,22 @@ class MainComponent extends React.Component {
     }
 
     // Try some window events
-    // TODO !0: test and remove unwanted ones
+    // TODO !0: test and remove unwanted ones, then call a new refresh func !
+    // window.addEventListener('xxx', event => {
     window.onfocus = () => { this.logger.log('onfocus') } /// keep
     window.ononline = () => { this.logger.log('ononline') } /// keep
     window.onoffline = () => { this.logger.log('onoffline') } /// keep
-
     window.onpageshow = () => { this.logger.log('onpageshow') }
     window.onpagehide = () => { this.logger.log('onpagehide') }
-    window.onpause = () => { this.logger.log('onpause') }
-    window.ondeviceproximity = () => { this.logger.log('ondeviceproximity') }
-    window.onuserproximity = () => { this.logger.log('onuserproximity') }
 
-    sleep(200)
+    sleep(320)
     .then(() => Promise.all(this.itemManager.getAllItems()))
     .then((items) => {
       console.log(`Restoring ${items.length} items in the grid...`)
       this.setState({ items })
     })
+
+    $('div.asterism .navbar-fixed > nav').css('height', 'inherit')
   }
 
   componentDidUpdate (prevProps, prevState) {
