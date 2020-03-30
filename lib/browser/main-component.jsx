@@ -7,6 +7,7 @@ import React from 'react'
 import { Gridifier } from 'react-gridifier/dist/materialize'
 import { Icon, Navbar, NavItem } from 'react-materialize'
 import { TransitionGroup } from 'react-transition-group'
+import debounce from 'debounce'
 
 import AddCategoryButtons from './edition/add-category-buttons'
 import DefaultMaterialTheme from './default-material-theme'
@@ -19,23 +20,13 @@ import NotificationManager from './notification-manager'
 import Settings from './edition/settings'
 import SocketManager from './socket-manager'
 import SpeechManager from './speech-manager'
-import { thenSleep, sleep } from './tools'
+import { thenSleep, sleep, hasCookie, deleteCookie } from './tools'
 
 import 'react-gridifier/dist/styles.css'
 import './asterism.css'
 import 'asterism-plugin-library/styles.css'
 
 const localStorage = new DefaultLocalStorage('asterism')
-
-const hasCookie = (name) => {
-  var value = '; ' + window.document.cookie
-  var parts = value.split('; ' + name + '=')
-  return (parts.length === 2)
-}
-
-const deleteCookie = (name) => {
-  window.document.cookie = name + '=; Max-Age=-99999999;'
-}
 
 class MainComponent extends React.Component {
   constructor (props) {
@@ -85,10 +76,6 @@ class MainComponent extends React.Component {
         clean: () => this.setState({ deferredInstallPrompt: null }),
         prompt: () => {
           event.prompt()
-          window.addEventListener('appinstalled', (evt) => {
-            // TODO !0: what to do here ?
-            this.logger.log('app installed')
-          })
           return event.userChoice.then((choiceResult) => {
             // https://web.dev/customize-install
             if (choiceResult.outcome === 'accepted') {
@@ -199,22 +186,23 @@ class MainComponent extends React.Component {
       })
     }
 
-    // Try some window events
-    // TODO !0: test and remove unwanted ones, then call a new refresh func !
-    // window.addEventListener('xxx', event => {
-    window.onfocus = () => { this.logger.log('onfocus') } /// keep
-    window.ononline = () => { this.logger.log('ononline') } /// keep
-    window.onoffline = () => { this.logger.log('onoffline') } /// keep
-    window.onpageshow = () => { this.logger.log('onpageshow') }
-    window.onpagehide = () => { this.logger.log('onpagehide') }
-
-    sleep(320)
-    .then(() => Promise.all(this.itemManager.getAllItems()))
-    .then((items) => {
-      console.log(`Restoring ${items.length} items in the grid...`)
-      this.setState({ items })
+    // On some window events, refresh items or freeze them
+    const debouncerRefreshItems = debounce(this.refreshItems.bind(this), 5000, true)
+    window.addEventListener('pageshow',
+      () => this.state.items.length ? debouncerRefreshItems() : null)
+    window.addEventListener('focus', debouncerRefreshItems)
+    window.addEventListener('online', debouncerRefreshItems)
+    window.addEventListener('offline', (event) => {
+      debouncerRefreshItems.clear()
+      this.freezeItems(event)
+    })
+    window.addEventListener('pagehide', (event) => {
+      debouncerRefreshItems.clear()
+      this.freezeItems(event)
     })
 
+    // Instantiate items
+    sleep(320).then(this.instantiateItems.bind(this))
     $('div.asterism .navbar-fixed > nav').css('height', 'inherit')
   }
 
@@ -545,6 +533,42 @@ class MainComponent extends React.Component {
 
   getState () {
     return this.state
+  }
+
+  instantiateItems () {
+    return Promise.all(this.itemManager.getAllItems())
+    .then((items) => {
+      console.log(`Restoring ${items.length} items in the grid...`)
+      this.setState({ items })
+    })
+  }
+
+  refreshItems (event) {
+    this.logger.log('refreshItems' + (event && event.type))
+
+    const items = this.state.items
+    if (!items || items.length === 0) {
+      return Promise.resolve()
+    }
+
+    return Promise.all(items.map((item) => {
+      // Warning, to adapt if itemManager.encapsulateItem changes its children order!
+      return item.props.children[0].props.initialParams.refresh(event)
+    }))
+  }
+
+  freezeItems (event) {
+    this.logger.log('freezeItems' + (event && event.type))
+
+    const items = this.state.items
+    if (!items || items.length === 0) {
+      return Promise.resolve()
+    }
+
+    return Promise.all(items.map((item) => {
+      // Warning, to adapt if itemManager.encapsulateItem changes its children order!
+      return item.props.children[0].props.initialParams.freeze(event)
+    }))
   }
 }
 

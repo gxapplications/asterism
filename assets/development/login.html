@@ -171,8 +171,6 @@
             var encoder = decodeURIComponent(getCookie('password-encoder'));
             encoder = forge.pki.publicKeyFromPem(encoder);
             const isPwaInstalled = navigator.standalone || matchMedia('(display-mode: standalone)').matches;
-            alert('isPwaInstalled:' + (isPwaInstalled ? 'YES' : 'NO')); // TODO !0: remove when ok.
-
             const height = $('#pattern-outer').width();
             // http://ignitersworld.com/lab/patternLock.html#documentation
             const lock = new PatternLock("#pattern-inner", {

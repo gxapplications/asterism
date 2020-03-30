@@ -156,6 +156,11 @@ class TemperatureProgrammerItem extends Item {
   _updateModeText () {
     this._programmer && this._programmer.doubleKnob && this._programmer.doubleKnob.setTitle(this.computeModeText())
   }
+
+  refresh (event) {
+    // TODO !1: a lot of things to do, huh ?
+    return Promise.resolve()
+  }
 }
 
 export default TemperatureProgrammerItem

@@ -24,6 +24,10 @@ class RefreshButtonItem extends Item {
   click () {
     window.location.reload()
   }
+
+  refresh () {
+    return Promise.resolve()
+  }
 }
 
 export default RefreshButtonItem

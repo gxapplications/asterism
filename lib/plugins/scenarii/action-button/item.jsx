@@ -97,6 +97,10 @@ class ActionButtonItem extends Item {
       })
     }
   }
+
+  refresh (event) {
+    // TODO !0: need to fetch execution state of the action, before to forceUpdate().
+  }
 }
 
 export default ActionButtonItem

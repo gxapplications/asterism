@@ -118,6 +118,10 @@ class BitmaskStateControlItem extends Item {
       currentValue: value
     })
   }
+
+  refresh (event) {
+    // TODO !0: need to fetch state state before to forceUpdate()
+  }
 }
 
 export default BitmaskStateControlItem

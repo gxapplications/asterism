@@ -103,6 +103,10 @@ class LevelStateControlItem extends Item {
       console.log(error)
     })
   }
+
+  refresh (event) {
+    // TODO !0: need to fetch state level before to forceUpdate()
+  }
 }
 
 export default LevelStateControlItem

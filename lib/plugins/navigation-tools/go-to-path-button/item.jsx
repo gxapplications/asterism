@@ -34,6 +34,10 @@ class GoToPathButtonItem extends Item {
   click () {
     window.location.pathname = this.state.params.path || '/example/of/another-path'
   }
+
+  refresh () {
+    return Promise.resolve()
+  }
 }
 
 export default GoToPathButtonItem
