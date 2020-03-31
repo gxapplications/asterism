@@ -104,8 +104,17 @@ class LevelStateControlItem extends Item {
     })
   }
 
-  refresh (event) {
-    // TODO !0: need to fetch state level before to forceUpdate()
+  refresh () {
+    if (this.state.params.levelState) {
+      this.scenariiService.getStateInstance(this.state.params.levelState)
+      .then((levelState) => {
+        this.setState({
+          levelState,
+          currentLevel: levelState.data.state
+        })
+      })
+      .catch(() => {})
+    }
   }
 }
 

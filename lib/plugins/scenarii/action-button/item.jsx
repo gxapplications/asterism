@@ -98,8 +98,18 @@ class ActionButtonItem extends Item {
     }
   }
 
-  refresh (event) {
-    // TODO !0: need to fetch execution state of the action, before to forceUpdate().
+  refresh () {
+    if (this.state.actionExecuting === false) {
+      return Promise.resolve()
+    }
+    this.scenariiService.actionExecutionState(this.state.actionExecuting)
+    .then((executing) => {
+      if (!executing) {
+        this.setState({
+          actionExecuting: false
+        })
+      }
+    })
   }
 }
 

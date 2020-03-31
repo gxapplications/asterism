@@ -119,8 +119,17 @@ class BitmaskStateControlItem extends Item {
     })
   }
 
-  refresh (event) {
-    // TODO !0: need to fetch state state before to forceUpdate()
+  refresh () {
+    if (this.state.params.bitmaskState) {
+      this.scenariiService.getStateInstance(this.state.params.bitmaskState)
+      .then((bitmaskState) => {
+        this.setState({
+          bitmaskState,
+          currentValue: bitmaskState.data.state
+        })
+      })
+      .catch(() => {})
+    }
   }
 }
 
