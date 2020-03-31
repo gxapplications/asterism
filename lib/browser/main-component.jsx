@@ -155,8 +155,8 @@ class MainComponent extends React.Component {
       notifications: [], // not directly used to render, but to trigger a render() when modified
       messageModal: null,
       speechDialog: null,
-      deferredInstallPrompt: null,
-      logs: []
+      deferredInstallPrompt: null
+      // logs: []
     }
   }
 
@@ -344,13 +344,13 @@ class MainComponent extends React.Component {
           </NavItem>) : null}
         </Navbar>
 
-        <pre className='logger'>
+        {false && <pre className='logger'>
           <ul>
             {logs.map((log, idx) => (
               <li key={idx}>{log}</li>
             ))}
           </ul>
-        </pre>
+        </pre>}
 
         {items.length ? (
           <Gridifier editable={editMode} sortDispersion orderHandler={this.itemManager.orderHandler}
