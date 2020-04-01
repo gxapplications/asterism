@@ -85,6 +85,43 @@
   line-height: 48px;
 }
 
+.asterism #mobile-nav li .closing-header {
+  background-image: url('/assets/menu-header.png');
+  background-position: bottom;
+  background-repeat: no-repeat;
+  background-size: cover;
+  padding-right: 0;
+  padding-left: 3.8rem;
+  line-height: inherit;
+  height: 7.5rem;
+  position: relative;
+}
+
+.asterism #mobile-nav li .closing-header i {
+  float: right;
+  margin-right: 1rem;
+  margin-left: 2rem;
+}
+
+.asterism #mobile-nav li .closing-header span {
+  position: relative;
+  top: 2.5rem;
+  text-align: center;
+  font-weight: 600 !important;
+}
+
+.asterism #mobile-nav li .closing-header pre {
+  position: absolute;
+  bottom: 0;
+  right: 0.6rem;
+  line-height: 1rem;
+  margin-bottom: 0.6rem;
+  text-align: right;
+  color: black;
+  opacity: 0.5;
+  font-size: smaller;
+}
+
 .asterism .modal {
   border-radius: 0; /* To avoid a glitch */
 }

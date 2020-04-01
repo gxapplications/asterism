@@ -9,6 +9,7 @@ import { Icon, Navbar, NavItem } from 'react-materialize'
 import { TransitionGroup } from 'react-transition-group'
 import debounce from 'debounce'
 
+import { version } from '../../package.json'
 import AddCategoryButtons from './edition/add-category-buttons'
 import DefaultMaterialTheme from './default-material-theme'
 import DefaultLocalStorage from './default-local-storage'
@@ -312,6 +313,15 @@ class MainComponent extends React.Component {
           options={{ preventScrolling: true, edge: 'left', closeOnClick: true, draggable: true }}
           className={cx(editMode ? theme.backgrounds.editing : theme.backgrounds.card, animationLevel >= 2 ? 'animated' : null)}
         >
+          <NavItem key='closing-header' href='javascript:$("div.sidenav-overlay").click()'
+            className={cx('closing-header', 'hide-on-large-only',
+              animationLevel >= 2 ? 'waves-effect waves-light' : '',
+              editMode ? theme.backgrounds.editing : theme.backgrounds.card)}>
+            <i className={cx('material-icons', 'close')}>close</i>
+            <span className='truncate'>{window.location.pathname.split('/').filter(p => p).join('/') || 'asterism'}</span>
+            <pre>v{version}</pre>
+          </NavItem>
+
           {editMode ? null : notifications}
           {editMode ? null : (
             <SpeechStatus animationLevel={animationLevel} />
