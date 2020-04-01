@@ -1,14 +1,13 @@
-name: CI
+name: Test
 
 on: [push, release, pull-request]
 
-
-    
 jobs:
-  dist:
+  test:
+    name: Test
     strategy:
       matrix:
-        node: [8, 10]
+        node: [8]
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
@@ -28,32 +27,3 @@ jobs:
         # Set Europe/Paris timezone, but without summer time offset: equiv to Algiers
         TZ: /usr/share/zoneinfo/Africa/Johannesburg
       run: npm run test:rerun
-      
-
-
-#  publish-npm:
-#    needs: build
-#    runs-on: ubuntu-latest
-#    steps:
-#      - uses: actions/checkout@v1
-#      - uses: actions/setup-node@v1
-#        with:
-#          node-version: 8
-#          registry-url: https://registry.npmjs.org/
-#      - run: npm publish
-#        env:
-#          NODE_AUTH_TOKEN: ${{secrets.npm_token}}
-
-#  publish-gpr:
-#    needs: build
-#    runs-on: ubuntu-latest
-#    steps:
-#      - uses: actions/checkout@v1
-#      - uses: actions/setup-node@v1
-#        with:
-#          node-version: 8
-#          registry-url: https://npm.pkg.github.com/
-#          scope: '@your-github-username'
-#      - run: npm publish
-#        env:
-#          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
