@@ -1,6 +1,6 @@
 /* global self, clients, caches, fetch, URL */
 
-const CACHE_VERSION = '1.3.0'
+const CACHE_VERSION = '$VERSIONS$'
 const FILES_TO_CACHE = ['', '/',
   '/web-push-worker.js',
   '/manifest.json',
@@ -24,7 +24,7 @@ self.addEventListener('install', ev => {
 
   ev.waitUntil(
     caches.open(CACHE_VERSION).then((cache) => {
-      console.log('[ServiceWorker] Pre-caching offline page')
+      console.log('[Serviceorker] Pre-caching offline page')
       return cache.addAll(FILES_TO_CACHE)
     })
   )
@@ -84,8 +84,3 @@ self.addEventListener('notificationclick', ev => {
     ev.waitUntil(clients.openWindow(url))
   }
 })
-
-// TODO !0: support much more elements:
-// options.badge: the same for everybody: asterism ico
-// options.actions: https://developers.google.com/web/fundamentals/push-notifications/display-a-notification#actions
-// https://developer.mozilla.org/en-US/docs/Web/API/ServiceWorkerRegistration/showNotification

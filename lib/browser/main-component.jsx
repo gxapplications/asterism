@@ -273,8 +273,8 @@ class MainComponent extends React.Component {
     if (this.state.EditPanel && !prevState.EditPanel) {
       $('#edit-panel-modal').modal({
         dismissible: false,
-        startingTop: '2%',
-        endingTop: '6%',
+        startingTop: '1%',
+        endingTop: '4%',
         opacity: 0.5,
         inDuration: this.state.animationLevel >= 2 ? 300 : 0,
         outDuration: this.state.animationLevel >= 2 ? 300 : 0,

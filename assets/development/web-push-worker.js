@@ -1,4 +1,5 @@
 /* global self, clients */
+/* $VERSIONS$ */
 
 self.addEventListener('push', ev => {
   const data = ev.data.json()
@@ -20,8 +21,3 @@ self.addEventListener('notificationclick', ev => {
     ev.waitUntil(clients.openWindow(url))
   }
 })
-
-// TODO !0: support much more elements:
-// options.badge: the same for everybody: asterism ico
-// options.actions: https://developers.google.com/web/fundamentals/push-notifications/display-a-notification#actions
-// https://developer.mozilla.org/en-US/docs/Web/API/ServiceWorkerRegistration/showNotification

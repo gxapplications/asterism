@@ -34,7 +34,8 @@ class Settings extends React.Component {
       opacity: 0.5,
       inDuration: this.props.animationLevel >= 2 ? 300 : 0,
       outDuration: this.props.animationLevel >= 2 ? 300 : 0,
-      endingTop: '5%',
+      startingTop: '1%',
+      endingTop: '4%',
       onOpenStart: () => {
         $('#settings-modal > nav > div.nav-wrapper').addClass(this.props.theme.backgrounds.editing)
         $('#settings-modal .sidenav-trigger').remove()
@@ -86,7 +87,7 @@ class Settings extends React.Component {
     )
 
     return (
-      <div id='settings-modal' className={cx('modal thin-scrollable', theme.backgrounds.body)}>
+      <div id='settings-modal' className={cx('modal very-large-modal thin-scrollable', theme.backgrounds.body)}>
         <Navbar
           alignLinks='right' extendWith={tabs}
           brand={<span>
