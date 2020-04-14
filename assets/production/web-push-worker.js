@@ -26,6 +26,9 @@ self.addEventListener('install', ev => {
     caches.open(CACHE_VERSION).then((cache) => {
       console.log('[Serviceorker] Pre-caching offline page')
       return cache.addAll(FILES_TO_CACHE)
+      .catch((error) => {
+        console.error(error)
+      })
     })
   )
 
