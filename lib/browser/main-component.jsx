@@ -386,7 +386,7 @@ class MainComponent extends React.Component {
 
         {editMode && itemSettingPanel ? (
           <ItemSetting animationLevel={animationLevel} localStorage={localStorage}
-            icon={itemSettingPanel.props.icon} title={itemSettingPanel.props.title}
+            icon={itemSettingPanel.props.icon} title={itemSettingPanel.props.title} mainStateSet={this.setState.bind(this)}
             serverStorage={serverStorage} theme={theme}>{itemSettingPanel}</ItemSetting>
         ) : null}
 
