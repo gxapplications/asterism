@@ -503,7 +503,7 @@
 
 .waitPanel, .levelStateChangerPanel, .astral-time-trigger-panel, .level-state-trigger-panel, .time-based-condition-panel,
 .astral-time-condition-panel, .level-state-condition-panel, .bitmaskStateChangerPanel, .bitmask-state-condition-panel,
-.bitmask-state-trigger-panel {
+.bitmask-state-trigger-panel, .floatingLevelStatePanel {
   & .slider {
     height: 5.4rem;
     padding-top: 1.6rem;
