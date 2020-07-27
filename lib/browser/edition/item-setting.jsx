@@ -23,9 +23,16 @@ class ItemSetting extends React.Component {
   }
 
   render () {
-    const { icon, title, theme, children, animationLevel } = this.props
+    const { icon, title, theme, children, animationLevel, mainStateSet } = this.props
+    const hasChildren = !!children.type
+
+    const autoClose = () => {
+      $('#item-setting-modal').modal('close')
+      mainStateSet({ itemSettingPanel: null })
+    }
+
     return (
-      <div id='item-setting-modal' className={cx('modal', theme.backgrounds.body)}>
+      <div id='item-setting-modal' className={cx('modal', theme.backgrounds.body)} onClick={autoClose}>
         <div className='modal-content'>
           <div className={cx('coloring-header', animationLevel < 3 ? theme.backgrounds.editing : null)}>
             <div>
@@ -36,13 +43,20 @@ class ItemSetting extends React.Component {
             </div>
           </div>
 
-          <div className='center setting-panel thin-scrollable'>
-            {children}
-          </div>
+          {hasChildren && [
+            <div key={0} className='center setting-panel thin-scrollable'>
+              {children}
+            </div>,
+            <div key={1} className={cx('bottom-bar', theme.backgrounds.body)}>
+              &nbsp;
+            </div>
+          ]}
 
-          <div className={cx('bottom-bar', theme.backgrounds.body)}>
-            &nbsp;
-          </div>
+          {!hasChildren && (
+            <div className='center setting-panel thin-scrollable no-panel'>
+              No setting panel for this item.
+            </div>
+          )}
         </div>
       </div>
     )
@@ -55,7 +69,8 @@ ItemSetting.propTypes = {
   theme: PropTypes.object.isRequired,
   localStorage: PropTypes.object.isRequired,
   serverStorage: PropTypes.object.isRequired,
-  animationLevel: PropTypes.number.isRequired
+  animationLevel: PropTypes.number.isRequired,
+  mainStateSet: PropTypes.func.isRequired
 }
 
 export default ItemSetting
