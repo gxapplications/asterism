@@ -1,5 +1,5 @@
 --colors
---compilers js:babel-core/register
+--require @babel/register
 --recursive
 --reporter spec
 --slow 600

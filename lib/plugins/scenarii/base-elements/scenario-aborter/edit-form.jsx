@@ -19,9 +19,11 @@ class BrowserScenarioAborterEditForm extends React.Component {
     return (
       <Row className='section card form'>
         <br />
-        <ScenariiDropdown defaultScenarioId={instance.data.scenarioId} onChange={this.scenarioChanged.bind(this)}
+        <ScenariiDropdown
+          defaultScenarioId={instance.data.scenarioId} onChange={this.scenarioChanged.bind(this)}
           theme={theme} animationLevel={animationLevel} services={services} noCreationPanel typeFilter={() => false}
-          s={12} label='Scenario to abort' />
+          s={12} label='Scenario to abort'
+        />
       </Row>
     )
   }
@@ -38,9 +40,9 @@ class BrowserScenarioAborterEditForm extends React.Component {
     }
 
     this.scenariiService.getScenarioInstance(this.props.instance.data.scenarioId)
-    .then((scenario) => {
-      this.props.instance.data.name = scenario.data.name
-    })
+      .then((scenario) => {
+        this.props.instance.data.name = scenario.data.name
+      })
     this.props.highlightCloseButton()
   }
 }

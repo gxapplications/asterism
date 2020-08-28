@@ -39,10 +39,10 @@ class BrowserAstralTimeConditionEditForm extends React.Component {
         step: 1,
         animate: true,
         range: {
-          'min': [5, 5],
+          min: [5, 5],
           '21%': [30, 10],
           '36%': [60, 15],
-          'max': [240]
+          max: [240]
         },
         format: wNumb({
           decimals: 1
@@ -68,18 +68,20 @@ class BrowserAstralTimeConditionEditForm extends React.Component {
     const { event, timeshift } = this.state
 
     const sunTimes = SunCalc.getTimes(new Date(), 48.8566, 2.3522)
-    const exampleStart = (event === 'daylight') ? moment(sunTimes['goldenHourEnd']) : (
-      (event === 'fewlight') ? moment(sunTimes['sunriseEnd']) : moment(sunTimes[event]).subtract(timeshift, 'minutes')
+    const exampleStart = (event === 'daylight') ? moment(sunTimes.goldenHourEnd) : (
+      (event === 'fewlight') ? moment(sunTimes.sunriseEnd) : moment(sunTimes[event]).subtract(timeshift, 'minutes')
     )
-    const exampleEnd = (event === 'daylight') ? moment(sunTimes['goldenHour']) : (
-      (event === 'fewlight') ? moment(sunTimes['sunsetStart']) : moment(sunTimes[event]).add(timeshift, 'minutes')
+    const exampleEnd = (event === 'daylight') ? moment(sunTimes.goldenHour) : (
+      (event === 'fewlight') ? moment(sunTimes.sunsetStart) : moment(sunTimes[event]).add(timeshift, 'minutes')
     )
 
     return (
       <Row className='section card form astral-time-condition-panel'>
         <br />
-        <Select s={12} label='Sunlight condition' icon='brightness_4' onChange={this.changeEvent.bind(this)}
-          defaultValue={event}>
+        <Select
+          s={12} label='Sunlight condition' icon='brightness_4' onChange={this.changeEvent.bind(this)}
+          defaultValue={event}
+        >
           <option key='daylight' value='daylight'>Full daylight period</option>
           <option key='fewlight' value='fewlight'>Few or full daylight period (larger)</option>
           <option key='sunrise' value='sunrise'>Around sunrise event</option>

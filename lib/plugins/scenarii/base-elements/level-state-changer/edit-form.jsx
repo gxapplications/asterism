@@ -36,10 +36,10 @@ class BrowserLevelStateChangerEditForm extends React.Component {
         step: 1,
         animate: true,
         range: {
-          'min': [1],
+          min: [1],
           '81%': [10, 6],
           '91%': [16, 16],
-          'max': [32]
+          max: [32]
         },
         format: wNumb({
           decimals: 1
@@ -66,14 +66,18 @@ class BrowserLevelStateChangerEditForm extends React.Component {
     return (
       <Row className='section card form levelStateChangerPanel'>
         <br />
-        <StatesDropdown defaultStateId={instance.data.levelStateId} onChange={this.levelStateChanged.bind(this)}
+        <StatesDropdown
+          defaultStateId={instance.data.levelStateId} onChange={this.levelStateChanged.bind(this)}
           theme={theme} animationLevel={animationLevel} services={services} s={12} label='State to update'
-          typeFilter={(e) => e.id === 'level-state'} instanceFilter={(e) => e.typeId === 'level-state'} />
+          typeFilter={(e) => e.id === 'level-state'} instanceFilter={(e) => e.typeId === 'level-state'}
+        />
 
         <br />&nbsp;
         <br />
-        <Select s={12} m={4} label='Operation' icon='swap_vert' onChange={this.operationChanged.bind(this)}
-          defaultValue={instance.data.operation || 'replace'}>
+        <Select
+          s={12} m={4} label='Operation' icon='swap_vert' onChange={this.operationChanged.bind(this)}
+          defaultValue={instance.data.operation || 'replace'}
+        >
           <option key='replace' value='replace'>Set value</option>
           <option key='increment' value='increment'>Increment value</option>
           <option key='decrement' value='decrement'>Decrement value</option>
@@ -110,27 +114,27 @@ class BrowserLevelStateChangerEditForm extends React.Component {
     }
 
     this.scenariiService.getStateInstance(this.props.instance.data.levelStateId)
-    .then((levelState) => {
-      switch (this.props.instance.data.operation) {
-        case 'increment':
-          if (this.props.instance.data.amount === 1) {
-            this.props.instance.data.name = `${levelState.data.name} ++`
-          } else {
-            this.props.instance.data.name = `∆ ${levelState.data.name} +${this.props.instance.data.amount}`
-          }
-          break
-        case 'decrement':
-          if (this.props.instance.data.amount === 1) {
-            this.props.instance.data.name = `${levelState.data.name} --`
-          } else {
-            this.props.instance.data.name = `∇ ${levelState.data.name} -${this.props.instance.data.amount}`
-          }
-          break
-        case 'replace':
-        default:
-          this.props.instance.data.name = `${levelState.data.name} = ${this.props.instance.data.amount}`
-      }
-    })
+      .then((levelState) => {
+        switch (this.props.instance.data.operation) {
+          case 'increment':
+            if (this.props.instance.data.amount === 1) {
+              this.props.instance.data.name = `${levelState.data.name} ++`
+            } else {
+              this.props.instance.data.name = `∆ ${levelState.data.name} +${this.props.instance.data.amount}`
+            }
+            break
+          case 'decrement':
+            if (this.props.instance.data.amount === 1) {
+              this.props.instance.data.name = `${levelState.data.name} --`
+            } else {
+              this.props.instance.data.name = `∇ ${levelState.data.name} -${this.props.instance.data.amount}`
+            }
+            break
+          case 'replace':
+          default:
+            this.props.instance.data.name = `${levelState.data.name} = ${this.props.instance.data.amount}`
+        }
+      })
     this.props.highlightCloseButton()
   }
 }

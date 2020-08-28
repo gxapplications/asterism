@@ -1,7 +1,7 @@
 'use strict'
 
 import debounce from 'debounce'
-import Joi from 'joi'
+import Joi from '@hapi/joi'
 import PropTypes from 'prop-types'
 import React from 'react'
 import { Select, TextInput, Row } from 'react-materialize'
@@ -30,15 +30,19 @@ class BrowserLevelStateEditForm extends React.Component {
 
     return (
       <Row className='section card form'>
-        <TextInput placeholder='Short name' s={12}
-          defaultValue={defaultValue} onChange={(e) => { instance.data.name = e.currentTarget.value; this.props.highlightCloseButton() }} />
+        <TextInput
+          placeholder='Short name' s={12}
+          defaultValue={defaultValue} onChange={(e) => { instance.data.name = e.currentTarget.value; this.props.highlightCloseButton() }}
+        />
 
         <br />&nbsp;
         <br />
         <div className='col s12'>Maximum level: {instance.data.max}</div>
         <div className='range-field col s12'>
-          <input type='range' list='max' min='2' max='32' onChange={this.changeMaxValue.bind(this)}
-            defaultValue={instance.data.max} />
+          <input
+            type='range' list='max' min='2' max='32' onChange={this.changeMaxValue.bind(this)}
+            defaultValue={instance.data.max}
+          />
           <datalist id='max'>
             <option>2</option>
             <option>3</option>
@@ -56,8 +60,10 @@ class BrowserLevelStateEditForm extends React.Component {
 
         <div className='col s12'>Current level: {this.state.state}</div>
         <div className='range-field col s12'>
-          <input type='range' list='state' min='1' max={instance.data.max} onChange={(e) => { this.changeStateValue(e.currentTarget.value) }}
-            defaultValue={this.state.state} />
+          <input
+            type='range' list='state' min='1' max={instance.data.max} onChange={(e) => { this.changeStateValue(e.currentTarget.value) }}
+            defaultValue={this.state.state}
+          />
           <datalist id='state'>
             <option>1</option>
             <option>2</option>
@@ -75,8 +81,10 @@ class BrowserLevelStateEditForm extends React.Component {
         </div>
 
         {instance.data.colors.map((color, idx) => (
-          <Select s={6} m={4} l={3} key={idx} label={`Color for state ${idx + 1}`}
-            onChange={this.colorChange.bind(this, idx)} value={color} options={{ classes: `${color}-text select-top-marged` }}>
+          <Select
+            s={6} m={4} l={3} key={idx} label={`Color for state ${idx + 1}`}
+            onChange={this.colorChange.bind(this, idx)} value={color} options={{ classes: `${color}-text select-top-marged` }}
+          >
             {levelStateSchema.colors.map((color, idx2) => (
               <option key={`${idx}-${idx2}`} value={color}>{color}</option>
             ))}

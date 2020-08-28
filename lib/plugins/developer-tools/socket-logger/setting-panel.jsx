@@ -24,8 +24,10 @@ class SocketLoggerSettingPanel extends ItemSettingPanel {
           <div className='col s12'>
             <h5>Min log level</h5>
             <div className='range-field'>
-              <input type='range' min='0' max='3'
-                value={logLevel} onChange={this.handleEventChange.bind(this, 'logLevel')} />
+              <input
+                type='range' min='0' max='3'
+                value={logLevel} onChange={this.handleEventChange.bind(this, 'logLevel')}
+              />
             </div>
             Will log from {logLevelLabel} level.
           </div>
@@ -35,8 +37,10 @@ class SocketLoggerSettingPanel extends ItemSettingPanel {
           <div className='col s12'>
             <h5>History length</h5>
             <div className='range-field'>
-              <input type='range' min='1' max='100'
-                value={historyLength} onChange={this.handleEventChange.bind(this, 'historyLength')} />
+              <input
+                type='range' min='1' max='100'
+                value={historyLength} onChange={this.handleEventChange.bind(this, 'historyLength')}
+              />
             </div>
             Will keep last {historyLength} messages.
           </div>

@@ -15,7 +15,7 @@ import TemperatureProgrammerItem from './temperature-programmer/item'
 import TemperatureProgrammerSettingPanel from './temperature-programmer/setting-panel'
 
 const builder = new ItemFactoryBuilder()
-.newItemType('action_button', AdditionalItem.categories.DOMOTICS)
+  .newItemType('action_button', AdditionalItem.categories.DOMOTICS)
   .withDescription('Action button', 'A button that launches an action')
   .settingPanelWithHeader('Action button settings', 'touch_app') // optional override, but always before *Instance*() calls...
   .newInstanceFromInitialSetting(1, 2, ActionButtonSettingPanel)
@@ -27,7 +27,7 @@ const builder = new ItemFactoryBuilder()
     { w: 2, h: 2 }
   ])
   .build()
-.newItemType('level_state_control', AdditionalItem.categories.DOMOTICS)
+  .newItemType('level_state_control', AdditionalItem.categories.DOMOTICS)
   .withDescription('Level state control', 'A control to change level state')
   .settingPanelWithHeader('Level state control settings', 'speed') // optional override, but always before *Instance*() calls...
   .newInstanceFromInitialSetting(3, 1, LevelStateControlSettingPanel)
@@ -39,7 +39,7 @@ const builder = new ItemFactoryBuilder()
     { w: 2, h: 3 }
   ])
   .build()
-.newItemType('bitmask_state_control', AdditionalItem.categories.DOMOTICS)
+  .newItemType('bitmask_state_control', AdditionalItem.categories.DOMOTICS)
   .withDescription('Bitmask state control', 'A control to change booleans on a multi-position state')
   .settingPanelWithHeader('Bitmask state control settings', 'toggle_on') // optional override, but always before *Instance*() calls...
   .newInstanceFromInitialSetting(2, 2, BitmaskStateControlSettingPanel)
@@ -53,7 +53,7 @@ const builder = new ItemFactoryBuilder()
     { w: 3, h: 2 }
   ])
   .build()
-.newItemType('temperature_programmer', AdditionalItem.categories.DOMOTICS)
+  .newItemType('temperature_programmer', AdditionalItem.categories.DOMOTICS)
   .withDescription('Temperature programmer', 'Programmer interface linked to a programmable dual mode scenario')
   .settingPanelWithHeader('Temperature programmer settings', 'filter_tilt_shift') // optional override, but always before *Instance*() calls...
   .newInstanceFromInitialSetting(5, 2, TemperatureProgrammerSettingPanel)

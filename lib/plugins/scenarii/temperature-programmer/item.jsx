@@ -12,6 +12,7 @@ class TemperatureProgrammerItem extends Item {
     this.scenariiService = this.props.context.services['asterism-scenarii']
 
     this.state.scenario = null
+    this.state.temperatureStateInstance = null
     this.receiveNewParams(this.state.params)
 
     this._programmer = null
@@ -21,29 +22,52 @@ class TemperatureProgrammerItem extends Item {
   receiveNewParams (params) {
     if (params.scenario) {
       this.scenariiService.getScenarioInstance(params.scenario, true)
-      .then((scenario) => {
-        this.setState({
-          params,
-          scenario
-        })
-        this.scenariiService.privateSocket.on('scenarioThermostatStateChanged', ({ instanceId, data }) => {
-          if (!this._mounted || (params.scenario !== instanceId)) {
-            return
+        .then((scenario) => {
+          if (scenario.data.temperatureStateId) {
+            this.scenariiService.getStateInstance(scenario.data.temperatureStateId)
+              .then((temperatureStateInstance) => {
+                const listener = this.scenariiService.addStateListener(temperatureStateInstance, (level, levelState) => {
+                  Object.assign(this.state.temperatureStateInstance, levelState)
+                  this._updateModeText()
+                })
+                this.setState({
+                  params,
+                  scenario,
+                  temperatureStateInstance,
+                  temperatureStateListenerId: listener
+                })
+              })
+              .catch(() => {
+                this.setState({
+                  params,
+                  scenario
+                })
+              })
+          } else {
+            this.setState({
+              params,
+              scenario
+            })
           }
-          const hadOverriddenProgram = this.state.scenario.data.overriddenProgram
-          this.state.scenario.data = data
-          this._updateModeText()
-          this._programmer && this._programmer.doubleKnob && this._programmer.doubleKnob.setCenter(
-            this._programmer.centerText[data.forceModeEnd ? 1 : 0],
-            !!data.forceModeEnd
-          )
 
-          if (data.overriddenProgram !== hadOverriddenProgram) {
-            this.forceUpdate()
-          }
+          this.scenariiService.privateSocket.on('scenarioThermostatStateChanged', ({ instanceId, data }) => {
+            if (!this._mounted || (params.scenario !== instanceId)) {
+              return
+            }
+            const hadOverriddenProgram = this.state.scenario.data.overriddenProgram
+            this.state.scenario.data = data
+            this._updateModeText()
+            this._programmer && this._programmer.doubleKnob && this._programmer.doubleKnob.setCenter(
+              this._programmer.centerText[data.forceModeEnd ? 1 : 0],
+              !!data.forceModeEnd
+            )
+
+            if (data.overriddenProgram !== hadOverriddenProgram) {
+              this.forceUpdate()
+            }
+          })
         })
-      })
-      .catch(() => {})
+        .catch(() => {})
     }
   }
 
@@ -72,7 +96,6 @@ class TemperatureProgrammerItem extends Item {
 
   shouldComponentUpdate (nextProps, nextState) {
     const comparator = (i) => [
-      // TODO !1
       i.scenario && i.scenario.instanceId,
       i.scenario && i.scenario.data && i.scenario.data.forceModeEnd,
       i.scenario && i.scenario.data && i.scenario.data.overriddenProgram
@@ -94,11 +117,11 @@ class TemperatureProgrammerItem extends Item {
       )
     }
 
-    const { program, overriddenProgram, maxTemperature, minTemperature, highTemperature,
-      lowTemperature, temperatureStateId, forceModeEnd } = scenario.data
+    const { program, overriddenProgram, maxTemperature, minTemperature, temperatureStateId, forceModeEnd } = scenario.data
 
     return (
-      <TemperatureProgrammer ref={(c) => { this._programmer = c }} theme={theme} animationLevel={animationLevel}
+      <TemperatureProgrammer
+        ref={(c) => { this._programmer = c }} theme={theme} animationLevel={animationLevel}
         plannerGetter={() => ({ plannings: program, todayOverridenPlanning: overriddenProgram })}
         onPlannerChange={this.changePlanner.bind(this)}
         scaleOffset={temperatureStateId ? minTemperature : 0}
@@ -106,9 +129,11 @@ class TemperatureProgrammerItem extends Item {
         onForceModeChange={this.changeForceMode.bind(this)}
         initialForceMode={!!forceModeEnd}
         title={this.computeModeText()}
-        temperaturesGetter={() => ({ ecoTemperature: lowTemperature || 15, comfortTemperature: highTemperature || 19 })}
-
-        onTemperaturesChange={(eco, comfort) => { console.log('####', eco, comfort) /* TODO !1 */ }}
+        temperaturesGetter={() => ({
+          ecoTemperature: scenario.data.lowTemperature || 17,
+          comfortTemperature: scenario.data.highTemperature || 21
+        })}
+        onTemperaturesChange={this.changeEcoComfortTemperature.bind(this)}
       />
     )
   }
@@ -117,6 +142,7 @@ class TemperatureProgrammerItem extends Item {
     let modeText = ''
     const now = new Date()
     const { name, program, overriddenProgram, forceModeEnd, activated } = this.state.scenario.data
+    const temperatureStateValue = this.state.temperatureStateInstance && this.state.temperatureStateInstance.data.state
 
     if (!activated) {
       modeText = 'INACTIVE'
@@ -129,8 +155,7 @@ class TemperatureProgrammerItem extends Item {
       const currentMode = currentProgram[currentHourStep]
       modeText = (currentMode === 0) ? 'economic' : ((currentMode === 1) ? 'comfort' : 'OFF')
     }
-    return `${name}<br/>${modeText}`
-    // TODO !1: si temperatureStateInstance, alors `${name} (${temperatureStateInstance.valeur}°C)<br/>${modeText}`
+    return temperatureStateValue ? `${name} (${temperatureStateValue}°C)<br/>${modeText}` : `${name}<br/>${modeText}`
   }
 
   changePlanner (program, overriddenProgram) {
@@ -157,8 +182,17 @@ class TemperatureProgrammerItem extends Item {
     this._programmer && this._programmer.doubleKnob && this._programmer.doubleKnob.setTitle(this.computeModeText())
   }
 
+  changeEcoComfortTemperature (ecoTemperature, comfortTemperature) {
+    ecoTemperature = Math.round(ecoTemperature * 2) / 2
+    comfortTemperature = Math.round(comfortTemperature * 2) / 2
+    this.state.scenario.data.lowTemperature = ecoTemperature
+    this.state.scenario.data.highTemperature = comfortTemperature
+    this.state.scenario.save()
+    return { ecoTemperature, comfortTemperature }
+  }
+
   refresh (event) {
-    // TODO !1: a lot of things to do, huh ?
+    this.forceUpdate()
     return Promise.resolve()
   }
 }

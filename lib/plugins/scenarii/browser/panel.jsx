@@ -14,7 +14,7 @@ class ScenariiEditPanel extends React.Component {
   constructor (props) {
     super(props)
 
-    this._tabs = [ null, null, null, null, null ]
+    this._tabs = [null, null, null, null, null]
     this._editInstance = null
     this.scenariiService = props.services()['asterism-scenarii']
     this._socket = props.privateSocket
@@ -64,10 +64,11 @@ class ScenariiEditPanel extends React.Component {
     const { theme, animationLevel, services, highlightCloseButton } = this.props
     const { EditForm, supportGroup, currentTab, currentGroupName } = this.state
     return (
-      <div id='scenarii-edit-panel' className={cx({ 'editFormOpened': !!EditForm }, 'ScenariiEditPanel', styles.ScenariiEditPanel)}>
+      <div id='scenarii-edit-panel' className={cx({ editFormOpened: !!EditForm }, 'ScenariiEditPanel', styles.ScenariiEditPanel)}>
         <Tabs onChange={this.tabChanged.bind(this)} className={theme.backgrounds.editing}>
           <Tab title={<span><Icon left>offline_pin</Icon><span className='hide-on-small-only'>Scenarii</span></span>} active={currentTab === 0}>
-            <PanelList theme={theme} animationLevel={animationLevel}
+            <PanelList
+              theme={theme} animationLevel={animationLevel}
               getInstances={this.scenariiService.getScenarioInstances.bind(this.scenariiService)}
               getTypes={this.scenariiService.getScenarioTypes.bind(this.scenariiService)}
               createInstance={this.scenariiService.createScenarioInstance.bind(this.scenariiService)}
@@ -76,7 +77,8 @@ class ScenariiEditPanel extends React.Component {
               abortInstance={this.scenariiService.forceAbortScenarioInstance.bind(this.scenariiService)}
               activateInstance={this.scenariiService.setActivationScenarioInstance.bind(this.scenariiService)}
               applyEditForm={this.applyEditForm.bind(this)} supportGroups
-              ref={(c) => { this._tabs[0] = c }}>
+              ref={(c) => { this._tabs[0] = c }}
+            >
               <div className='collection-header'>
                 <Icon>offline_pin</Icon>
                 No scenario yet.<br /><br />
@@ -87,14 +89,16 @@ class ScenariiEditPanel extends React.Component {
             </PanelList>
           </Tab>
           <Tab title={<span><Icon left>help</Icon><span className='hide-on-small-only'>Conditions</span></span>} active={currentTab === 1}>
-            <PanelList theme={theme} animationLevel={animationLevel}
+            <PanelList
+              theme={theme} animationLevel={animationLevel}
               getInstances={this.scenariiService.getConditionInstances.bind(this.scenariiService)}
               getTypes={this.scenariiService.getConditionTypes.bind(this.scenariiService)}
               createInstance={this.scenariiService.createConditionInstance.bind(this.scenariiService)}
               deleteInstance={this.scenariiService.deleteConditionInstance.bind(this.scenariiService)}
               testInstance={this.scenariiService.testConditionInstance.bind(this.scenariiService)}
               applyEditForm={this.applyEditForm.bind(this)} supportGroups
-              ref={(c) => { this._tabs[1] = c }}>
+              ref={(c) => { this._tabs[1] = c }}
+            >
               <div className='collection-header'>
                 <Icon>help</Icon>
                 No condition yet.<br /><br />
@@ -104,7 +108,8 @@ class ScenariiEditPanel extends React.Component {
             </PanelList>
           </Tab>
           <Tab title={<span><Icon left>error</Icon><span className='hide-on-small-only'>Actions</span></span>} active={currentTab === 2}>
-            <PanelList theme={theme} animationLevel={animationLevel}
+            <PanelList
+              theme={theme} animationLevel={animationLevel}
               getInstances={this.scenariiService.getActionInstances.bind(this.scenariiService)}
               getTypes={this.scenariiService.getActionTypes.bind(this.scenariiService)}
               createInstance={this.scenariiService.createActionInstance.bind(this.scenariiService)}
@@ -112,7 +117,8 @@ class ScenariiEditPanel extends React.Component {
               testInstance={this.scenariiService.executeActionInstance.bind(this.scenariiService)}
               abortInstance={this.scenariiService.abortActionInstance.bind(this.scenariiService)}
               applyEditForm={this.applyEditForm.bind(this)} supportGroups
-              ref={(c) => { this._tabs[2] = c }}>
+              ref={(c) => { this._tabs[2] = c }}
+            >
               <div className='collection-header'>
                 <Icon>error</Icon>
                 No action yet.<br /><br />
@@ -122,13 +128,15 @@ class ScenariiEditPanel extends React.Component {
             </PanelList>
           </Tab>
           <Tab title={<span><Icon left>play_circle_filled</Icon><span className='hide-on-small-only'>Triggers</span></span>} active={currentTab === 3}>
-            <PanelList theme={theme} animationLevel={animationLevel}
+            <PanelList
+              theme={theme} animationLevel={animationLevel}
               getInstances={this.scenariiService.getTriggerInstances.bind(this.scenariiService)}
               getTypes={this.scenariiService.getTriggerTypes.bind(this.scenariiService)}
               createInstance={this.scenariiService.createTriggerInstance.bind(this.scenariiService)}
               deleteInstance={this.scenariiService.deleteTriggerInstance.bind(this.scenariiService)}
               applyEditForm={this.applyEditForm.bind(this)} supportGroups
-              ref={(c) => { this._tabs[3] = c }}>
+              ref={(c) => { this._tabs[3] = c }}
+            >
               <div className='collection-header'>
                 <Icon>play_circle_filled</Icon>
                 No trigger yet.<br /><br />
@@ -138,13 +146,15 @@ class ScenariiEditPanel extends React.Component {
             </PanelList>
           </Tab>
           <Tab title={<span><Icon left>monetization_on</Icon><span className='hide-on-small-only'>States</span></span>} active={currentTab === 4}>
-            <PanelList theme={theme} animationLevel={animationLevel}
+            <PanelList
+              theme={theme} animationLevel={animationLevel}
               getInstances={this.scenariiService.getStateInstances.bind(this.scenariiService)}
               getTypes={this.scenariiService.getStateTypes.bind(this.scenariiService)}
               createInstance={this.scenariiService.createStateInstance.bind(this.scenariiService)}
               deleteInstance={this.scenariiService.deleteStateInstance.bind(this.scenariiService)}
               applyEditForm={this.applyEditForm.bind(this)}
-              ref={(c) => { this._tabs[4] = c }}>
+              ref={(c) => { this._tabs[4] = c }}
+            >
               <div className='collection-header'>
                 <Icon>monetization_on</Icon>
                 No state yet.<br /><br />
@@ -156,25 +166,33 @@ class ScenariiEditPanel extends React.Component {
           </Tab>
         </Tabs>
         <div className={cx('editForm', theme.backgrounds.body)}>
-          {EditForm && supportGroup && <div className='right section group'><Autocomplete placeholder='Unclassified' title='Group' options={{
-            data: this._groups,
-            limit: 64,
-            minLength: 2,
-            onAutocomplete: this.groupAutocompleted.bind(this)
-          }} onChange={this.groupChanged.bind(this)} value={currentGroupName} /></div>}
+          {EditForm && supportGroup && (
+            <div className='right section group'>
+              <Autocomplete
+                placeholder='Unclassified' title='Group' options={{
+                  data: this._groups,
+                  limit: 64,
+                  minLength: 2,
+                  onAutocomplete: this.groupAutocompleted.bind(this)
+                }} onChange={this.groupChanged.bind(this)} value={currentGroupName}
+              />
+            </div>
+          )}
           {EditForm && <h5 className='title'>{EditForm.label} - Edition</h5>}
           {EditForm &&
-            <EditForm ref={(c) => { this._editFormInstance = c }}
+            <EditForm
+              ref={(c) => { this._editFormInstance = c }}
               instance={this._editInstance} services={services}
               theme={theme} animationLevel={animationLevel}
               highlightCloseButton={highlightCloseButton}
               privateSocket={this._socket}
-            />
-          }
+            />}
         </div>
 
-        <Modal id='scenarii-persistence-error-modal'
-          header='Persistence error'>
+        <Modal
+          id='scenarii-persistence-error-modal'
+          header='Persistence error'
+        >
           <p>No message</p>
         </Modal>
       </div>
@@ -182,7 +200,7 @@ class ScenariiEditPanel extends React.Component {
   }
 
   tabChanged (href) {
-    $(`#scenarii-edit-panel > ul.tabs > li.tab > a[href^='#']`).each((idx, el) => {
+    $('#scenarii-edit-panel > ul.tabs > li.tab > a[href^=\'#\']').each((idx, el) => {
       if ($(el).attr('href') === `#tab_${href}`) {
         this.setState({ currentTab: idx })
         setTimeout(() => {
@@ -196,26 +214,26 @@ class ScenariiEditPanel extends React.Component {
     const group = this.state.currentGroupName || undefined
     const save = (instance.presave) ? instance.presave(this.props.services).then(() => instance.save(undefined, group)) : instance.save(undefined, group)
     return save
-    .catch((error) => {
-      $('#scenarii-persistence-error-modal p').html(error ? error.message : 'Unknown error saving element!')
-      $('#scenarii-persistence-error-modal').modal('open')
-    })
-    .then(() => {
-      this._tabs[0].forceUpdate && this._tabs[0].forceUpdate()
-      this._tabs[this.state.currentTab].forceUpdate && this._tabs[this.state.currentTab].forceUpdate()
-      this._editInstance = null
-      if (this.state.EditForm) {
-        this.setState({
-          EditForm: null,
-          currentGroupName: ''
-        })
-        setTimeout(() => {
-          $(`#scenarii-edit-panel > div.row > div:eq(${this.state.currentTab}) .search input`).focus()
-        }, 300)
-      }
-      this.fetchGroups()
-    })
-    .then(() => true) // modal will not close now
+      .catch((error) => {
+        $('#scenarii-persistence-error-modal p').html(error ? error.message : 'Unknown error saving element!')
+        $('#scenarii-persistence-error-modal').modal('open')
+      })
+      .then(() => {
+        this._tabs[0].forceUpdate && this._tabs[0].forceUpdate()
+        this._tabs[this.state.currentTab].forceUpdate && this._tabs[this.state.currentTab].forceUpdate()
+        this._editInstance = null
+        if (this.state.EditForm) {
+          this.setState({
+            EditForm: null,
+            currentGroupName: ''
+          })
+          setTimeout(() => {
+            $(`#scenarii-edit-panel > div.row > div:eq(${this.state.currentTab}) .search input`).focus()
+          }, 300)
+        }
+        this.fetchGroups()
+      })
+      .then(() => true) // modal will not close now
   }
 
   applyEditForm (instance, supportGroup) {
@@ -243,7 +261,7 @@ class ScenariiEditPanel extends React.Component {
     // try to save first, then close editForm sliding card: modal will not close now
     if (this._editFormInstance && this._editFormInstance.handleCloseButton) {
       return this._editFormInstance.handleCloseButton()
-      .then(() => this.saveInstance(this._editInstance))
+        .then(() => this.saveInstance(this._editInstance))
     } else {
       return this.saveInstance(this._editInstance)
     }
@@ -256,12 +274,12 @@ class ScenariiEditPanel extends React.Component {
       this.scenariiService.getTriggerInstances(),
       this.scenariiService.getScenarioInstances()
     ])
-    .then(([actions, conditions, triggers, scenarios]) => {
-      actions.forEach(i => { this._groups[i.group] = null })
-      conditions.forEach(i => { this._groups[i.group] = null })
-      triggers.forEach(i => { this._groups[i.group] = null })
-      scenarios.forEach(i => { this._groups[i.group] = null })
-    })
+      .then(([actions, conditions, triggers, scenarios]) => {
+        actions.forEach(i => { this._groups[i.group] = null })
+        conditions.forEach(i => { this._groups[i.group] = null })
+        triggers.forEach(i => { this._groups[i.group] = null })
+        scenarios.forEach(i => { this._groups[i.group] = null })
+      })
   }
 
   groupChanged (event) {

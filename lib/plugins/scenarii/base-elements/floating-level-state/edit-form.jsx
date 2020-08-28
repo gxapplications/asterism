@@ -2,7 +2,7 @@
 
 /* global $, noUiSlider, wNumb */
 import debounce from 'debounce'
-import Joi from 'joi'
+import Joi from '@hapi/joi'
 import PropTypes from 'prop-types'
 import React from 'react'
 import { TextInput, Row } from 'react-materialize'
@@ -43,8 +43,8 @@ class BrowserFloatingLevelStateEditForm extends React.Component {
         step: 1,
         animate: true,
         range: {
-          'min': [2],
-          'max': [8]
+          min: [2],
+          max: [8]
         },
         format: wNumb({
           decimals: 1
@@ -73,7 +73,7 @@ class BrowserFloatingLevelStateEditForm extends React.Component {
         step: 1,
         animate: true,
         range: {
-          'min': [-65534, 49152],
+          min: [-65534, 49152],
           '6%': [-16382, 12288],
           '12%': [-4094, 3072],
           '17%': [-1022, 512],
@@ -91,7 +91,7 @@ class BrowserFloatingLevelStateEditForm extends React.Component {
           '83%': [1023, 3072],
           '88%': [4095, 12288],
           '94%': [16383, 49152],
-          'max': [65535]
+          max: [65535]
         },
         format: wNumb({ decimals: 1 }),
         pips: { // Show a scale with the slider
@@ -129,8 +129,10 @@ class BrowserFloatingLevelStateEditForm extends React.Component {
 
     return (
       <Row className='section card form floatingLevelStatePanel'>
-        <TextInput placeholder='Short name' s={12}
-          defaultValue={defaultValue} onChange={(e) => { instance.data.name = e.currentTarget.value; this.props.highlightCloseButton() }} />
+        <TextInput
+          placeholder='Short name' s={12}
+          defaultValue={defaultValue} onChange={(e) => { instance.data.name = e.currentTarget.value; this.props.highlightCloseButton() }}
+        />
 
         <br />&nbsp;
         <br />
@@ -146,9 +148,11 @@ class BrowserFloatingLevelStateEditForm extends React.Component {
         </div>
 
         <div className='col s12'>Current level: {this.state.state}</div>
-        <TextInput placeholder='Value' s={12}
+        <TextInput
+          placeholder='Value' s={12}
           defaultValue={Number.parseFloat(this.state.state).toPrecision(this.state.precision)}
-          onChange={(e) => this.changeStateValue(e.currentTarget.value)} />
+          onChange={(e) => this.changeStateValue(e.currentTarget.value)}
+        />
       </Row>
     )
   }
@@ -162,7 +166,7 @@ class BrowserFloatingLevelStateEditForm extends React.Component {
   }
 
   changeMinMaxValue (value) {
-    const [ min, max ] = value.sort((a, b) => (a - b))
+    const [min, max] = value.sort((a, b) => (a - b))
     const i = this.props.instance
     i.data.max = max
     i.data.min = min
@@ -182,7 +186,6 @@ class BrowserFloatingLevelStateEditForm extends React.Component {
     value = Number.parseFloat(Number.parseFloat(value).toPrecision(this.state.precision))
     if (Number.isNaN(value)) {
       return
-      // TODO !0: on fait quoi d'autre ?
     }
 
     const i = this.props.instance

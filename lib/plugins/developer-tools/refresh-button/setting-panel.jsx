@@ -25,8 +25,10 @@ class RefreshButtonSettingPanel extends ItemSettingPanel {
     return (
       <div className='clearing padded'>
         <Row className='padded card'>
-          <TextInput placeholder='Refresh' s={12} label='Label' ref={(c) => { this._title = c }}
-            value={title} onChange={this.handleEventChange.bind(this, 'title')} />
+          <TextInput
+            placeholder='Refresh' s={12} label='Label' ref={(c) => { this._title = c }}
+            value={title} onChange={this.handleEventChange.bind(this, 'title')}
+          />
         </Row>
         <Button waves={waves} className={cx('right btn-bottom-sticky', theme.actions.primary)} onClick={this.save.bind(this)}>
           Save &amp; close

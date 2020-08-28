@@ -1,7 +1,7 @@
 /* eslint-env mocha */
 'use strict'
 
-import Joi from 'joi'
+import Joi from '@hapi/joi'
 import uuid from 'uuid'
 
 import schema from '../../../../../../lib/plugins/scenarii/base-elements/procedure/schema.js'
@@ -10,7 +10,7 @@ describe('Plugin scenarii - procedure schema', function () {
   it('A minimalist procedure is validated', function () {
     const procedureData = {
       script: {
-        'a': []
+        a: []
       },
       name: 'pouet'
     }
@@ -22,38 +22,38 @@ describe('Plugin scenarii - procedure schema', function () {
       script: { }
     }
     Joi.validate(procedureData, schema)
-    .then(() => done(new Error()))
-    .catch(() => done())
+      .then(() => done(new Error()))
+      .catch(() => done())
   })
 
   it('An void data procedure is rejected', function (done) {
     const procedureData = { }
     Joi.validate(procedureData, schema)
-    .then(() => done(new Error()))
-    .catch(() => done())
+      .then(() => done(new Error()))
+      .catch(() => done())
   })
 
   it('A simple procedure is validated', function () {
     const procedureData = {
       script: {
-        'a': [
+        a: [
           {
-            'b': [ uuid.v4() ],
-            'c': [ uuid.v4() ],
-            'd': [
+            b: [uuid.v4()],
+            c: [uuid.v4()],
+            d: [
               {
-                'e': [ uuid.v4() ],
-                'f': []
+                e: [uuid.v4()],
+                f: []
               }
             ]
           },
           {
-            'g': [ uuid.v4() ],
-            'h': []
+            g: [uuid.v4()],
+            h: []
           },
           uuid.v4()
         ],
-        'i': [ uuid.v4() ]
+        i: [uuid.v4()]
       },
       name: 'pouet'
     }

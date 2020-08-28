@@ -1,6 +1,6 @@
 'use strict'
 
-require('babel-core/register')
+require('@babel/register')
 require('colors')
 
 const server = require('../dist').server

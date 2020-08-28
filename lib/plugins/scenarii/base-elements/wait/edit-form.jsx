@@ -37,14 +37,14 @@ class BrowserWaitEditForm extends React.Component {
         step: 1,
         animate: true,
         range: {
-          'min': [1],
+          min: [1],
           '15%': [5, 5],
           '35%': [30, 10],
           '46%': [60, 15],
           '52%': [90, 30],
           '70%': [240, 60],
           '75%': [300, 50],
-          'max': [600]
+          max: [600]
         },
         format: wNumb({
           decimals: 1
@@ -72,8 +72,10 @@ class BrowserWaitEditForm extends React.Component {
     return (
       <Row className='section card form waitPanel'>
         <br />
-        <Select key={0} s={12} label='Mode' icon={waitMode === 'amount' ? 'timer' : (waitMode === 'until' ? 'timelapse' : 'av_timer')} onChange={this.changeWaitMode.bind(this)}
-          defaultValue={waitMode}>
+        <Select
+          key={0} s={12} label='Mode' icon={waitMode === 'amount' ? 'timer' : (waitMode === 'until' ? 'timelapse' : 'av_timer')} onChange={this.changeWaitMode.bind(this)}
+          defaultValue={waitMode}
+        >
           <option key='amount' value='amount'>Wait a lapse of time</option>
           <option key='until' value='until'>Wait until a specific moment</option>
           <option key='hours' value='untilQuarter'>Wait until next round quarter hour</option>
@@ -83,8 +85,10 @@ class BrowserWaitEditForm extends React.Component {
         <div className='col s12'>&nbsp;</div>
 
         {waitMode === 'amount' && [
-          <Select key={1} s={12} m={12} l={2} label='Unit' icon='timer' onChange={this.changeAmountUnit.bind(this)}
-            defaultValue={amountUnit}>
+          <Select
+            key={1} s={12} m={12} l={2} label='Unit' icon='timer' onChange={this.changeAmountUnit.bind(this)}
+            defaultValue={amountUnit}
+          >
             <option key='seconds' value='seconds'>seconds</option>
             <option key='minutes' value='minutes'>minutes</option>
             <option key='hours' value='hours'>hours</option>
@@ -96,25 +100,31 @@ class BrowserWaitEditForm extends React.Component {
 
         {waitMode === 'until' && [
           <div key={3} className='input-field col s12 m8 l6'>
-            <label className={'col s5'} htmlFor={timePickerId}>Time:</label>
-            <TimePicker className={'col offset-s5 s7'} id={timePickerId} options={{
-              twelveHour: false,
-              autoClose: true,
-              defaultTime: until || '12:00',
-              showClearBtn: false
-            }} onChange={this.changeUntil.bind(this)} value={until || '12:00'} />
+            <label className='col s5' htmlFor={timePickerId}>Time:</label>
+            <TimePicker
+              className='col offset-s5 s7' id={timePickerId} options={{
+                twelveHour: false,
+                autoClose: true,
+                defaultTime: until || '12:00',
+                showClearBtn: false
+              }} onChange={this.changeUntil.bind(this)} value={until || '12:00'}
+            />
           </div>,
           <div key={6} className='col s12'>&nbsp;</div>,
-          <Select key={4} s={12} label='Occurrence' icon='timelapse' onChange={this.changeUntilOccurrence.bind(this)}
-            defaultValue={untilOccurrence}>
+          <Select
+            key={4} s={12} label='Occurrence' icon='timelapse' onChange={this.changeUntilOccurrence.bind(this)}
+            defaultValue={untilOccurrence}
+          >
             <option key='first' value='first'>at first occurrence of this moment</option>
             <option key='tomorrow' value='tomorrow'>tomorrow</option>
           </Select>
         ]}
 
         {waitMode === 'untilQuarter' && (
-          <Select key={5} s={12} label='Until next occurrence of' icon='av_timer' onChange={this.changeUntilQuarter.bind(this)}
-            defaultValue={untilQuarter}>
+          <Select
+            key={5} s={12} label='Until next occurrence of' icon='av_timer' onChange={this.changeUntilQuarter.bind(this)}
+            defaultValue={untilQuarter}
+          >
             <option key='all' value='00/15/30/45'>any round quarter hour (00/15/30/45)</option>
             <option key='halfs' value='00/30'>any round half hour (00/30)</option>
             <option key='HH:00' value='00'>HH:00</option>

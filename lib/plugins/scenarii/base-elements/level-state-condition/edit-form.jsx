@@ -39,8 +39,8 @@ class BrowserLevelStateConditionEditForm extends React.Component {
           step: 1,
           animate: true,
           range: {
-            'min': [1, 1],
-            'max': [32]
+            min: [1, 1],
+            max: [32]
           },
           format: wNumb({
             decimals: 1
@@ -70,8 +70,8 @@ class BrowserLevelStateConditionEditForm extends React.Component {
           step: 1,
           animate: true,
           range: {
-            'min': [1, 1],
-            'max': [32]
+            min: [1, 1],
+            max: [32]
           },
           format: wNumb({
             decimals: 1
@@ -102,9 +102,11 @@ class BrowserLevelStateConditionEditForm extends React.Component {
       <Row className='section card form level-state-condition-panel'>
 
         <br />
-        <StatesDropdown defaultStateId={levelStateId} onChange={this.levelStateChanged.bind(this)}
+        <StatesDropdown
+          defaultStateId={levelStateId} onChange={this.levelStateChanged.bind(this)}
           theme={theme} animationLevel={animationLevel} services={services}
-          typeFilter={(e) => e.id === 'level-state'} instanceFilter={(e) => e.typeId === 'level-state'} />
+          typeFilter={(e) => e.id === 'level-state'} instanceFilter={(e) => e.typeId === 'level-state'}
+        />
 
         <br />&nbsp;
         <br />
@@ -163,21 +165,21 @@ class BrowserLevelStateConditionEditForm extends React.Component {
     }
 
     this.scenariiService.getStateInstance(this.props.instance.data.levelStateId)
-    .then((levelState) => {
-      switch (this.props.instance.data.operator) {
-        case 'eq':
-          this.props.instance.data.name = `${levelState.data.name} = ${this.props.instance.data.level}`
-          break
-        case 'lte':
-          this.props.instance.data.name = `${levelState.data.name} ≤ ${this.props.instance.data.level}`
-          break
-        case 'between':
-          this.props.instance.data.name = `${levelState.data.name} in [${this.props.instance.data.level}-${this.props.instance.data.level2}]`
-          break
-        case 'gte':
-          this.props.instance.data.name = `${levelState.data.name} ≥ ${this.props.instance.data.level}`
-      }
-    })
+      .then((levelState) => {
+        switch (this.props.instance.data.operator) {
+          case 'eq':
+            this.props.instance.data.name = `${levelState.data.name} = ${this.props.instance.data.level}`
+            break
+          case 'lte':
+            this.props.instance.data.name = `${levelState.data.name} ≤ ${this.props.instance.data.level}`
+            break
+          case 'between':
+            this.props.instance.data.name = `${levelState.data.name} in [${this.props.instance.data.level}-${this.props.instance.data.level2}]`
+            break
+          case 'gte':
+            this.props.instance.data.name = `${levelState.data.name} ≥ ${this.props.instance.data.level}`
+        }
+      })
     this.props.highlightCloseButton()
   }
 }

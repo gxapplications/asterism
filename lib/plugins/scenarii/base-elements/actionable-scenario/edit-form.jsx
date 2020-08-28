@@ -38,30 +38,38 @@ class BrowserActionableScenarioEditForm extends React.Component {
     return (
       <div>
         <Row className='section card form hide-in-procedure'>
-          <TextInput placeholder='Short name' s={12} ref={(c) => { this._nameInput = c }}
+          <TextInput
+            placeholder='Short name' s={12} ref={(c) => { this._nameInput = c }}
             id={`actionable-scenario-name-input-${this._nameInputId}`}
-            defaultValue={name} onChange={(e) => { instance.data.name = e.currentTarget.value }} />
+            defaultValue={name} onChange={(e) => { instance.data.name = e.currentTarget.value }}
+          />
         </Row>
         <Row className='section card form'>
           <h5>When:</h5>
           <div className='col s12'>&nbsp;</div>
-          <TriggersDropdown onChange={this.setTrigger.bind(this)} theme={theme} animationLevel={animationLevel}
+          <TriggersDropdown
+            onChange={this.setTrigger.bind(this)} theme={theme} animationLevel={animationLevel}
             services={services} noCreationPanel defaultTriggerId={executionTrigger}
-            typeFilter={() => false} icon={null} label='Set a trigger' dropdownId={uuid.v4()} />
+            typeFilter={() => false} icon={null} label='Set a trigger' dropdownId={uuid.v4()}
+          />
           <h5>With additional condition:</h5>
           <div className='col s12'>&nbsp;</div>
-          <ConditionsDropdown onChange={this.setCondition.bind(this)} theme={theme} animationLevel={animationLevel}
+          <ConditionsDropdown
+            onChange={this.setCondition.bind(this)} theme={theme} animationLevel={animationLevel}
             services={services} noCreationPanel defaultConditionId={executionCondition}
-            typeFilter={() => false} icon={null} label='Set additional condition' dropdownId={uuid.v4()}>
-            <option key='no-condition-option' value={'no-condition'}>No condition</option>
+            typeFilter={() => false} icon={null} label='Set additional condition' dropdownId={uuid.v4()}
+          >
+            <option key='no-condition-option' value='no-condition'>No condition</option>
           </ConditionsDropdown>
         </Row>
         <Row className='section card form'>
           <h5>Then:</h5>
           <div className='col s12'>&nbsp;</div>
-          <ActionsDropdown onChange={this.setAction.bind(this)} theme={theme} animationLevel={animationLevel}
+          <ActionsDropdown
+            onChange={this.setAction.bind(this)} theme={theme} animationLevel={animationLevel}
             services={services} noCreationPanel defaultActionId={action}
-            typeFilter={() => false} icon={null} label='Set an action' dropdownId={uuid.v4()} />
+            typeFilter={() => false} icon={null} label='Set an action' dropdownId={uuid.v4()}
+          />
         </Row>
 
         <Row className='section card form' onClick={this.expandAdvanced.bind(this)}>
@@ -69,10 +77,12 @@ class BrowserActionableScenarioEditForm extends React.Component {
             <span>
               <h5>Abort when:</h5>
               <div className='col s12'>&nbsp;</div>
-              <TriggersDropdown onChange={this.setAbortTrigger.bind(this)} theme={theme} animationLevel={animationLevel}
+              <TriggersDropdown
+                onChange={this.setAbortTrigger.bind(this)} theme={theme} animationLevel={animationLevel}
                 services={services} noCreationPanel defaultTriggerId={abortTrigger}
-                typeFilter={() => false} icon={null} label='Set a trigger' dropdownId={uuid.v4()}>
-                <option key='no-abort-trigger-option' value={''}>No trigger</option>
+                typeFilter={() => false} icon={null} label='Set a trigger' dropdownId={uuid.v4()}
+              >
+                <option key='no-abort-trigger-option' value=''>No trigger</option>
               </TriggersDropdown>
             </span>
           )) || (
@@ -118,7 +128,7 @@ class BrowserActionableScenarioEditForm extends React.Component {
         this.props.instance.data.name.length &&
         this.props.instance.data.name !== 'Unconfigured actionable scenario' &&
         this.props.instance.data.name !== 'Misconfigured actionable scenario'
-      ) {
+    ) {
       if (this._nameInput) {
         this._nameInput.setState({ value: this.props.instance.data.name })
       }

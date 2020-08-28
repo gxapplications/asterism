@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-handler-names */
 'use strict'
 
 /* global fetch, process, navigator */
@@ -8,8 +9,8 @@ import { NavItem } from 'react-materialize'
 const _urlBase64ToUint8Array = (base64String) => {
   const padding = '='.repeat((4 - base64String.length % 4) % 4)
   const base64 = (base64String + padding)
-      .replace(/-/g, '+')
-      .replace(/_/g, '/')
+    .replace(/-/g, '+')
+    .replace(/_/g, '/')
 
   const rawData = window.atob(base64)
   const outputArray = new Uint8Array(rawData.length)
@@ -52,19 +53,19 @@ export default class NotificationManager {
 
   update (socketMessages) {
     socketMessages.forEach((message) => {
-      let animation = []
+      const animation = []
       switch (message.command) {
         case 'highlight':
           animation.push('animation wobble-scaled-80')
           setTimeout(() => {
-            let item = this.navItems.find((i) => i.id === message.id) || {}
+            const item = this.navItems.find((i) => i.id === message.id) || {}
             delete item.animation
             this.mainComponent.setState({ notifications: this.navItems })
           }, 4000)
 
           // fall through
-        case 'set':
-          let item = this.navItems.find((i) => i.id === message.id) || {}
+        case 'set': {
+          const item = this.navItems.find((i) => i.id === message.id) || {}
           if (!item.id) {
             this.navItems.push(item)
           }
@@ -75,11 +76,11 @@ export default class NotificationManager {
           item.onClick = () => {
             this.callback(item.id, (serverResult) => {
               if (serverResult.success) {
-                let item = this.navItems.find((i) => i.id === message.id) || {}
+                const item = this.navItems.find((i) => i.id === message.id) || {}
                 item.feedback = 'animation rubberBand80'
                 this.mainComponent.setState({ notifications: this.navItems })
                 setTimeout(() => {
-                  let item = this.navItems.find((i) => i.id === message.id) || {}
+                  const item = this.navItems.find((i) => i.id === message.id) || {}
                   delete item.feedback
                   this.mainComponent.setState({ notifications: this.navItems })
                 }, 2000)
@@ -90,6 +91,7 @@ export default class NotificationManager {
             })
           }
           break
+        }
         case 'remove':
           this.navItems = this.navItems.filter((i) => i.id !== message.id) || {}
           break
@@ -102,7 +104,8 @@ export default class NotificationManager {
 
   getComponents ({ animationLevel, theme }) {
     return this.navItems.map((item, idx) => (
-      <NavItem key={idx}
+      <NavItem
+        key={idx}
         className={cx(
           'notification-item',
           `notification-item-${item.id}`,
@@ -111,7 +114,8 @@ export default class NotificationManager {
           item.feedback,
           _translateCss(item.css, theme)
         )}
-        href='javascript:void(0)' onClick={item.onClick}
+        href='javascript:void(0)'
+        onClick={item.onClick}
       >
         <i className={cx('material-icons', item.icon)}>{item.icon}</i>
       </NavItem>
@@ -120,27 +124,27 @@ export default class NotificationManager {
 
   registerWebPushServiceWorker () {
     this.logger.info('Registering web-push service worker...')
-    return navigator.serviceWorker.register('/web-push-worker.js', {scope: '/'})
-    .then((registration) => {
-      this.logger.info('Registered web-push service worker. Registering web-push subscription...')
+    return navigator.serviceWorker.register('/web-push-worker.js', { scope: '/' })
+      .then((registration) => {
+        this.logger.info('Registered web-push service worker. Registering web-push subscription...')
 
-      registration.pushManager.subscribe({
-        userVisibleOnly: true,
-        // https://www.npmjs.com/package/web-push#using-vapid-key-for-applicationserverkey
-        applicationServerKey: _urlBase64ToUint8Array(this.webPushParams.publicVapidKey)
-      })
-      .then((subscription) => {
-        this.logger.info('Registered web-push subscription. Sending subscription to server...')
+        registration.pushManager.subscribe({
+          userVisibleOnly: true,
+          // https://www.npmjs.com/package/web-push#using-vapid-key-for-applicationserverkey
+          applicationServerKey: _urlBase64ToUint8Array(this.webPushParams.publicVapidKey)
+        })
+          .then((subscription) => {
+            this.logger.info('Registered web-push subscription. Sending subscription to server...')
 
-        fetch('/web-push-subscribe', {
-          method: 'POST',
-          body: JSON.stringify(subscription),
-          headers: { 'content-type': 'application/json' }
-        })
-        .then(() => {
-          this.logger.info('Sent subscription to server.')
-        })
+            fetch('/web-push-subscribe', {
+              method: 'POST',
+              body: JSON.stringify(subscription),
+              headers: { 'content-type': 'application/json' }
+            })
+              .then(() => {
+                this.logger.info('Sent subscription to server.')
+              })
+          })
       })
-    })
   }
 }

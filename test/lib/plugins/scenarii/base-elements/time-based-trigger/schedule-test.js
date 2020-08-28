@@ -289,8 +289,8 @@ describe('Plugin scenarii - time based trigger scheduling,', function () {
         [8, 0],
         [4, 6]
       ]
-      .map(([o, d]) => _weekdayMapper(immediately.clone())([o, d])) // clone each time to avoid side effects
-      .map(t => t.toISOString(true))
+        .map(([o, d]) => _weekdayMapper(immediately.clone())([o, d])) // clone each time to avoid side effects
+        .map(t => t.toISOString(true))
     ).to.deep.equal([
       '2018-03-06T00:00:00.000+01:00',
       '2018-03-13T00:00:00.000+01:00',

@@ -83,17 +83,19 @@ class PanelList extends React.Component {
   componentDidMount () {
     this._mounted = true
     this.props.getTypes().then((types) => {
-      this.setState({ types: types.map((type) => {
-        return {
-          type: type.type,
-          onClick: () => {
-            return this.props.createInstance(type.id)
-            .then(this.editInstance.bind(this))
+      this.setState({
+        types: types.map((type) => {
+          return {
+            type: type.type,
+            onClick: () => {
+              return this.props.createInstance(type.id)
+                .then(this.editInstance.bind(this))
+            }
           }
-        }
-      })})
+        })
+      })
     })
-    .then(() => this.forceUpdate())
+      .then(() => this.forceUpdate())
   }
 
   componentWillUnmount () {
@@ -121,13 +123,13 @@ class PanelList extends React.Component {
               if (this.state.deleteConfirm === instance) {
                 clearTimeout(this._deleteTimer)
                 this.props.deleteInstance(instance)
-                .catch((error) => {
-                  $('#scenarii-persistence-error-modal p').html(error.message)
-                  $('#scenarii-persistence-error-modal').modal('open')
-                })
-                .then(() => {
-                  this.forceUpdate()
-                })
+                  .catch((error) => {
+                    $('#scenarii-persistence-error-modal p').html(error.message)
+                    $('#scenarii-persistence-error-modal').modal('open')
+                  })
+                  .then(() => {
+                    this.forceUpdate()
+                  })
                 this.setState({ deleteConfirm: null })
               } else {
                 this.setState({ deleteConfirm: instance })
@@ -145,90 +147,94 @@ class PanelList extends React.Component {
               event.preventDefault()
 
               const executionId = uuid.v4()
-              this.setState({ instances: this.state.instances.map((i) => {
-                if (i.instance === instance) {
-                  i.testing = executionId
-                }
-                return i
-              }) })
+              this.setState({
+                instances: this.state.instances.map((i) => {
+                  if (i.instance === instance) {
+                    i.testing = executionId
+                  }
+                  return i
+                })
+              })
 
               super.forceUpdate()
 
               this.props.testInstance(instance, 10000, executionId)
-              .catch(() => false)
-              .then((success) => {
-                if (this._mounted) {
-                  this.setState({
-                    instances: this.state.instances.map((i) => {
-                      if (i.instance === instance && i.testing !== null) {
-                        i.testing = success
-                      }
-                      return i
-                    })
-                  })
-
-                  super.forceUpdate()
-
-                  setTimeout(() => {
-                    if (this._mounted) {
-                      this.setState({
-                        instances: this.state.instances.map((i) => {
-                          if (i.instance === instance) {
-                            i.testing = null
-                          }
-                          return i
-                        })
+                .catch(() => false)
+                .then((success) => {
+                  if (this._mounted) {
+                    this.setState({
+                      instances: this.state.instances.map((i) => {
+                        if (i.instance === instance && i.testing !== null) {
+                          i.testing = success
+                        }
+                        return i
                       })
+                    })
 
-                      super.forceUpdate()
-                    }
-                  }, 2000)
-                }
-              })
+                    super.forceUpdate()
+
+                    setTimeout(() => {
+                      if (this._mounted) {
+                        this.setState({
+                          instances: this.state.instances.map((i) => {
+                            if (i.instance === instance) {
+                              i.testing = null
+                            }
+                            return i
+                          })
+                        })
+
+                        super.forceUpdate()
+                      }
+                    }, 2000)
+                  }
+                })
             } : null,
             onStop: this.props.abortInstance ? (event) => {
               event.stopPropagation()
               event.preventDefault()
 
               let executionId
-              this.setState({ instances: this.state.instances.map((i) => {
-                if (i.instance === instance) {
-                  executionId = i.testing
-                  i.testing = executionId
-                }
-                return i
-              }) })
+              this.setState({
+                instances: this.state.instances.map((i) => {
+                  if (i.instance === instance) {
+                    executionId = i.testing
+                    i.testing = executionId
+                  }
+                  return i
+                })
+              })
 
               super.forceUpdate()
 
               this.props.abortInstance(instance, executionId, 10000)
-              .catch(() => false)
-              .then(() => {
-                if (this._mounted) {
-                  this.setState({
-                    instances: this.state.instances.map((i) => {
-                      if (i.instance === instance) {
-                        i.testing = null
-                      }
-                      return i
+                .catch(() => false)
+                .then(() => {
+                  if (this._mounted) {
+                    this.setState({
+                      instances: this.state.instances.map((i) => {
+                        if (i.instance === instance) {
+                          i.testing = null
+                        }
+                        return i
+                      })
                     })
-                  })
 
-                  super.forceUpdate()
-                }
-              })
+                    super.forceUpdate()
+                  }
+                })
             } : null,
             onActivateSwitch: this.props.activateInstance ? (event) => {
               event.stopPropagation()
               event.preventDefault()
 
               this.props.activateInstance(instance)
-              .catch(() => false)
-              .then(() => {
-                if (this._mounted) {
-                  this.forceUpdate()
-                }
-              })
+                .catch(() => false)
+                .then(() => {
+                  if (this._mounted) {
+                    this.forceUpdate()
+                  }
+                })
             } : null
           }))
         })
@@ -294,31 +300,41 @@ class PanelList extends React.Component {
           </a>,
           <span key={group.id + '_items'}>
             {group.instances.map(({ instance, onClick, onDelete, onTest, testing, onStop, onActivateSwitch }) => (
-              <a key={instance.instanceId} href='javascript:void(0)' onClick={onClick}
-                className={cx('collection-item sub-item', waves)}>
+              <a
+                key={instance.instanceId} href='javascript:void(0)' onClick={onClick}
+                className={cx('collection-item sub-item', waves)}
+              >
                 <i className={cx(
-                    'material-icons circle white-text',
-                    (instance.constructor && instance.constructor.type && instance.constructor.type.icon) || 'bubble_chart'
-                )}>{(instance.constructor && instance.constructor.type && instance.constructor.type.icon) || 'bubble_chart'}</i>
-                <div onClick={onDelete}
-                  className={cx('secondary-content', (deleteConfirm === instance) ? deleteWavesConfirm : deleteWaves)}>
+                  'material-icons circle white-text',
+                  (instance.constructor && instance.constructor.type && instance.constructor.type.icon) || 'bubble_chart'
+                )}
+                >{(instance.constructor && instance.constructor.type && instance.constructor.type.icon) || 'bubble_chart'}
+                </i>
+                <div
+                  onClick={onDelete}
+                  className={cx('secondary-content', (deleteConfirm === instance) ? deleteWavesConfirm : deleteWaves)}
+                >
                   <i className='material-icons'>delete</i>
                 </div>
                 {onStop && (
-                  <div href='javascript:void(0)' onClick={onStop}
+                  <div
+                    href='javascript:void(0)' onClick={onStop}
                     className={cx(
                       'secondary-content',
                       testing === true ? testingWavesPositive : (testing === false ? testingWavesNegative : (typeof testing === 'string' ? testingWaves : `btn-flat ${waves}`))
-                    )}>
+                    )}
+                  >
                     <i className='material-icons'>stop</i>
                   </div>
                 )}
                 {onTest && (
-                  <div href='javascript:void(0)' onClick={onTest}
+                  <div
+                    href='javascript:void(0)' onClick={onTest}
                     className={cx(
                       'secondary-content',
                       testing === true ? testingWavesPositive : (testing === false ? testingWavesNegative : (typeof testing === 'string' ? testingWaves : `btn-flat ${waves}`))
-                    )}>
+                    )}
+                  >
                     <i className='material-icons'>play_arrow</i>
                   </div>
                 )}
@@ -337,28 +353,36 @@ class PanelList extends React.Component {
             ))}
           </span>
         ]) : groupedInstances.map(({ instance, onClick, onDelete, onTest, testing, onStop, onActivateSwitch }) => (
-          <a key={instance.instanceId} href='javascript:void(0)' onClick={onClick}
-            className={cx('collection-item', waves)}>
+          <a
+            key={instance.instanceId} href='javascript:void(0)' onClick={onClick}
+            className={cx('collection-item', waves)}
+          >
             <i className={cx('material-icons circle white-text', instance.constructor.type.icon || 'bubble_chart')}>{instance.constructor.type.icon || 'bubble_chart'}</i>
-            <div onClick={onDelete}
-              className={cx('secondary-content', (deleteConfirm === instance) ? deleteWavesConfirm : deleteWaves)}>
+            <div
+              onClick={onDelete}
+              className={cx('secondary-content', (deleteConfirm === instance) ? deleteWavesConfirm : deleteWaves)}
+            >
               <i className='material-icons'>delete</i>
             </div>
             {onStop && (
-              <div href='javascript:void(0)' onClick={onStop}
+              <div
+                href='javascript:void(0)' onClick={onStop}
                 className={cx(
                   'secondary-content',
                   testing === true ? testingWavesPositive : (testing === false ? testingWavesNegative : (typeof testing === 'string' ? testingWaves : `btn-flat ${waves}`))
-                )}>
+                )}
+              >
                 <i className='material-icons'>stop</i>
               </div>
             )}
             {onTest && (
-              <div href='javascript:void(0)' onClick={onTest}
+              <div
+                href='javascript:void(0)' onClick={onTest}
                 className={cx(
                   'secondary-content',
                   testing === true ? testingWavesPositive : (testing === false ? testingWavesNegative : (typeof testing === 'string' ? testingWaves : `btn-flat ${waves}`))
-                )}>
+                )}
+              >
                 <i className='material-icons'>play_arrow</i>
               </div>
             )}
@@ -376,10 +400,12 @@ class PanelList extends React.Component {
           </a>
         ))}
 
-        <hr key={'separator'} className={cx('collection-item separator')} />
+        <hr key='separator' className={cx('collection-item separator')} />
         {types.filter(_typeFilter(search)).sort(_typeSorter).map(({ type, onClick }, idx) => (
-          <a key={type.name} href='javascript:void(0)' onClick={onClick}
-            className={cx('collection-item adder active avatar', waves)}>
+          <a
+            key={type.name} href='javascript:void(0)' onClick={onClick}
+            className={cx('collection-item adder active avatar', waves)}
+          >
             <i className={cx('material-icons circle white-text', type.icon || 'bubble_chart')}>{type.icon || 'bubble_chart'}</i>
             <span className='title truncate'>{type.shortLabel || type.fullLabel || type.name}</span>
             {(type.shortLabel && type.fullLabel) ? (

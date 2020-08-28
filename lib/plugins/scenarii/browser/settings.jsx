@@ -40,46 +40,46 @@ class DomoticsSettings extends React.Component {
   componentDidMount () {
     this._mounted = true
     this.props.serverStorage.getItem('settings-domotics-location')
-    .then((location) => {
-      if (this._mounted) {
-        if (location.name.length) {
-          $('#domotics_settings .location-field label').addClass('active')
-          $('#domotics_settings .autocomplete').val(location.name)
+      .then((location) => {
+        if (this._mounted) {
+          if (location.name.length) {
+            $('#domotics_settings .location-field label').addClass('active')
+            $('#domotics_settings .autocomplete').val(location.name)
+          }
+          this.setState({
+            currentLocation: location || {}
+          })
         }
-        this.setState({
-          currentLocation: location || {}
-        })
-      }
-    })
-    .catch(error => {
-      console.log(error)
-      this.setState({
-        currentLocation: {}
       })
-    })
-    this.props.serverStorage.getItem('settings-domotics-energy-costs')
-    .then((energyCosts) => {
-      if (this._mounted) {
+      .catch(error => {
+        console.log(error)
         this.setState({
-          energyCosts: energyCosts || {
+          currentLocation: {}
+        })
+      })
+    this.props.serverStorage.getItem('settings-domotics-energy-costs')
+      .then((energyCosts) => {
+        if (this._mounted) {
+          this.setState({
+            energyCosts: energyCosts || {
+              prices: [0, 0, 0, 0, 0, 0],
+              planningBase: [0, 0, 0, 0, 0, 0, 0],
+              planningOthers: [[], [], [], [], [], [], []]
+            }
+          })
+          this.plugWidgets()
+        }
+      })
+      .catch(error => {
+        console.log(error)
+        this.setState({
+          energyCosts: {
             prices: [0, 0, 0, 0, 0, 0],
             planningBase: [0, 0, 0, 0, 0, 0, 0],
             planningOthers: [[], [], [], [], [], [], []]
           }
         })
-        this.plugWidgets()
-      }
-    })
-    .catch(error => {
-      console.log(error)
-      this.setState({
-        energyCosts: {
-          prices: [0, 0, 0, 0, 0, 0],
-          planningBase: [0, 0, 0, 0, 0, 0, 0],
-          planningOthers: [[], [], [], [], [], [], []]
-        }
       })
-    })
   }
 
   componentDidUpdate (prevProps, prevState) {
@@ -112,8 +112,8 @@ class DomoticsSettings extends React.Component {
           step: 1,
           animate: true,
           range: {
-            'min': [0, 15],
-            'max': [1440]
+            min: [0, 15],
+            max: [1440]
           },
           format: wNumb({ decimals: 1, edit: minuter }),
           pips: { // Show a scale with the slider
@@ -169,10 +169,12 @@ class DomoticsSettings extends React.Component {
           <Row className='section card form location-field'>
             <Icon s={1} className='hide-on-small-only location-icon' left>my_location</Icon>
             <br />
-            <Autocomplete s={12} m={11} l={11} title='Nearest big city'
+            <Autocomplete
+              s={12} m={11} l={11} title='Nearest big city'
               value={currentLocation.name}
               onChange={this.onLocationChanged.bind(this)}
-              options={{ minLength: 2, limit: 10, onAutocomplete: this.onLocationChoosed.bind(this), data: Object.assign({}, ...locations) }} />
+              options={{ minLength: 2, limit: 10, onAutocomplete: this.onLocationChoosed.bind(this), data: Object.assign({}, locations) }}
+            />
           </Row>
           <Row className='section card form'>
             <p className='col s12'>
@@ -181,8 +183,10 @@ class DomoticsSettings extends React.Component {
               <br clear='both' /><br clear='both' />
             </p>
             {energyCosts.prices.map((pricing, idx) => (
-              <TextInput s={6} m={4} l={4} key={idx} type='number' label={idx === 0 ? 'Base pricing' : `Pricing #${idx}`}
-                onChange={this.pricingChange.bind(this, idx)} value={`${pricing}` || '0'} min={0} max={100} step={0.0001} />
+              <TextInput
+                s={6} m={4} l={4} key={idx} type='number' label={idx === 0 ? 'Base pricing' : `Pricing #${idx}`}
+                onChange={this.pricingChange.bind(this, idx)} value={`${pricing}` || '0'} min={0} max={100} step={0.0001}
+              />
             ))}
             <hr className='col s12' />
 
@@ -194,28 +198,36 @@ class DomoticsSettings extends React.Component {
               </thead>
               <tbody>
                 <tr>
-                  {_weekdays.map((weekday, idx) => (<td key={`weekdays_a${idx}`} className='energyPlanningSlider'>
-                    <div id={`weekdays_a_slider_${idx}`} />
-                  </td>))}
+                  {_weekdays.map((weekday, idx) => (
+                    <td key={`weekdays_a${idx}`} className='energyPlanningSlider'>
+                      <div id={`weekdays_a_slider_${idx}`} />
+                    </td>
+                  ))}
                 </tr>
                 <tr className='energyPlanningPrices'>
-                  {_weekdays.map((weekday, idx) => (<td key={`weekdays_b${idx}`} className='top-aligned'>
-                    <Select key={`weekdays_b${idx}_select`} label={null}
-                      onChange={this.mainPricingChange.bind(this, idx)} value={`${energyCosts.planningBase[idx]}` || '0'}>
-                      {energyCosts.prices.map((price, idx2) => (
-                        <option key={`weekdays_b${idx}_select_${idx2}`} value={idx2}>{idx2 === 0 ? 'Base' : `#${idx2}`}</option>
-                      ))}
-                    </Select>
-
-                    {energyCosts.planningOthers[idx].map((area, idx2) => (
-                      <Select key={`weekdays_b${idx}_select_${idx2}`}
-                        onChange={this.otherPricingChange.bind(this, idx, idx2)} value={`${area.pricing}` || '0'}>
-                        {energyCosts.prices.map((price, idx3) => (
-                          <option key={`weekdays_b${idx}_select_${idx2}_${idx3}`} value={idx3}>{idx3 === 0 ? 'Base' : `#${idx3}`}</option>
+                  {_weekdays.map((weekday, idx) => (
+                    <td key={`weekdays_b${idx}`} className='top-aligned'>
+                      <Select
+                        key={`weekdays_b${idx}_select`} label={null}
+                        onChange={this.mainPricingChange.bind(this, idx)} value={`${energyCosts.planningBase[idx]}` || '0'}
+                      >
+                        {energyCosts.prices.map((price, idx2) => (
+                          <option key={`weekdays_b${idx}_select_${idx2}`} value={idx2}>{idx2 === 0 ? 'Base' : `#${idx2}`}</option>
                         ))}
                       </Select>
-                    ))}
-                  </td>))}
+
+                      {energyCosts.planningOthers[idx].map((area, idx2) => (
+                        <Select
+                          key={`weekdays_b${idx}_select_${idx2}`}
+                          onChange={this.otherPricingChange.bind(this, idx, idx2)} value={`${area.pricing}` || '0'}
+                        >
+                          {energyCosts.prices.map((price, idx3) => (
+                            <option key={`weekdays_b${idx}_select_${idx2}_${idx3}`} value={idx3}>{idx3 === 0 ? 'Base' : `#${idx3}`}</option>
+                          ))}
+                        </Select>
+                      ))}
+                    </td>
+                  ))}
                 </tr>
               </tbody>
             </table>

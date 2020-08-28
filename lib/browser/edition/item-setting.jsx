@@ -27,8 +27,10 @@ class ItemSetting extends React.Component {
     const hasChildren = !!children.type
 
     const autoClose = () => {
-      $('#item-setting-modal').modal('close')
-      mainStateSet({ itemSettingPanel: null })
+      if (!hasChildren) {
+        $('#item-setting-modal').modal('close')
+        mainStateSet({ itemSettingPanel: null })
+      }
     }
 
     return (

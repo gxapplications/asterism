@@ -17,13 +17,13 @@ class Settings extends React.Component {
     // Plugin settings panels
     this.pluginSettingsPanels = (process.env.ASTERISM_SETTINGS_PANELS || []).map((toRequire) => {
       return {
-        'Panel': plugins.settingsPanels[toRequire.module].default,
-        'privateSocket': props.socketManager.connectPrivateSocket(toRequire.privateSocket),
-        'publicSockets': toRequire.publicSockets.reduce((acc, namespace) => {
+        Panel: plugins.settingsPanels[toRequire.module].default,
+        privateSocket: props.socketManager.connectPrivateSocket(toRequire.privateSocket),
+        publicSockets: toRequire.publicSockets.reduce((acc, namespace) => {
           acc[namespace] = props.socketManager.connectPublicSocket(namespace)
           return acc
         }, {}),
-        'serverStorage': props.serverStorage.createSubStorage(toRequire.libName)
+        serverStorage: props.serverStorage.createSubStorage(toRequire.libName)
       }
     })
   }
@@ -40,13 +40,15 @@ class Settings extends React.Component {
         $('#settings-modal > nav > div.nav-wrapper').addClass(this.props.theme.backgrounds.editing)
         $('#settings-modal .sidenav-trigger').remove()
         $('#settings-modal > nav > div.nav-wrapper > ul').removeClass('hide-on-med-and-down')
-        $('#settings-modal > nav > .nav-content > ul.tabs').tabs({ onShow: (p) => {
-          $(`#settings-modal > nav > .nav-content > ul.tabs > li.tab > a[href^='#']`).each((idx, el) => {
-            if ($(el).attr('href') === p.selector) {
-              this._activeTabIndex = idx
-            }
-          })
-        } })
+        $('#settings-modal > nav > .nav-content > ul.tabs').tabs({
+          onShow: (p) => {
+            $('#settings-modal > nav > .nav-content > ul.tabs > li.tab > a[href^=\'#\']').each((idx, el) => {
+              if ($(el).attr('href') === p.selector) {
+                this._activeTabIndex = idx
+              }
+            })
+          }
+        })
 
         $('#settings-modal > nav > .nav-content > ul.tabs').tabs('updateTabIndicator')
       },
@@ -66,21 +68,27 @@ class Settings extends React.Component {
     const tabs = (
       <Tabs className={theme.backgrounds.editing}>
         <Tab title='Security' active={this._activeTabIndex === 0}>
-          <Security theme={theme} serverStorage={serverStorage}
+          <Security
+            theme={theme} serverStorage={serverStorage}
             animationLevel={animationLevel}
-            showRefreshButton={this.showRefreshButton.bind(this)} />
+            showRefreshButton={this.showRefreshButton.bind(this)}
+          />
         </Tab>
         <Tab title='User interface' active={this._activeTabIndex === 1}>
-          <UserInterface localStorage={localStorage} theme={theme} animationLevel={animationLevel}
+          <UserInterface
+            localStorage={localStorage} theme={theme} animationLevel={animationLevel}
             itemManager={itemManager} serverStorage={serverStorage}
             showRefreshButton={this.showRefreshButton.bind(this)}
-            mainState={mainState} />
+            mainState={mainState}
+          />
         </Tab>
         {this.pluginSettingsPanels.map(({ Panel, privateSocket, publicSockets, serverStorage }, idx) => (
           <Tab title={Panel.tabName || idx} key={idx + 2} active={this._activeTabIndex === idx + 2}>
-            <Panel localStorage={localStorage} theme={theme} animationLevel={animationLevel}
+            <Panel
+              localStorage={localStorage} theme={theme} animationLevel={animationLevel}
               serverStorage={serverStorage} showRefreshButton={this.showRefreshButton.bind(this)}
-              privateSocket={privateSocket} publicSockets={publicSockets} />
+              privateSocket={privateSocket} publicSockets={publicSockets}
+            />
           </Tab>
         ))}
       </Tabs>
@@ -90,12 +98,15 @@ class Settings extends React.Component {
       <div id='settings-modal' className={cx('modal very-large-modal thin-scrollable', theme.backgrounds.body)}>
         <Navbar
           alignLinks='right' extendWith={tabs}
-          brand={<span>
-            <Icon small>settings</Icon>
-            <span className='hide-on-small-only'>Settings</span>
-          </span>}
+          brand={
+            <span>
+              <Icon small>settings</Icon>
+              <span className='hide-on-small-only'>Settings</span>
+            </span>
+          }
         >
-          <NavItem href='javascript:void(0)' id='settings-modal-refresh-button'
+          <NavItem
+            href='javascript:void(0)' id='settings-modal-refresh-button'
             className={cx(
               'hide btn',
               { 'waves-effect waves-light': animationLevel >= 2 },
@@ -107,11 +118,12 @@ class Settings extends React.Component {
             <span className='hide-on-small-only hide-on-large-only'>Close &amp; reload</span>
             <span className='hide-on-med-and-up'>Close</span>
           </NavItem>
-          <NavItem href='javascript:void(0)' id='settings-modal-close-button'
+          <NavItem
+            href='javascript:void(0)' id='settings-modal-close-button'
             className={cx(
               'modal-action modal-close',
               { 'waves-effect waves-light': animationLevel >= 2 }
-           )}
+            )}
           >
             Close
           </NavItem>

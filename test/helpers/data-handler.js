@@ -48,17 +48,17 @@ export default class FakeDataHandler {
     const key = new RegExp(`^${forcePrefix || this.prefix}§§.*${path ? '@@' + path : ''}$`)
     const prefix = new RegExp(`^${forcePrefix || this.prefix}§§`)
     const suffix = new RegExp(`${path ? '@@' + path : ''}$`)
-    let results = Object.entries(this.tempMemory)
-    .filter((entry) => key.test(entry[0]))
-    .map((result) => ({
-      item: result[1],
-      keyName: result[0].replace(prefix, '').replace(suffix, ''),
-      prefix: forcePrefix || this.prefix,
-      path: path || false,
-      update: Date.now(), // wrong value for the mock
-      select: Date.now() // wrong value for the mock
-    }))
-    .filter(filter)
+    const results = Object.entries(this.tempMemory)
+      .filter((entry) => key.test(entry[0]))
+      .map((result) => ({
+        item: result[1],
+        keyName: result[0].replace(prefix, '').replace(suffix, ''),
+        prefix: forcePrefix || this.prefix,
+        path: path || false,
+        update: Date.now(), // wrong value for the mock
+        select: Date.now() // wrong value for the mock
+      }))
+      .filter(filter)
 
     return Promise.resolve(results)
   }

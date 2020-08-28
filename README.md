@@ -26,9 +26,9 @@ _[Development progression / Roadmap available here (asterism and plugins)](https
 
 [The technical and developer documentation is here.](https://github.com/gxapplications/asterism/wiki/Developer-documentation) If you want to install and develop on the platform, this is for you.
 
-[Documentation of library to include in your developments](https://gxapplications.github.io/asterism-plugin-library/asterism-plugin-library/2.0.0/index.html)
+[Documentation of library to include in your developments](https://gxapplications.github.io/asterism-plugin-library/asterism-plugin-library/2.4.0/index.html)
 
-![node version](https://img.shields.io/badge/node-%3E%3D%208.9.4-pink.svg)
+![node version](https://img.shields.io/badge/node-%3E%3D%2012.12.0-pink.svg)
 ![](https://img.shields.io/npm/dependency-version/asterism/react.svg)
 ![](https://img.shields.io/npm/dependency-version/asterism/express.svg)
 ![](https://img.shields.io/npm/dependency-version/asterism/materialize-css.svg)
@@ -49,8 +49,4 @@ _[Development progression / Roadmap available here (asterism and plugins)](https
 - Every domotics features are bundled in third part plugins. You choose the plugins you need, only.
 
 
-# :construction: Project under beta testing development
-_asterism_ is for now in public testing stage, for 2019. You are welcome to use it and test it.
-Stable release is scheduled for 2020.
-
-:copyright: 2017-2019 GXApplications. [ [Roadmap/Milestones](https://github.com/gxapplications/asterism/milestones?direction=asc&sort=due_date&state=open) | [License](https://github.com/gxapplications/asterism/blob/master/LICENSE.md) ]
+:copyright: 2017-2020 GXApplications. [ [Roadmap/Milestones](https://github.com/gxapplications/asterism/milestones?direction=asc&sort=due_date&state=open) | [License](https://github.com/gxapplications/asterism/blob/master/LICENSE.md) ]
