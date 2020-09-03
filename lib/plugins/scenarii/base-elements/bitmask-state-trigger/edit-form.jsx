@@ -33,54 +33,54 @@ class BrowserBitmaskStateTriggerEditForm extends React.Component {
       return
     }
     this.scenariiService.getStateInstance(this.props.instance.data.bitmaskStateId)
-    .then((bitmaskState) => {
-      if (!this._slider || !domSlider.noUiSlider) {
-        this._sliderCount = bitmaskState.data.count
-        this._slider = noUiSlider.create(domSlider, {
-          start: this.props.instance.data.position || 1,
-          connect: true,
-          step: 1,
-          animate: true,
-          range: {
-            'min': [1, 1],
-            'max': [this._sliderCount]
-          },
-          format: wNumb({
-            decimals: 1
-          }),
-          pips: { // Show a scale with the slider
-            mode: 'steps',
-            stepped: true,
-            density: 16
-          },
-          tooltips: wNumb({ decimals: 1, edit: (v) => `${v}`.split('.')[0] }), // decimals: 0 does not work...
-          behaviour: 'tap-drag',
-          orientation: 'horizontal'
-        })
-
-        this._slider.on('change', this.positionChanged.bind(this))
-      } else {
-        if (this._sliderCount !== bitmaskState.data.count) {
+      .then((bitmaskState) => {
+        if (!this._slider || !domSlider.noUiSlider) {
           this._sliderCount = bitmaskState.data.count
-          this._slider.updateOptions(
-            {
-              range: {
-                'min': [1, 1],
-                'max': [this._sliderCount]
-              }
+          this._slider = noUiSlider.create(domSlider, {
+            start: this.props.instance.data.position || 1,
+            connect: true,
+            step: 1,
+            animate: true,
+            range: {
+              min: [1, 1],
+              max: [this._sliderCount]
             },
-            true
-          )
-          domSlider.querySelector('.noUi-pips').remove()
-          this._slider.pips({
-            mode: 'steps',
-            stepped: true,
-            density: 16
+            format: wNumb({
+              decimals: 1
+            }),
+            pips: { // Show a scale with the slider
+              mode: 'steps',
+              stepped: true,
+              density: 16
+            },
+            tooltips: wNumb({ decimals: 1, edit: (v) => `${v}`.split('.')[0] }), // decimals: 0 does not work...
+            behaviour: 'tap-drag',
+            orientation: 'horizontal'
           })
+
+          this._slider.on('change', this.positionChanged.bind(this))
+        } else {
+          if (this._sliderCount !== bitmaskState.data.count) {
+            this._sliderCount = bitmaskState.data.count
+            this._slider.updateOptions(
+              {
+                range: {
+                  min: [1, 1],
+                  max: [this._sliderCount]
+                }
+              },
+              true
+            )
+            domSlider.querySelector('.noUi-pips').remove()
+            this._slider.pips({
+              mode: 'steps',
+              stepped: true,
+              density: 16
+            })
+          }
+          this._slider.set(this.props.instance.data.position)
         }
-        this._slider.set(this.props.instance.data.position)
-      }
-    })
+      })
   }
 
   render () {
@@ -91,9 +91,11 @@ class BrowserBitmaskStateTriggerEditForm extends React.Component {
     return (
       <Row className='section card form bitmask-state-trigger-panel'>
         <br />
-        <StatesDropdown defaultStateId={bitmaskStateId} onChange={this.bitmaskStateChanged.bind(this)}
+        <StatesDropdown
+          defaultStateId={bitmaskStateId} onChange={this.bitmaskStateChanged.bind(this)}
           theme={theme} animationLevel={animationLevel} s={12} services={services} label='State that triggers'
-          typeFilter={(e) => e.id === 'bitmask-state'} instanceFilter={(e) => e.typeId === 'bitmask-state'} />
+          typeFilter={(e) => e.id === 'bitmask-state'} instanceFilter={(e) => e.typeId === 'bitmask-state'}
+        />
 
         <br />&nbsp;
         <br />
@@ -144,31 +146,31 @@ class BrowserBitmaskStateTriggerEditForm extends React.Component {
     }
 
     this.scenariiService.getStateInstance(this.props.instance.data.bitmaskStateId)
-    .then((bitmaskState) => {
-      const position = this.props.instance.data.position
-      const positions = Array(bitmaskState.data.count).fill('?')
+      .then((bitmaskState) => {
+        const position = this.props.instance.data.position
+        const positions = Array(bitmaskState.data.count).fill('?')
 
-      switch (this.props.instance.data.operator) {
-        case 'position-set':
-          this.props.instance.data.name = `${bitmaskState.data.name}: ${positions.map((p, i) => (i + 1) === position ? '0' : '~').reverse().join('')} ⇨ ${positions.map((p, i) => (i + 1) === position ? '1' : '~').reverse().join('')}`
-          break
-        case 'position-unset':
-          this.props.instance.data.name = `${bitmaskState.data.name}: ${positions.map((p, i) => (i + 1) === position ? '1' : '~').reverse().join('')} ⇨ ${positions.map((p, i) => (i + 1) === position ? '0' : '~').reverse().join('')}`
-          break
-        case 'position-move':
-          this.props.instance.data.name = `${bitmaskState.data.name} changed at ${positions.map((p, i) => (i + 1) === position ? 'X' : '~').reverse().join('')}`
-          break
-        case 'any-set':
-          this.props.instance.data.name = `${bitmaskState.data.name} changed to set (to 1) at any position`
-          break
-        case 'any-unset':
-          this.props.instance.data.name = `${bitmaskState.data.name} changed to unset (to 0) at any position`
-          break
-        case 'any-move':
-          this.props.instance.data.name = `${bitmaskState.data.name} changed at any position`
-          break
-      }
-    })
+        switch (this.props.instance.data.operator) {
+          case 'position-set':
+            this.props.instance.data.name = `${bitmaskState.data.name}: ${positions.map((p, i) => (i + 1) === position ? '0' : '~').reverse().join('')} ⇨ ${positions.map((p, i) => (i + 1) === position ? '1' : '~').reverse().join('')}`
+            break
+          case 'position-unset':
+            this.props.instance.data.name = `${bitmaskState.data.name}: ${positions.map((p, i) => (i + 1) === position ? '1' : '~').reverse().join('')} ⇨ ${positions.map((p, i) => (i + 1) === position ? '0' : '~').reverse().join('')}`
+            break
+          case 'position-move':
+            this.props.instance.data.name = `${bitmaskState.data.name} changed at ${positions.map((p, i) => (i + 1) === position ? 'X' : '~').reverse().join('')}`
+            break
+          case 'any-set':
+            this.props.instance.data.name = `${bitmaskState.data.name} changed to set (to 1) at any position`
+            break
+          case 'any-unset':
+            this.props.instance.data.name = `${bitmaskState.data.name} changed to unset (to 0) at any position`
+            break
+          case 'any-move':
+            this.props.instance.data.name = `${bitmaskState.data.name} changed at any position`
+            break
+        }
+      })
     this.props.highlightCloseButton()
   }
 }

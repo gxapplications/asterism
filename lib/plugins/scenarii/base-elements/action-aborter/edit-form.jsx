@@ -19,9 +19,11 @@ class BrowserActionAborterEditForm extends React.Component {
     return (
       <Row className='section card form'>
         <br />
-        <ActionsDropdown defaultActionId={instance.data.actionId} onChange={this.actionChanged.bind(this)}
+        <ActionsDropdown
+          defaultActionId={instance.data.actionId} onChange={this.actionChanged.bind(this)}
           theme={theme} animationLevel={animationLevel} services={services} noCreationPanel label='Action to abort'
-          instanceFilter={(e) => e.typeId !== 'action-aborter'} typeFilter={() => false} />
+          instanceFilter={(e) => e.typeId !== 'action-aborter'} typeFilter={() => false}
+        />
       </Row>
     )
   }
@@ -38,9 +40,9 @@ class BrowserActionAborterEditForm extends React.Component {
     }
 
     this.scenariiService.getActionInstance(this.props.instance.data.actionId)
-    .then((action) => {
-      this.props.instance.data.name = action.data.name
-    })
+      .then((action) => {
+        this.props.instance.data.name = action.data.name
+      })
     this.props.highlightCloseButton()
   }
 }

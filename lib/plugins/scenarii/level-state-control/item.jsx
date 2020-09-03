@@ -22,15 +22,15 @@ class LevelStateControlItem extends Item {
   receiveNewParams (params) {
     if (params.levelState) {
       this.scenariiService.getStateInstance(params.levelState)
-      .then((levelState) => {
-        this.setState({
-          params,
-          levelState,
-          currentLevel: levelState.data.state,
-          stateListenerId: this.scenariiService.addStateListener(levelState, this.updateLevel.bind(this))
+        .then((levelState) => {
+          this.setState({
+            params,
+            levelState,
+            currentLevel: levelState.data.state,
+            stateListenerId: this.scenariiService.addStateListener(levelState, this.updateLevel.bind(this))
+          })
         })
-      })
-      .catch(() => {})
+        .catch(() => {})
     }
   }
 
@@ -63,8 +63,10 @@ class LevelStateControlItem extends Item {
 
     return levelState ? (
       <div className={cx(stateColor, 'fluid levelStateItem')}>
-        <Button waves={animationLevel >= 2 ? 'light' : null} disabled={currentLevel >= levelState.data.max}
-          className={cx(theme.actions[color], 'truncate')} onClick={this.click.bind(this, 1)}>
+        <Button
+          waves={animationLevel >= 2 ? 'light' : null} disabled={currentLevel >= levelState.data.max}
+          className={cx(theme.actions[color], 'truncate')} onClick={this.click.bind(this, 1)}
+        >
           <Icon className={btnMoreColor}>keyboard_arrow_up</Icon>
         </Button>
 
@@ -72,8 +74,10 @@ class LevelStateControlItem extends Item {
           <span><Icon>{icon}</Icon> {title || levelState.data.name} ({currentLevel})</span>
         </div>
 
-        <Button waves={animationLevel >= 2 ? 'light' : null} disabled={currentLevel <= 1}
-          className={cx(theme.actions[color], 'truncate')} onClick={this.click.bind(this, -1)}>
+        <Button
+          waves={animationLevel >= 2 ? 'light' : null} disabled={currentLevel <= 1}
+          className={cx(theme.actions[color], 'truncate')} onClick={this.click.bind(this, -1)}
+        >
           <Icon className={btnLessColor}>keyboard_arrow_down</Icon>
         </Button>
       </div>
@@ -95,25 +99,25 @@ class LevelStateControlItem extends Item {
   click (delta) {
     const newStateValue = this.state.currentLevel + delta
     this.scenariiService.setStateState(this.state.levelState, newStateValue)
-    .then((state) => this.scenariiService.setStateInstance(state))
-    .then(() => {
-      this.state.levelState.data.state = newStateValue
-    })
-    .catch((error) => {
-      console.log(error)
-    })
+      .then((state) => this.scenariiService.setStateInstance(state))
+      .then(() => {
+        this.state.levelState.data.state = newStateValue
+      })
+      .catch((error) => {
+        console.log(error)
+      })
   }
 
   refresh () {
     if (this.state.params.levelState) {
       this.scenariiService.getStateInstance(this.state.params.levelState)
-      .then((levelState) => {
-        this.setState({
-          levelState,
-          currentLevel: levelState.data.state
+        .then((levelState) => {
+          this.setState({
+            levelState,
+            currentLevel: levelState.data.state
+          })
         })
-      })
-      .catch(() => {})
+        .catch(() => {})
     }
   }
 }

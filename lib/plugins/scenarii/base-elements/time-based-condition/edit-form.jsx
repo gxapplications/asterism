@@ -51,8 +51,8 @@ class BrowserTimeBasedConditionEditForm extends React.Component {
           step: 1,
           animate: true,
           range: {
-            'min': [0, 10],
-            'max': [1440]
+            min: [0, 10],
+            max: [1440]
           },
           format: wNumb({ decimals: 1, edit: minuter }),
           pips: { // Show a scale with the slider
@@ -88,8 +88,8 @@ class BrowserTimeBasedConditionEditForm extends React.Component {
         step: 1,
         animate: true,
         range: {
-          'min': [0, 10],
-          'max': [1440]
+          min: [0, 10],
+          max: [1440]
         },
         format: wNumb({ decimals: 1, edit: minuter }),
         pips: { // Show a scale with the slider
@@ -117,25 +117,27 @@ class BrowserTimeBasedConditionEditForm extends React.Component {
     const list = dayAndMonth.map((dm, j) => {
       const d = (dm % 32) + 1
       const m = dm >> 5
-      return <div key={`190-${j}`} className='col s12 m6 l4'>
-        <Select key={`19-${j}`} s={6} label='Day' icon='today' onChange={this.changeDayAndMonth.bind(this, j, 0)} defaultValue={d}>
-          <option key={`19-${j}-d`} value={''}>Remove</option>
-          {(new Array(31).fill(null)).map((o, i) =>
-            <option key={`19-${j}-${i}`} value={i + 1}>{i + 1}</option>
-          )}
-        </Select>
-        <Select key={`20-${j}`} s={6} label='Month' onChange={this.changeDayAndMonth.bind(this, j, 1)} defaultValue={m}>
-          {(new Array(12).fill(null)).map((o, i) =>
-            <option key={`20-${j}-${i}`} value={i + 1}>{i + 1}</option>
-          )}
-        </Select>
-      </div>
+      return (
+        <div key={`190-${j}`} className='col s12 m6 l4'>
+          <Select key={`19-${j}`} s={6} label='Day' icon='today' onChange={this.changeDayAndMonth.bind(this, j, 0)} defaultValue={d}>
+            <option key={`19-${j}-d`} value=''>Remove</option>
+            {(new Array(31).fill(null)).map((o, i) =>
+              <option key={`19-${j}-${i}`} value={i + 1}>{i + 1}</option>
+            )}
+          </Select>
+          <Select key={`20-${j}`} s={6} label='Month' onChange={this.changeDayAndMonth.bind(this, j, 1)} defaultValue={m}>
+            {(new Array(12).fill(null)).map((o, i) =>
+              <option key={`20-${j}-${i}`} value={i + 1}>{i + 1}</option>
+            )}
+          </Select>
+        </div>
+      )
     })
     if (list.length < 32) {
       list.push(
         <div key={192} className='col s12 m6 l4 translucent-text'>
-          <Select key={`19-${dayAndMonth.length}`} s={6} label='Day' icon='today' onChange={this.changeDayAndMonth.bind(this, dayAndMonth.length, 0)} defaultValue={''}>
-            <option key={`19-${dayAndMonth.length}-a`} value={''}>Add</option>
+          <Select key={`19-${dayAndMonth.length}`} s={6} label='Day' icon='today' onChange={this.changeDayAndMonth.bind(this, dayAndMonth.length, 0)} defaultValue=''>
+            <option key={`19-${dayAndMonth.length}-a`} value=''>Add</option>
             {(new Array(31).fill(null)).map((o, i) =>
               <option key={`19-${dayAndMonth.length}-${i}`} value={i + 1}>{i + 1}</option>
             )}
@@ -162,7 +164,7 @@ class BrowserTimeBasedConditionEditForm extends React.Component {
     const list = weekdayInMonth.map(([o, d], j) =>
       <div key={`31-${uuid.v4()}`} className='col s12 l6'>
         <Select key={`31-${j}-o`} s={6} label='Occurrence' icon='today' onChange={this.changeWeekdayInMonth.bind(this, j, 0)} defaultValue={o}>
-          <option key={`31-${j}-o-d`} value={''}>Remove</option>
+          <option key={`31-${j}-o-d`} value=''>Remove</option>
           <option key={`31-${j}-o-1`} value={1}>First</option>
           <option key={`31-${j}-o-2`} value={2}>Second</option>
           <option key={`31-${j}-o-3`} value={3}>Third</option>
@@ -185,9 +187,11 @@ class BrowserTimeBasedConditionEditForm extends React.Component {
     if (list.length < 32) {
       list.push(
         <div key={`31-${weekdayInMonth.length}`} className='col s12 l6 translucent-text'>
-          <Select key={`31-${weekdayInMonth.length}-o`} s={6} label='Occurrence' icon='today'
-            onChange={this.changeWeekdayInMonth.bind(this, weekdayInMonth.length, 0)} defaultValue={''}>
-            <option key={`31-${weekdayInMonth.length}-o-a`} value={''}>Add</option>
+          <Select
+            key={`31-${weekdayInMonth.length}-o`} s={6} label='Occurrence' icon='today'
+            onChange={this.changeWeekdayInMonth.bind(this, weekdayInMonth.length, 0)} defaultValue=''
+          >
+            <option key={`31-${weekdayInMonth.length}-o-a`} value=''>Add</option>
             <option key={`31-${weekdayInMonth.length}-o-1`} value={1}>First</option>
             <option key={`31-${weekdayInMonth.length}-o-2`} value={2}>Second</option>
             <option key={`31-${weekdayInMonth.length}-o-3`} value={3}>Third</option>
@@ -195,8 +199,10 @@ class BrowserTimeBasedConditionEditForm extends React.Component {
             <option key={`31-${weekdayInMonth.length}-o-8`} value={8}>Penultimate</option>
             <option key={`31-${weekdayInMonth.length}-o-9`} value={9}>Last</option>
           </Select>
-          <Select key={`31-${weekdayInMonth.length}-d`} s={6} label='Day'
-            onChange={this.changeWeekdayInMonth.bind(this, weekdayInMonth.length, 1)} defaultValue={1}>
+          <Select
+            key={`31-${weekdayInMonth.length}-d`} s={6} label='Day'
+            onChange={this.changeWeekdayInMonth.bind(this, weekdayInMonth.length, 1)} defaultValue={1}
+          >
             <option key={`31-${weekdayInMonth.length}-d-0`} value={0}>Sunday</option>
             <option key={`31-${weekdayInMonth.length}-d-1`} value={1}>Monday</option>
             <option key={`31-${weekdayInMonth.length}-d-2`} value={2}>Tuesday</option>
@@ -243,18 +249,20 @@ class BrowserTimeBasedConditionEditForm extends React.Component {
         {dayMode === 'dayInMonth' && [
           dayInMonth.map((d, j) =>
             <Select key={`17-${j}`} s={6} m={4} l={3} label='Day number' icon='today' onChange={this.changeDayInMonth.bind(this, j)} defaultValue={d}>
-              <option key={`17-${j}-d`} value={''}>Remove</option>
+              <option key={`17-${j}-d`} value=''>Remove</option>
               {(new Array(31).fill(null)).map((o, i) =>
                 <option key={`17-${j}-${i}`} value={i + 1}>{i + 1}</option>
               )}
             </Select>
           ),
-          dayInMonth.length < 32 ? <Select key={`17-${dayInMonth.length}`} className='translucent-text' s={6} m={4} l={3} label='Day number' icon='today' onChange={this.changeDayInMonth.bind(this, dayInMonth.length)}>
-            <option key={`17-${dayInMonth.length}-a`} value={''}>Add</option>
-            {(new Array(31).fill(null)).map((o, i) =>
-              <option key={`17-${dayInMonth.length}-${i}`} value={i + 1}>{i + 1}</option>
-            )}
-          </Select> : null,
+          dayInMonth.length < 32 ? (
+            <Select key={`17-${dayInMonth.length}`} className='translucent-text' s={6} m={4} l={3} label='Day number' icon='today' onChange={this.changeDayInMonth.bind(this, dayInMonth.length)}>
+              <option key={`17-${dayInMonth.length}-a`} value=''>Add</option>
+              {(new Array(31).fill(null)).map((o, i) =>
+                <option key={`17-${dayInMonth.length}-${i}`} value={i + 1}>{i + 1}</option>
+              )}
+            </Select>
+          ) : null,
           dayInMonth.includes(29) || dayInMonth.includes(30) || dayInMonth.includes(31)
             ? <div key={18} className='col s12'>If day number does not exist in a month then no trigger will occurs during this month.</div>
             : null
@@ -270,8 +278,10 @@ class BrowserTimeBasedConditionEditForm extends React.Component {
         ]}
 
         <div key={6} className='col s12'>&nbsp;</div>
-        <Select key={7} s={12} label='Time' icon='schedule' onChange={this.changeTimeMode.bind(this)}
-          defaultValue={timeMode}>
+        <Select
+          key={7} s={12} label='Time' icon='schedule' onChange={this.changeTimeMode.bind(this)}
+          defaultValue={timeMode}
+        >
           <option key='whatever' value='whatever'>Whatever the time</option>
           <option key='between' value='between'>Between time laps</option>
           <option key='before' value='before'>Before specific hour</option>
@@ -284,32 +294,38 @@ class BrowserTimeBasedConditionEditForm extends React.Component {
               <div id={`between-slider-${instance.instanceId}-${i}`} />
             </div>
           )),
-          timeBetweens.length < 32 ? <div className='col s12 slider' key='8-a'>
-            <div id={`between-slider-${instance.instanceId}-a`} className='grey-knobs' />
-          </div> : null
+          timeBetweens.length < 32 ? (
+            <div className='col s12 slider' key='8-a'>
+              <div id={`between-slider-${instance.instanceId}-a`} className='grey-knobs' />
+            </div>
+          ) : null
         ]}
 
         {timeMode === 'before' && [
-          <div key={9} className={'input-field col s12 m8 l6'}>
-            <label className={'col s5'} htmlFor={timePickerId}>Before time:</label>
-            <TimePicker className={'col offset-s5 s7'} id={timePickerId} options={{
-              twelveHour: false,
-              autoClose: true,
-              defaultTime: timeBeforeAfter || '12:00',
-              showClearBtn: false
-            }} onChange={this.changeBeforeAfterTime.bind(this)} value={timeBeforeAfter || '12:00'} />
+          <div key={9} className='input-field col s12 m8 l6'>
+            <label className='col s5' htmlFor={timePickerId}>Before time:</label>
+            <TimePicker
+              className='col offset-s5 s7' id={timePickerId} options={{
+                twelveHour: false,
+                autoClose: true,
+                defaultTime: timeBeforeAfter || '12:00',
+                showClearBtn: false
+              }} onChange={this.changeBeforeAfterTime.bind(this)} value={timeBeforeAfter || '12:00'}
+            />
           </div>
         ]}
 
         {timeMode === 'after' && [
-          <div key={10} className={'input-field col s12 m6 l4'}>
-            <label className={'col s5'} htmlFor={timePickerId}>After time:</label>
-            <TimePicker className={'col offset-s5 s7'} id={timePickerId} options={{
-              twelveHour: false,
-              autoClose: true,
-              defaultTime: timeBeforeAfter || '12:00',
-              showClearBtn: false
-            }} onChange={this.changeBeforeAfterTime.bind(this)} value={timeBeforeAfter || '12:00'} />
+          <div key={10} className='input-field col s12 m6 l4'>
+            <label className='col s5' htmlFor={timePickerId}>After time:</label>
+            <TimePicker
+              className='col offset-s5 s7' id={timePickerId} options={{
+                twelveHour: false,
+                autoClose: true,
+                defaultTime: timeBeforeAfter || '12:00',
+                showClearBtn: false
+              }} onChange={this.changeBeforeAfterTime.bind(this)} value={timeBeforeAfter || '12:00'}
+            />
           </div>
         ]}
       </Row>
@@ -503,7 +519,7 @@ class BrowserTimeBasedConditionEditForm extends React.Component {
         name = 'Whatever the day'
         break
 
-      case 'weekdays':
+      case 'weekdays': {
         if (data.weekdays.length === 0) {
           this.props.instance.data.name = 'Misconfigured time based condition'
           return
@@ -520,8 +536,9 @@ class BrowserTimeBasedConditionEditForm extends React.Component {
         }
         name = `On [${name}]`
         break
+      }
 
-      case 'dayInMonth':
+      case 'dayInMonth': {
         const days = data.dayInMonth.sort((a, b) => a - b).map((d) => {
           switch (d) {
             case 1:
@@ -544,8 +561,9 @@ class BrowserTimeBasedConditionEditForm extends React.Component {
         }
         name = `On the [${name}] of the month`
         break
+      }
 
-      case 'dayAndMonth':
+      case 'dayAndMonth': {
         const dates = data.dayAndMonth.sort((a, b) => a - b).map((dm) => `${dm >> 5}/${(dm % 32) + 1}`)
         if (dates.length === 1) {
           name = `On date ${dates[0]}`
@@ -557,8 +575,9 @@ class BrowserTimeBasedConditionEditForm extends React.Component {
         }
         name = `On dates [${name}]`
         break
+      }
 
-      case 'weekdayInMonth':
+      case 'weekdayInMonth': {
         const dates2 = data.weekdayInMonth.map(([occurrence, weekday]) => {
           const occurrenceText = [0, 'First', 'Second', 'Third', 'Fourth', 0, 0, 0, 'Penultimate', 'Last'][occurrence]
           const weekDayText = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][weekday]
@@ -574,10 +593,11 @@ class BrowserTimeBasedConditionEditForm extends React.Component {
         }
         name = `On [${name}] of the month`
         break
+      }
     }
 
     switch (data.timeMode) {
-      case 'between':
+      case 'between': {
         let laps = data.timeBetweens.map((between) => `${minuter(between[0])}→${minuter(between[1])}`)
         if (laps.length === 1) {
           name += ` on the ${laps[0]} time slot`
@@ -589,6 +609,7 @@ class BrowserTimeBasedConditionEditForm extends React.Component {
         }
         name += ` on specific time slots [${laps}]`
         break
+      }
 
       case 'before':
         name += ` before ${data.timeBeforeAfter}`

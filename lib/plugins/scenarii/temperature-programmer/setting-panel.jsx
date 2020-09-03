@@ -40,10 +40,12 @@ class TemperatureProgrammerSettingPanel extends ItemSettingPanel {
     return (
       <div id='tempProgrammerSettingDiv' className='clearing padded'>
         <Row className='padded card'>
-          <ScenariiDropdown onChange={this.handleValueChange.bind(this, 'scenario')} theme={theme} animationLevel={animationLevel}
+          <ScenariiDropdown
+            onChange={this.handleValueChange.bind(this, 'scenario')} theme={theme} animationLevel={animationLevel}
             ref={(c) => { this._scenario = c }} services={() => this.props.context.services}
             defaultScenarioId={scenario} s={12} instanceFilter={(e) => e.typeId === 'thermostat-state-scenario'}
-            typeFilter={(e) => e.id === 'thermostat-state-scenario'} label='Thermostat scenario to control' dropdownId={uuid.v4()} />
+            typeFilter={(e) => e.id === 'thermostat-state-scenario'} label='Thermostat scenario to control' dropdownId={uuid.v4()}
+          />
         </Row>
 
         <Button waves={waves} className={cx('right btn-bottom-sticky', theme.actions.primary)} onClick={this.save.bind(this)}>

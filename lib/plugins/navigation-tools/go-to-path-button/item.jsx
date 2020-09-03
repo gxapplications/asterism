@@ -23,7 +23,8 @@ class GoToPathButtonItem extends Item {
     const { title = '', path = '/example/of/another-path', icon = 'link', color = 'secondary' } = this.state.params
 
     return (
-      <Button waves={animationLevel >= 2 ? 'light' : null}
+      <Button
+        waves={animationLevel >= 2 ? 'light' : null}
         className={cx(theme.actions[color], 'truncate fluid')} onClick={this.click.bind(this)}
       >
         <Icon right>{icon}</Icon>{title || path}

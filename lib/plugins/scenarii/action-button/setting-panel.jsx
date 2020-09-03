@@ -37,17 +37,23 @@ class ActionButtonSettingPanel extends ItemSettingPanel {
     return (
       <div id='actionButtonSettingDiv' className='clearing padded'>
         <Row className='padded card'>
-          <ActionsDropdown defaultActionId={action} onChange={this.handleValueChange.bind(this, 'action')}
+          <ActionsDropdown
+            defaultActionId={action} onChange={this.handleValueChange.bind(this, 'action')}
             ref={(c) => { this._action = c }} theme={theme} animationLevel={animationLevel} label={null}
-            services={() => this.props.context.services} />
+            services={() => this.props.context.services}
+          />
 
           <IconPicker theme={theme} animationLevel={animationLevel} defaultIcon={icon} onChange={this.handleValueChange.bind(this, 'icon')} />
-          <TextInput s={12} m={10} l={10} label='Label'
-            value={title} onChange={this.handleEventChange.bind(this, 'title')} />
+          <TextInput
+            s={12} m={10} l={10} label='Label'
+            value={title} onChange={this.handleEventChange.bind(this, 'title')}
+          />
         </Row>
 
-        <ActionColorSwitch theme={theme} animationLevel={animationLevel} defaultColor={color}
-          onChange={this.handleValueChange.bind(this, 'color')} />
+        <ActionColorSwitch
+          theme={theme} animationLevel={animationLevel} defaultColor={color}
+          onChange={this.handleValueChange.bind(this, 'color')}
+        />
 
         <Button waves={waves} className={cx('right btn-bottom-sticky', theme.actions.primary)} onClick={this.save.bind(this)}>
           Save &amp; close

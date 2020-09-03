@@ -66,7 +66,8 @@ class SocketLoggerItem extends Item {
     const { animationLevel } = mainState()
 
     return needRefresh ? (
-      <Button waves={animationLevel >= 2 ? 'light' : null}
+      <Button
+        waves={animationLevel >= 2 ? 'light' : null}
         className={cx(theme.actions.edition, 'truncate fluid')}
         onClick={this.refreshPage.bind(this)}
       >
@@ -80,18 +81,22 @@ class SocketLoggerItem extends Item {
             timestamp.setTime(log.args[0])
             timestamp = timestamp.toLocaleString()
             return (
-              <Modal key={idx} header={timestamp}
+              <Modal
+                key={idx} header={timestamp}
                 options={{
                   inDuration: animationLevel >= 2 ? 300 : 0,
                   outDuration: animationLevel >= 2 ? 300 : 0
                 }}
-                trigger={<pre style={{ ...styles.logRow, ...styles.logLevel(theme)[log.level] }}>
-                  <span style={styles.logRowInset}>
-                    [{timestamp}]
-                    <br />
-                    {log.args[1]}
-                  </span>
-                </pre>}>
+                trigger={
+                  <pre style={{ ...styles.logRow, ...styles.logLevel(theme)[log.level] }}>
+                    <span style={styles.logRowInset}>
+                      [{timestamp}]
+                      <br />
+                      {log.args[1]}
+                    </span>
+                  </pre>
+                }
+              >
                 <pre>{log.args.slice(1).join('\n')}</pre>
               </Modal>
             )

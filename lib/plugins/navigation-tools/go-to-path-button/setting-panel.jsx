@@ -29,12 +29,16 @@ class GoToPathButtonSettingPanel extends ItemSettingPanel {
     return (
       <div id='goToPathSettingDiv' className='clearing padded'>
         <Row className='padded card'>
-          <TextInput s={12} label='Path' placeholder='/example/of/another-path' ref={(c) => { this._path = c }}
-            value={path} onChange={this.handleEventChange.bind(this, 'path')} />
+          <TextInput
+            s={12} label='Path' placeholder='/example/of/another-path' ref={(c) => { this._path = c }}
+            value={path} onChange={this.handleEventChange.bind(this, 'path')}
+          />
 
           <IconPicker theme={theme} animationLevel={animationLevel} defaultIcon={icon} onChange={this.handleValueChange.bind(this, 'icon')} />
-          <TextInput s={9} m={10} l={10} label='Label' ref={(c) => { this._title = c }}
-            value={title} onChange={this.handleEventChange.bind(this, 'title')} />
+          <TextInput
+            s={9} m={10} l={10} label='Label' ref={(c) => { this._title = c }}
+            value={title} onChange={this.handleEventChange.bind(this, 'title')}
+          />
         </Row>
 
         <ActionColorSwitch theme={theme} animationLevel={animationLevel} defaultColor={color} onChange={this.handleValueChange.bind(this, 'color')} />

@@ -56,8 +56,10 @@ class BrowserProcedureEditForm extends React.Component {
     return (
       <div>
         <Row className='section card form hide-in-procedure'>
-          <TextInput placeholder='Short name' s={12} defaultValue={defaultValue}
-            onChange={(e) => { instance.data.name = e.currentTarget.value; this.props.highlightCloseButton() }} />
+          <TextInput
+            placeholder='Short name' s={12} defaultValue={defaultValue}
+            onChange={(e) => { instance.data.name = e.currentTarget.value; this.props.highlightCloseButton() }}
+          />
         </Row>
 
         <Row className='section procedurePanel'>
@@ -78,8 +80,10 @@ class BrowserProcedureEditForm extends React.Component {
       <ul className='script'>
         {sequences.map((sequence, idx) => (
           <li key={uuid.v4()}>
-            <div className={cx('remove sequence', this.isDeleteSequenceConfirmation(sequence.props['data-sequenceKey'], script, idx) ? deleteWavesConfirm : deleteWaves)}
-              onClick={this.deleteSequence.bind(this, script, idx, sequence.props['data-sequenceKey'])}>
+            <div
+              className={cx('remove sequence', this.isDeleteSequenceConfirmation(sequence.props['data-sequenceKey'], script, idx) ? deleteWavesConfirm : deleteWaves)}
+              onClick={this.deleteSequence.bind(this, script, idx, sequence.props['data-sequenceKey'])}
+            >
               <i className='material-icons'>delete</i>
             </div>
             {sequence}
@@ -101,20 +105,30 @@ class BrowserProcedureEditForm extends React.Component {
     const scriptsOrActions = sequence.map((e, idx) => (typeof e !== 'string')
       ? [
         this.renderScript(e),
-        <div className={cx('removeAction', this.isDeleteScriptConfirmation(e, sequence, idx) ? deleteWavesConfirm : deleteWaves)}
-          onClick={this.deleteScript.bind(this, sequence, idx, e)}><i className='material-icons'>delete</i></div>,
+        <div
+          key={0}
+          className={cx('removeAction', this.isDeleteScriptConfirmation(e, sequence, idx) ? deleteWavesConfirm : deleteWaves)}
+          onClick={this.deleteScript.bind(this, sequence, idx, e)}
+        >
+          <i className='material-icons'>delete</i>
+        </div>,
         null
       ] : [
         this.renderAction(e),
-        <div className={cx('removeAction', this.isDeleteActionConfirmation(e, sequence, idx) ? deleteWavesConfirm : deleteWaves)}
-          onClick={this.deleteAction.bind(this, sequence, idx, e)}>
+        <div
+          key={1}
+          className={cx('removeAction', this.isDeleteActionConfirmation(e, sequence, idx) ? deleteWavesConfirm : deleteWaves)}
+          onClick={this.deleteAction.bind(this, sequence, idx, e)}
+        >
           <i className='material-icons'>{this.isActionGlobal(e) ? 'clear' : 'delete'}</i>
         </div>,
         this.isActionGlobal(e)
           ? <div className='globalizeAction disabled'><i className='material-icons'>public</i> Shared action, cannot be edited here.</div>
-          : <div className={cx('globalizeAction btn-flat', waves)} onClick={this.globalizeAction.bind(this, e)}>
-            <i className='material-icons'>public</i>
-          </div>
+          : (
+            <div className={cx('globalizeAction btn-flat', waves)} onClick={this.globalizeAction.bind(this, e)}>
+              <i className='material-icons'>public</i>
+            </div>
+          )
       ]
     )
     return (
@@ -130,10 +144,12 @@ class BrowserProcedureEditForm extends React.Component {
 
         {scriptsOrActions.length < 32 ? (
           <li className='add action'>
-            <ActionsDropdown onChange={this.addAction.bind(this, sequence)} theme={theme} animationLevel={animationLevel}
+            <ActionsDropdown
+              onChange={this.addAction.bind(this, sequence)} theme={theme} animationLevel={animationLevel}
               services={services} parentIdForNewInstance={instance.instanceId} noCreationPanel
               typeFilter={(e) => e.id !== 'base-procedure'} instanceFilter={(e) => e.typeId !== 'base-procedure'}
-              icon={null} label='' dropdownId={uuid.v4()} />
+              icon={null} label='' dropdownId={uuid.v4()}
+            />
           </li>
         ) : null}
         {scriptsOrActions.length < 32 ? (
@@ -157,7 +173,8 @@ class BrowserProcedureEditForm extends React.Component {
         return (
           <ActionEditForm
             instance={this.state[`actionEditPanel-${actionId}`]} services={this.props.services}
-            theme={this.props.theme} animationLevel={this.props.animationLevel} />
+            theme={this.props.theme} animationLevel={this.props.animationLevel}
+          />
         )
       }
 
@@ -170,19 +187,19 @@ class BrowserProcedureEditForm extends React.Component {
       )
     } else {
       this.scenariiService.getActionInstance(actionId, true)
-      .then((action) => {
-        this.setState({
-          [`actionEditPanel-${actionId}`]: action || null // force null if undefined (not found)
+        .then((action) => {
+          this.setState({
+            [`actionEditPanel-${actionId}`]: action || null // force null if undefined (not found)
+          })
+          this.props.instance.editedActions = this.props.instance.editedActions || {}
+          this.props.instance.editedActions[actionId] = action
         })
-        this.props.instance.editedActions = this.props.instance.editedActions || {}
-        this.props.instance.editedActions[actionId] = action
-      })
-      .catch((error) => {
-        this.setState({
-          [`actionEditPanel-${actionId}`]: null
+        .catch((error) => {
+          this.setState({
+            [`actionEditPanel-${actionId}`]: null
+          })
+          console.error(error)
         })
-        console.error(error)
-      })
       return null
     }
   }
@@ -211,6 +228,7 @@ class BrowserProcedureEditForm extends React.Component {
     this._deleteAction(sequence, idx, actionId)
     this.props.highlightCloseButton()
   }
+
   _deleteAction (sequence, idx, actionId) {
     sequence.splice(idx, 1) // removes 1 element from idx position
 
@@ -224,7 +242,7 @@ class BrowserProcedureEditForm extends React.Component {
     if (action && action.parent === this.props.instance.instanceId) {
       action.parent = null
       this.scenariiService.setActionInstance(action, null)
-      .then(() => this.forceUpdate())
+        .then(() => this.forceUpdate())
       this.props.highlightCloseButton()
     }
   }
@@ -252,6 +270,7 @@ class BrowserProcedureEditForm extends React.Component {
     this.forceUpdate()
     this.props.highlightCloseButton()
   }
+
   _deleteScript (sequence, idx) {
     const removedScript = sequence.splice(idx, 1)[0] // removes 1 element from idx position
     Object.entries(removedScript).map(([sequenceKey, sequence]) => this._deleteSequence(removedScript, sequenceKey))
@@ -280,6 +299,7 @@ class BrowserProcedureEditForm extends React.Component {
     this.forceUpdate()
     this.props.highlightCloseButton()
   }
+
   _deleteSequence (script, sequenceKey) {
     const sequence = script[sequenceKey]
     sequence.forEach((scriptOrAction, i) => typeof scriptOrAction === 'string'

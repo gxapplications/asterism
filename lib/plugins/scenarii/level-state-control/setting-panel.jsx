@@ -47,18 +47,24 @@ class LevelStateControlSettingPanel extends ItemSettingPanel {
     return (
       <div id='levelStateControlItemSettingDiv' className='clearing padded'>
         <Row className='padded card'>
-          <StatesDropdown defaultStateId={levelState} onChange={this.stateChange.bind(this)}
+          <StatesDropdown
+            defaultStateId={levelState} onChange={this.stateChange.bind(this)}
             ref={(c) => { this._levelState = c }} theme={theme} animationLevel={animationLevel}
             services={() => this.props.context.services} label={null}
-            typeFilter={(e) => e.id === 'level-state'} instanceFilter={(e) => e.typeId === 'level-state'} />
+            typeFilter={(e) => e.id === 'level-state'} instanceFilter={(e) => e.typeId === 'level-state'}
+          />
 
           <IconPicker theme={theme} animationLevel={animationLevel} defaultIcon={icon} onChange={this.handleValueChange.bind(this, 'icon')} />
-          <TextInput s={12} m={10} l={10} label='Label' ref={(c) => { this._title = c }}
-            value={title} onChange={this.handleEventChange.bind(this, 'title')} />
+          <TextInput
+            s={12} m={10} l={10} label='Label' ref={(c) => { this._title = c }}
+            value={title} onChange={this.handleEventChange.bind(this, 'title')}
+          />
         </Row>
 
-        <ActionColorSwitch theme={theme} animationLevel={animationLevel} defaultColor={color}
-          onChange={this.handleValueChange.bind(this, 'color')} />
+        <ActionColorSwitch
+          theme={theme} animationLevel={animationLevel} defaultColor={color}
+          onChange={this.handleValueChange.bind(this, 'color')}
+        />
 
         <Button waves={waves} className={cx('right btn-bottom-sticky', theme.actions.primary)} onClick={this.save.bind(this)}>
           Save &amp; close
@@ -71,10 +77,10 @@ class LevelStateControlSettingPanel extends ItemSettingPanel {
     this.handleValueChange('levelState', value)
     if (!this.state.params.title) {
       this.scenariiService.getStateInstance(value)
-      .then((levelState) => {
-        this._title.setState({ value: levelState.data.name })
-        this.handleValueChange('title', levelState.data.name)
-      })
+        .then((levelState) => {
+          this._title.setState({ value: levelState.data.name })
+          this.handleValueChange('title', levelState.data.name)
+        })
     }
   }
 

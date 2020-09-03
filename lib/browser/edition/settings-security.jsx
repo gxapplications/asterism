@@ -23,9 +23,9 @@ class SettingsSecurity extends React.Component {
       this.props.serverStorage.getItem('security-admin').catch(() => false),
       this.props.serverStorage.getItem('security-readOnly').catch(() => false)
     ])
-    .then(([adminPattern, readOnlyPattern]) => {
-      this.setState({ adminPatternExists: !!adminPattern, readOnlyPatternExists: !!readOnlyPattern })
-    })
+      .then(([adminPattern, readOnlyPattern]) => {
+        this.setState({ adminPatternExists: !!adminPattern, readOnlyPatternExists: !!readOnlyPattern })
+      })
   }
 
   shouldComponentUpdate (nextProps, nextState) {
@@ -114,26 +114,26 @@ class SettingsSecurity extends React.Component {
 
   removePattern (key) {
     this.props.serverStorage.removeItem(`security-${key}`)
-    .catch(() => {}) // If does not exists, do nothing mre
-    .then(() => {
-      this.setState({
-        [`${key}PatternExists`]: false,
-        currentPatternKey: null
+      .catch(() => {}) // If does not exists, do nothing mre
+      .then(() => {
+        this.setState({
+          [`${key}PatternExists`]: false,
+          currentPatternKey: null
+        })
       })
-    })
   }
 
   patternDraw (pattern) {
     const patternKey = this.state.currentPatternKey
 
     this.props.serverStorage.setItem(`security-${patternKey}`, { pattern })
-    .then(() => {
-      this.setState({
-        [`${patternKey}PatternExists`]: true,
-        currentPatternKey: null
+      .then(() => {
+        this.setState({
+          [`${patternKey}PatternExists`]: true,
+          currentPatternKey: null
+        })
+        $('.pattern-close-card').click()
       })
-      $('.pattern-close-card').click()
-    })
   }
 }
 

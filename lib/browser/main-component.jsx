@@ -72,23 +72,25 @@ class MainComponent extends React.Component {
     window.addEventListener('beforeinstallprompt', event => {
       this.logger.log('beforeinstallprompt triggered!')
       // event.preventDefault() // to avoid classical install webAPK banner
-      this.setState({ deferredInstallPrompt: {
-        event,
-        clean: () => this.setState({ deferredInstallPrompt: null }),
-        prompt: () => {
-          event.prompt()
-          return event.userChoice.then((choiceResult) => {
+      this.setState({
+        deferredInstallPrompt: {
+          event,
+          clean: () => this.setState({ deferredInstallPrompt: null }),
+          prompt: () => {
+            event.prompt()
+            return event.userChoice.then((choiceResult) => {
             // https://web.dev/customize-install
-            if (choiceResult.outcome === 'accepted') {
-              this.logger.log('User accepted the install prompt')
-              this.state.deferredInstallPrompt && this.state.deferredInstallPrompt.clean()
-            } else {
-              this.logger.log('User dismissed the install prompt')
-            }
-            return choiceResult.outcome === 'accepted'
-          })
+              if (choiceResult.outcome === 'accepted') {
+                this.logger.log('User accepted the install prompt')
+                this.state.deferredInstallPrompt && this.state.deferredInstallPrompt.clean()
+              } else {
+                this.logger.log('User dismissed the install prompt')
+              }
+              return choiceResult.outcome === 'accepted'
+            })
+          }
         }
-      } })
+      })
     })
 
     this.speechManager = new SpeechManager(this, props.localStorage, this.logger, mainState)
@@ -215,27 +217,27 @@ class MainComponent extends React.Component {
       if (this.state.animationFlow && this.state.animationLevel >= 3) {
         const animationFlow = this.state.animationFlow
         animationFlow.then(thenSleep(300)) // wait modal to be at right place
-        .then(({ rect, bullet }) => {
-          const bulletIcon = $('i', bullet)
-          const header = $('#item-setting-modal .coloring-header')[0]
-          const headerBounds = header.getBoundingClientRect()
-          rect.css({ top: headerBounds.top, left: headerBounds.left, height: headerBounds.height, width: headerBounds.width })
-          bulletIcon.css({ color: 'transparent' })
-          return { rect, bullet, header, bulletIcon }
-        })
-        .then(thenSleep(350))
-        .then(({ rect, bullet, header, bulletIcon }) => {
-          bullet.removeClass('shrink')
-          $(header).addClass(this.props.theme.backgrounds.editing)
-          return { rect, bullet, bulletIcon }
-        })
-        .then(thenSleep(700))
-        .then(({ rect, bullet, bulletIcon }) => {
-          rect.css({ top: -100, left: -100, height: 10, width: 10, display: 'none' })
-          bullet.css({ 'background-color': '#fff' })
-          bulletIcon.css({ color: '#fff' })
-          this.setState({ animationFlow: null })
-        })
+          .then(({ rect, bullet }) => {
+            const bulletIcon = $('i', bullet)
+            const header = $('#item-setting-modal .coloring-header')[0]
+            const headerBounds = header.getBoundingClientRect()
+            rect.css({ top: headerBounds.top, left: headerBounds.left, height: headerBounds.height, width: headerBounds.width })
+            bulletIcon.css({ color: 'transparent' })
+            return { rect, bullet, header, bulletIcon }
+          })
+          .then(thenSleep(350))
+          .then(({ rect, bullet, header, bulletIcon }) => {
+            bullet.removeClass('shrink')
+            $(header).addClass(this.props.theme.backgrounds.editing)
+            return { rect, bullet, bulletIcon }
+          })
+          .then(thenSleep(700))
+          .then(({ rect, bullet, bulletIcon }) => {
+            rect.css({ top: -100, left: -100, height: 10, width: 10, display: 'none' })
+            bullet.css({ 'background-color': '#fff' })
+            bulletIcon.css({ color: '#fff' })
+            this.setState({ animationFlow: null })
+          })
       }
     } else { // If an animation flow should be played
       if (this.state.animationFlow && this.state.animationLevel >= 3) {
@@ -245,12 +247,12 @@ class MainComponent extends React.Component {
           bullet.removeClass('shrink')
           return { rect, bullet }
         })
-        .then(thenSleep(500))
-        .then(({ rect, bullet }) => {
-          rect.css({ top: -100, left: -100, height: 10, width: 10, display: 'none', overflow: 'hidden' })
-          bullet.css({ 'background-color': '#fff' })
-          this.setState({ animationFlow: null })
-        })
+          .then(thenSleep(500))
+          .then(({ rect, bullet }) => {
+            rect.css({ top: -100, left: -100, height: 10, width: 10, display: 'none', overflow: 'hidden' })
+            bullet.css({ 'background-color': '#fff' })
+            this.setState({ animationFlow: null })
+          })
       } else {
         $('#item-setting-modal .coloring-header').addClass(this.props.theme.backgrounds.editing)
       }
@@ -301,22 +303,27 @@ class MainComponent extends React.Component {
 
   render () {
     const { theme, localStorage, serverStorage } = this.props
-    const { editMode, animationLevel, itemFactories, editPanels, EditPanel, items, itemSettingPanel, messageModal,
-      speechDialog, editPanelButtonHighlight, logs } = this.state
+    const {
+      editMode, animationLevel, itemFactories, editPanels, EditPanel, items, itemSettingPanel, messageModal,
+      speechDialog, editPanelButtonHighlight, logs
+    } = this.state
     const SpeechStatus = this.speechManager.getComponent()
     const notifications = this.notificationManager.getComponents({ animationLevel, theme })
     const editPanelContext = EditPanel ? editPanels.find((ep) => ep.Panel === EditPanel) : {}
 
     return (
       <div className={cx('asterism', theme.backgrounds.body)}>
-        <Navbar fixed brand={<a>⁂</a>} alignLinks='right'
+        <Navbar
+          fixed brand={<a>⁂</a>} alignLinks='right'
           options={{ preventScrolling: true, edge: 'left', closeOnClick: true, draggable: true }}
           className={cx(editMode ? theme.backgrounds.editing : theme.backgrounds.card, animationLevel >= 2 ? 'animated' : null)}
         >
-          <NavItem key='closing-header' href='javascript:$("div.sidenav-overlay").click()'
+          <NavItem
+            key='closing-header' href='javascript:$("div.sidenav-overlay").click()'
             className={cx('closing-header', 'hide-on-large-only',
               animationLevel >= 2 ? 'waves-effect waves-light' : '',
-              editMode ? theme.backgrounds.editing : theme.backgrounds.card)}>
+              editMode ? theme.backgrounds.editing : theme.backgrounds.card)}
+          >
             <i className={cx('material-icons', 'close')}>close</i>
             <span className='truncate'>{window.location.pathname.split('/').filter(p => p).join('/') || 'asterism'}</span>
             <pre>v{version}</pre>
@@ -328,84 +335,118 @@ class MainComponent extends React.Component {
           )}
 
           {editMode ? editPanels.map(({ label, icon, Panel }, idx) => (
-            <NavItem key={idx} onClick={this.openEditPanel.bind(this, Panel)} href='javascript:void(0)'
-              className={cx(animationLevel >= 2 ? 'waves-effect waves-light' : '')}>
+            <NavItem
+              key={idx} onClick={this.openEditPanel.bind(this, Panel)} href='javascript:void(0)'
+              className={cx(animationLevel >= 2 ? 'waves-effect waves-light' : '')}
+            >
               <i className={cx('material-icons', icon)}>{icon}</i>
               <span className='hide-on-large-only'>{label}</span>
             </NavItem>
           )) : null}
 
           {editMode ? (
-            <NavItem onClick={this.openSettingsModal.bind(this)} href='javascript:void(0)'
-              className={cx(animationLevel >= 2 ? 'waves-effect waves-light' : '')}>
+            <NavItem
+              onClick={this.openSettingsModal.bind(this)} href='javascript:void(0)'
+              className={cx(animationLevel >= 2 ? 'waves-effect waves-light' : '')}
+            >
               <Icon>settings</Icon>
               <span className='hide-on-large-only'>Settings</span>
             </NavItem>
           ) : null}
-          {this.readOnly ? null : (<NavItem onClick={this.toggleEditMode.bind(this)} href='javascript:void(0)'
-            className={cx(animationLevel >= 2 ? 'waves-effect waves-light' : '')}>
-            <Icon>{editMode ? 'check_circle' : 'edit'}</Icon>
-            <span className='hide-on-large-only'>{editMode ? 'End edition' : 'Edit mode'}</span>
-          </NavItem>)}
-          {this.securityOn ? (<NavItem onClick={this.logout.bind(this)} href='javascript:void(0)'
-            className={cx(animationLevel >= 2 ? 'waves-effect waves-light' : '')}>
-            <Icon>lock_open</Icon>
-            <span className='hide-on-large-only'>Logout</span>
-          </NavItem>) : null}
+          {this.readOnly ? null : (
+            <NavItem
+              onClick={this.toggleEditMode.bind(this)} href='javascript:void(0)'
+              className={cx(animationLevel >= 2 ? 'waves-effect waves-light' : '')}
+            >
+              <Icon>{editMode ? 'check_circle' : 'edit'}</Icon>
+              <span className='hide-on-large-only'>{editMode ? 'End edition' : 'Edit mode'}</span>
+            </NavItem>
+          )}
+          {this.securityOn ? (
+            <NavItem
+              onClick={this.logout.bind(this)} href='javascript:void(0)'
+              className={cx(animationLevel >= 2 ? 'waves-effect waves-light' : '')}
+            >
+              <Icon>lock_open</Icon>
+              <span className='hide-on-large-only'>Logout</span>
+            </NavItem>
+          ) : null}
         </Navbar>
 
-        {false && <pre className='logger'>
-          <ul>
-            {logs.map((log, idx) => (
-              <li key={idx}>{log}</li>
-            ))}
-          </ul>
-        </pre>}
+        {false && (
+          <pre className='logger'>
+            <ul>
+              {logs.map((log, idx) => (
+                <li key={idx}>{log}</li>
+              ))}
+            </ul>
+          </pre>
+        )}
 
         {items.length ? (
-          <Gridifier editable={editMode} sortDispersion orderHandler={this.itemManager.orderHandler}
-            toggleTime={animationLevel >= 2 ? 500 : 1} coordsChangeTime={animationLevel >= 2 ? 300 : 1}
-            gridResizeDelay={animationLevel >= 2 ? 80 : 160} ref={(c) => { this.gridComponent = c }}>
+          <Gridifier
+            editable={editMode} sortDispersion orderHandler={this.itemManager.orderHandler}
+            toggleTime={animationLevel >= 2 ? 250 : 0} coordsChangeTime={animationLevel >= 2 ? 250 : 0}
+            gridResizeDelay={animationLevel >= 2 ? 80 : 160} ref={(c) => { this.gridComponent = c }}
+          >
             {items}
           </Gridifier>
         ) : null}
 
         {animationLevel >= 3 ? (
           <TransitionGroup>
-            {editMode ? (<AddCategoryButtons animationLevel={animationLevel} theme={theme}
-              itemManager={this.itemManager} itemFactories={itemFactories} />) : null}
+            {editMode ? (
+              <AddCategoryButtons
+                animationLevel={animationLevel} theme={theme}
+                itemManager={this.itemManager} itemFactories={itemFactories}
+              />
+            ) : null}
           </TransitionGroup>
-        ) : (editMode ? (<AddCategoryButtons animationLevel={animationLevel} theme={theme}
-          itemManager={this.itemManager} itemFactories={itemFactories} />) : null)}
+        ) : (editMode ? (
+          <AddCategoryButtons
+            animationLevel={animationLevel} theme={theme}
+            itemManager={this.itemManager} itemFactories={itemFactories}
+          />
+        ) : null)}
 
         {editMode ? (
-          <Settings animationLevel={animationLevel} localStorage={localStorage} serverStorage={serverStorage}
+          <Settings
+            animationLevel={animationLevel} localStorage={localStorage} serverStorage={serverStorage}
             itemManager={this.itemManager} socketManager={this.socketManager} theme={theme}
-            mainState={this.getState.bind(this)} />
+            mainState={this.getState.bind(this)}
+          />
         ) : null}
 
         {editMode && itemSettingPanel ? (
-          <ItemSetting animationLevel={animationLevel} localStorage={localStorage}
+          <ItemSetting
+            animationLevel={animationLevel} localStorage={localStorage}
             icon={itemSettingPanel.props.icon} title={itemSettingPanel.props.title} mainStateSet={this.setState.bind(this)}
-            serverStorage={serverStorage} theme={theme}>{itemSettingPanel}</ItemSetting>
+            serverStorage={serverStorage} theme={theme}
+          >{itemSettingPanel}
+          </ItemSetting>
         ) : null}
 
         {editMode && EditPanel ? (
           <div id='edit-panel-modal' className={cx('modal thin-scrollable', theme.backgrounds.body)}>
-            <Navbar alignLinks='right' className={EditPanel.extendHeader ? theme.backgrounds.body : theme.backgrounds.editing} extendWith={EditPanel.extendHeader ? (
-              <EditPanel serverStorage={serverStorage} theme={theme} animationLevel={animationLevel}
-                localStorage={localStorage} services={() => this.services}
-                privateSocket={editPanelContext.privateSocket} publicSockets={editPanelContext.publicSockets}
-                ref={(c) => { this._editPanelInstance = c }} highlightCloseButton={this.highlightCloseButton.bind(this)} />
-            ) : null} brand={
-              <span>
-                <i className={cx('material-icons small', EditPanel.icon)}>{EditPanel.icon}</i>
-                <span className='hide-on-small-only'>{EditPanel.label}</span>
-              </span>
-            }>
-              <NavItem href='javascript:void(0)' id='edit-panel-close-button'
+            <Navbar
+              alignLinks='right' className={EditPanel.extendHeader ? theme.backgrounds.body : theme.backgrounds.editing} extendWith={EditPanel.extendHeader ? (
+                <EditPanel
+                  serverStorage={serverStorage} theme={theme} animationLevel={animationLevel}
+                  localStorage={localStorage} services={() => this.services}
+                  privateSocket={editPanelContext.privateSocket} publicSockets={editPanelContext.publicSockets}
+                  ref={(c) => { this._editPanelInstance = c }} highlightCloseButton={this.highlightCloseButton.bind(this)}
+                />
+              ) : null} brand={
+                <span>
+                  <i className={cx('material-icons small', EditPanel.icon)}>{EditPanel.icon}</i>
+                  <span className='hide-on-small-only'>{EditPanel.label}</span>
+                </span>
+              }
+            >
+              <NavItem
+                href='javascript:void(0)' id='edit-panel-close-button'
                 className={cx({
-                  'btn': editPanelButtonHighlight,
+                  btn: editPanelButtonHighlight,
                   [theme.actions.edition]: editPanelButtonHighlight,
                   'waves-effect waves-green': (animationLevel >= 3) && !editPanelButtonHighlight,
                   'waves-effect waves-light': (animationLevel >= 3) && editPanelButtonHighlight
@@ -417,10 +458,12 @@ class MainComponent extends React.Component {
             </Navbar>
             {EditPanel.extendHeader ? null : (
               <div className='modal-content thin-scrollable'>
-                <EditPanel serverStorage={serverStorage} theme={theme} animationLevel={animationLevel}
+                <EditPanel
+                  serverStorage={serverStorage} theme={theme} animationLevel={animationLevel}
                   localStorage={localStorage} services={() => this.services}
                   privateSocket={editPanelContext.privateSocket} publicSockets={editPanelContext.publicSockets}
-                  ref={(c) => { this._editPanelInstance = c }} highlightCloseButton={this.highlightCloseButton.bind(this)} />
+                  ref={(c) => { this._editPanelInstance = c }} highlightCloseButton={this.highlightCloseButton.bind(this)}
+                />
               </div>
             )}
           </div>
@@ -433,10 +476,13 @@ class MainComponent extends React.Component {
               <p>{messageModal.message}</p>
             </div>
             <div className='modal-footer'>
-              <a href='javascript:void(0)' className={cx(
-                'btn modal-action modal-close btn-flat',
-                { 'waves-effect waves-green': animationLevel >= 3 }
-              )}><Icon>check</Icon></a>
+              <a
+                href='javascript:void(0)' className={cx(
+                  'btn modal-action modal-close btn-flat',
+                  { 'waves-effect waves-green': animationLevel >= 3 }
+                )}
+              ><Icon>check</Icon>
+              </a>
             </div>
           </div>
         ) : null}
@@ -448,14 +494,20 @@ class MainComponent extends React.Component {
               <p>You need admin privileges to access this feature.</p>
             </div>
             <div className='modal-footer'>
-              <a href='javascript:void(0)' className={cx(
+              <a
+                href='javascript:void(0)' className={cx(
                   'btn modal-action modal-close btn-flat',
                   { 'waves-effect waves-light': animationLevel >= 3 }
-              )}>Cancel</a>&nbsp;
-              <a href='javascript:void(0)' onClick={this.logout.bind(this)} className={cx(
+                )}
+              >Cancel
+              </a>&nbsp;
+              <a
+                href='javascript:void(0)' onClick={this.logout.bind(this)} className={cx(
                   'btn modal-action modal-close btn-flat',
                   { 'waves-effect waves-green': animationLevel >= 3 }
-              )}><Icon left>lock_open</Icon> Login as admin</a>
+                )}
+              ><Icon left>lock_open</Icon> Login as admin
+              </a>
             </div>
           </div>
         ) : null}
@@ -489,7 +541,7 @@ class MainComponent extends React.Component {
   toggleEditMode () {
     if (!this.readOnly) {
       $('#mobile-nav.sidenav').sidenav('close')
-      this.setState({editMode: !this.state.editMode})
+      this.setState({ editMode: !this.state.editMode })
     }
   }
 
@@ -527,9 +579,9 @@ class MainComponent extends React.Component {
 
     if (this._editPanelInstance && !!this._editPanelInstance.handleCloseButton) {
       return this._editPanelInstance.handleCloseButton()
-      .catch(() => { // rejected = not handled
-        $('#edit-panel-modal').modal('close')
-      })
+        .catch(() => { // rejected = not handled
+          $('#edit-panel-modal').modal('close')
+        })
     }
 
     $('#edit-panel-modal').modal('close')
@@ -547,10 +599,10 @@ class MainComponent extends React.Component {
 
   instantiateItems () {
     return Promise.all(this.itemManager.getAllItems())
-    .then((items) => {
-      console.log(`Restoring ${items.length} items in the grid...`)
-      this.setState({ items })
-    })
+      .then((items) => {
+        console.log(`Restoring ${items.length} items in the grid...`)
+        this.setState({ items })
+      })
   }
 
   refreshItems (event) {

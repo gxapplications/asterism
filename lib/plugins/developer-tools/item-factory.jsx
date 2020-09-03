@@ -8,7 +8,7 @@ import SocketLoggerItem from './socket-logger/item'
 import SocketLoggerSettingPanel from './socket-logger/setting-panel'
 
 const builder = new ItemFactoryBuilder()
-.newItemType('refresh_button', AdditionalItem.categories.DEVELOPMENT)
+  .newItemType('refresh_button', AdditionalItem.categories.DEVELOPMENT)
   .withDescription('Refresh button', 'Just a refresh button for the whole page.')
   .settingPanelWithHeader('Refresh button settings', 'touch_app') // optional override, but always before *Instance*() calls...
   .newInstanceWithoutInitialSetting(RefreshButtonItem, 1, 2, RefreshButtonSettingPanel)
@@ -20,7 +20,7 @@ const builder = new ItemFactoryBuilder()
     { w: 2, h: 2 }
   ])
   .build()
-.newItemType('socket_logger', AdditionalItem.categories.DEVELOPMENT)
+  .newItemType('socket_logger', AdditionalItem.categories.DEVELOPMENT)
   .withDescription('Socket logger', 'Listen for messages going through main socket.')
   .newInstanceFromInitialSetting(2, 2, SocketLoggerSettingPanel)
   .existingInstance(SocketLoggerItem, SocketLoggerSettingPanel)

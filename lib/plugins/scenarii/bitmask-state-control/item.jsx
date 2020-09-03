@@ -22,15 +22,15 @@ class BitmaskStateControlItem extends Item {
   receiveNewParams (params) {
     if (params.bitmaskState) {
       this.scenariiService.getStateInstance(params.bitmaskState)
-      .then((bitmaskState) => {
-        this.setState({
-          params,
-          bitmaskState,
-          currentValue: bitmaskState.data.state,
-          stateListenerId: this.scenariiService.addStateListener(bitmaskState, this.updateState.bind(this))
+        .then((bitmaskState) => {
+          this.setState({
+            params,
+            bitmaskState,
+            currentValue: bitmaskState.data.state,
+            stateListenerId: this.scenariiService.addStateListener(bitmaskState, this.updateState.bind(this))
+          })
         })
-      })
-      .catch(() => {})
+        .catch(() => {})
     }
   }
 
@@ -71,9 +71,11 @@ class BitmaskStateControlItem extends Item {
           {bitmaskState.data.colors.map((color, idx) => (
             <div key={idx} className='fluid switch vertical-switch'>
               <label>
-                <input type='checkbox' name={`switch-${idx}`} value={`switch-${idx}`} checked={currentValue & (2 ** idx)}
-                  onChange={this.changePosition.bind(this, idx)} />
-                <span className={cx('lever', color, { 'titled': titles[idx] && titles[idx].length > 0 })}>
+                <input
+                  type='checkbox' name={`switch-${idx}`} value={`switch-${idx}`} checked={currentValue & (2 ** idx)}
+                  onChange={this.changePosition.bind(this, idx)}
+                />
+                <span className={cx('lever', color, { titled: titles[idx] && titles[idx].length > 0 })}>
                   {icons[idx] && icons[idx].length > 0 && [
                     <Icon key={0}>{icons[idx]}</Icon>,
                     <Icon key={1}>{icons[idx]}</Icon>
@@ -103,13 +105,13 @@ class BitmaskStateControlItem extends Item {
 
     const newStateValue = way ? (oldState | shift) : (oldState & ~shift)
     this.scenariiService.setStateState(this.state.bitmaskState, newStateValue)
-    .then((state) => this.scenariiService.setStateInstance(state))
-    .then(() => {
-      this.state.bitmaskState.data.state = newStateValue
-    })
-    .catch((error) => {
-      console.log(error)
-    })
+      .then((state) => this.scenariiService.setStateInstance(state))
+      .then(() => {
+        this.state.bitmaskState.data.state = newStateValue
+      })
+      .catch((error) => {
+        console.log(error)
+      })
   }
 
   updateState (value, bitmaskState) {
@@ -122,13 +124,13 @@ class BitmaskStateControlItem extends Item {
   refresh () {
     if (this.state.params.bitmaskState) {
       this.scenariiService.getStateInstance(this.state.params.bitmaskState)
-      .then((bitmaskState) => {
-        this.setState({
-          bitmaskState,
-          currentValue: bitmaskState.data.state
+        .then((bitmaskState) => {
+          this.setState({
+            bitmaskState,
+            currentValue: bitmaskState.data.state
+          })
         })
-      })
-      .catch(() => {})
+        .catch(() => {})
     }
   }
 }

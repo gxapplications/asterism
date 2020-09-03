@@ -19,14 +19,18 @@ class BrowserScenarioActivatorEditForm extends React.Component {
     return (
       <Row className='section card form'>
         <br />
-        <ScenariiDropdown defaultScenarioId={instance.data.scenarioId} onChange={this.scenarioChanged.bind(this)}
+        <ScenariiDropdown
+          defaultScenarioId={instance.data.scenarioId} onChange={this.scenarioChanged.bind(this)}
           theme={theme} animationLevel={animationLevel} services={services} noCreationPanel typeFilter={() => false}
-          s={12} label='Scenario to activate' />
+          s={12} label='Scenario to activate'
+        />
 
         <br />&nbsp;
         <br />
-        <Select s={12} label='Operation' icon='settings_power' onChange={this.operationChanged.bind(this)}
-          defaultValue={instance.data.operation || 'switch'}>
+        <Select
+          s={12} label='Operation' icon='settings_power' onChange={this.operationChanged.bind(this)}
+          defaultValue={instance.data.operation || 'switch'}
+        >
           <option key='switch' value='switch'>Switch state</option>
           <option key='activate' value='activate'>Activate</option>
           <option key='deactivate' value='deactivate'>Deactivate</option>
@@ -53,9 +57,9 @@ class BrowserScenarioActivatorEditForm extends React.Component {
     }
 
     this.scenariiService.getScenarioInstance(this.props.instance.data.scenarioId)
-    .then((scenario) => {
-      this.props.instance.data.name = scenario.data.name
-    })
+      .then((scenario) => {
+        this.props.instance.data.name = scenario.data.name
+      })
     this.props.highlightCloseButton()
   }
 }

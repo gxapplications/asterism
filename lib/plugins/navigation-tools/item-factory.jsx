@@ -6,7 +6,7 @@ import GoToPathButtonItem from './go-to-path-button/item'
 import GoToPathButtonSettingPanel from './go-to-path-button/setting-panel'
 
 const builder = new ItemFactoryBuilder()
-.newItemType('go_to_path_button', AdditionalItem.categories.INFORMATION)
+  .newItemType('go_to_path_button', AdditionalItem.categories.INFORMATION)
   .withDescription('Dashboards navigation button', 'A button to navigate through different dashboards.')
   .settingPanelWithHeader('Navigation button settings', 'link') // optional override, but always before *Instance*() calls...
   .newInstanceFromInitialSetting(1, 1, GoToPathButtonSettingPanel)

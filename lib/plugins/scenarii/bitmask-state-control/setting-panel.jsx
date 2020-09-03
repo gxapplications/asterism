@@ -20,10 +20,10 @@ class BitmaskStateControlSettingPanel extends ItemSettingPanel {
 
   componentWillMount () {
     this.scenariiService.getStateInstance(this.state.params.bitmaskState)
-    .then((stateInstance) => {
-      this.setState({ stateInstance })
-    })
-    .catch(() => {})
+      .then((stateInstance) => {
+        this.setState({ stateInstance })
+      })
+      .catch(() => {})
   }
 
   componentWillUpdate (nextProps, nextState) {
@@ -31,9 +31,9 @@ class BitmaskStateControlSettingPanel extends ItemSettingPanel {
       this._bitmaskState.setState({ currentId: nextState.params.bitmaskState })
 
       this.scenariiService.getStateInstance(nextState.params.bitmaskState)
-      .then((stateInstance) => {
-        this.setState({ stateInstance })
-      })
+        .then((stateInstance) => {
+          this.setState({ stateInstance })
+        })
     }
   }
 
@@ -52,21 +52,29 @@ class BitmaskStateControlSettingPanel extends ItemSettingPanel {
     return (
       <div id='bitmaskStateControlItemSettingDiv' className='clearing padded'>
         <Row className='padded card'>
-          <StatesDropdown defaultStateId={bitmaskState} onChange={this.stateChange.bind(this)}
+          <StatesDropdown
+            defaultStateId={bitmaskState} onChange={this.stateChange.bind(this)}
             ref={(c) => { this._bitmaskState = c }} theme={theme} animationLevel={animationLevel}
             services={() => this.props.context.services} label={null}
-            typeFilter={(e) => e.id === 'bitmask-state'} instanceFilter={(e) => e.typeId === 'bitmask-state'} />
+            typeFilter={(e) => e.id === 'bitmask-state'} instanceFilter={(e) => e.typeId === 'bitmask-state'}
+          />
 
-          <TextInput s={12} label='Label' ref={(c) => { this._title = c }}
-            value={title} onChange={this.handleEventChange.bind(this, 'title')} />
+          <TextInput
+            s={12} label='Label' ref={(c) => { this._title = c }}
+            value={title} onChange={this.handleEventChange.bind(this, 'title')}
+          />
         </Row>
 
         {stateInstance && stateInstance.data.colors.map((color, idx) => (
           <Row key={idx} className='padded card'>
-            <IconPicker theme={{ ...theme, actions: { ...theme.actions, inconspicuous: `${color} lighten-1 black-text` } }}
-              animationLevel={animationLevel} defaultIcon={icons[idx] || ''} onChange={this.handleIconChange.bind(this, idx)} />
-            <TextInput s={12} m={10} l={10} label='Label' ref={(c) => { this[`_title_${idx}`] = c }}
-              value={titles[idx] || ''} onChange={this.handleTitleChange.bind(this, idx)} />
+            <IconPicker
+              theme={{ ...theme, actions: { ...theme.actions, inconspicuous: `${color} lighten-1 black-text` } }}
+              animationLevel={animationLevel} defaultIcon={icons[idx] || ''} onChange={this.handleIconChange.bind(this, idx)}
+            />
+            <TextInput
+              s={12} m={10} l={10} label='Label' ref={(c) => { this[`_title_${idx}`] = c }}
+              value={titles[idx] || ''} onChange={this.handleTitleChange.bind(this, idx)}
+            />
           </Row>
         ))}
 
@@ -81,10 +89,10 @@ class BitmaskStateControlSettingPanel extends ItemSettingPanel {
     this.handleValueChange('bitmaskState', value)
     if (!this.state.params.title) {
       this.scenariiService.getStateInstance(value)
-      .then((bitmaskState) => {
-        this._title.setState({ value: bitmaskState.data.name })
-        this.handleValueChange('title', bitmaskState.data.name)
-      })
+        .then((bitmaskState) => {
+          this._title.setState({ value: bitmaskState.data.name })
+          this.handleValueChange('title', bitmaskState.data.name)
+        })
     }
   }
 

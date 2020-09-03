@@ -149,11 +149,11 @@ export default class SpeechManager {
     // available on Mint: de-DE en-US (x2! M/F) en-GB es-ES es-US fr-FR
     // hi-IN id-ID it-IT ja-JP ko-KR nl-NL pl-PL pt-BR ru-RU zh-CN zh-HK zh-TW
     // ON Android, values are different: fr_FR, en_US... with UNDERSCORES! And specialities: zh_CN_#Hans
-    const voices = [ ...window.speechSynthesis.getVoices().filter((v) => {
+    const voices = [...window.speechSynthesis.getVoices().filter((v) => {
       return v.lang.startsWith(language) || v.lang.startsWith(language.replace('-', '_'))
     }), ...window.speechSynthesis.getVoices().filter((v) => {
       return v.lang.startsWith(language.substr(0, 2))
-    }) ]
+    })]
 
     if (voices.length) {
       this.voice = voices[0]
@@ -226,7 +226,8 @@ export default class SpeechManager {
 
   getComponent () {
     return ({ animationLevel }) => (
-      <NavItem className={cx(
+      <NavItem
+        className={cx(
           'notification-item-speech',
           this.available && animationLevel >= 2 ? 'waves-effect waves-light' : '',
           { 'speech-disabled': !this.available }

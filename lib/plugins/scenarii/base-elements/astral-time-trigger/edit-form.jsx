@@ -48,7 +48,7 @@ class BrowserAstralTimeTriggerEditForm extends React.Component {
         step: 1,
         animate: true,
         range: {
-          'min': [-180, 30],
+          min: [-180, 30],
           '15%': [-60, 15],
           '21%': [-30, 5],
           '31%': [-10, 1],
@@ -56,7 +56,7 @@ class BrowserAstralTimeTriggerEditForm extends React.Component {
           '69%': [10, 5],
           '79%': [30, 15],
           '85%': [60, 30],
-          'max': [180]
+          max: [180]
         },
         format: wNumb({
           decimals: 1
@@ -88,8 +88,8 @@ class BrowserAstralTimeTriggerEditForm extends React.Component {
         step: 1,
         animate: true,
         range: {
-          'min': [0, 10],
-          'max': [1440]
+          min: [0, 10],
+          max: [1440]
         },
         format: wNumb({ decimals: 1, edit: minuter }),
         pips: { // Show a scale with the slider
@@ -125,8 +125,10 @@ class BrowserAstralTimeTriggerEditForm extends React.Component {
     return (
       <Row className='section card form astral-time-trigger-panel' id={this._formId}>
         <br />
-        <Select s={12} label='Event to monitor' icon='brightness_4' onChange={this.changeEvent.bind(this)}
-          defaultValue={event}>
+        <Select
+          s={12} label='Event to monitor' icon='brightness_4' onChange={this.changeEvent.bind(this)}
+          defaultValue={event}
+        >
           <option key='sunrise' value='sunrise'>At sunrise</option>
           <option key='sunset' value='sunset'>At sunset</option>
           <option key='solarNoon' value='solarNoon'>At solar noon</option>

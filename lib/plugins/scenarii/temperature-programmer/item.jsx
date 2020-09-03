@@ -21,29 +21,29 @@ class TemperatureProgrammerItem extends Item {
   receiveNewParams (params) {
     if (params.scenario) {
       this.scenariiService.getScenarioInstance(params.scenario, true)
-      .then((scenario) => {
-        this.setState({
-          params,
-          scenario
-        })
-        this.scenariiService.privateSocket.on('scenarioThermostatStateChanged', ({ instanceId, data }) => {
-          if (!this._mounted || (params.scenario !== instanceId)) {
-            return
-          }
-          const hadOverriddenProgram = this.state.scenario.data.overriddenProgram
-          this.state.scenario.data = data
-          this._updateModeText()
-          this._programmer && this._programmer.doubleKnob && this._programmer.doubleKnob.setCenter(
-            this._programmer.centerText[data.forceModeEnd ? 1 : 0],
-            !!data.forceModeEnd
-          )
+        .then((scenario) => {
+          this.setState({
+            params,
+            scenario
+          })
+          this.scenariiService.privateSocket.on('scenarioThermostatStateChanged', ({ instanceId, data }) => {
+            if (!this._mounted || (params.scenario !== instanceId)) {
+              return
+            }
+            const hadOverriddenProgram = this.state.scenario.data.overriddenProgram
+            this.state.scenario.data = data
+            this._updateModeText()
+            this._programmer && this._programmer.doubleKnob && this._programmer.doubleKnob.setCenter(
+              this._programmer.centerText[data.forceModeEnd ? 1 : 0],
+              !!data.forceModeEnd
+            )
 
-          if (data.overriddenProgram !== hadOverriddenProgram) {
-            this.forceUpdate()
-          }
+            if (data.overriddenProgram !== hadOverriddenProgram) {
+              this.forceUpdate()
+            }
+          })
         })
-      })
-      .catch(() => {})
+        .catch(() => {})
     }
   }
 
@@ -94,11 +94,14 @@ class TemperatureProgrammerItem extends Item {
       )
     }
 
-    const { program, overriddenProgram, maxTemperature, minTemperature, highTemperature,
-      lowTemperature, temperatureStateId, forceModeEnd } = scenario.data
+    const {
+      program, overriddenProgram, maxTemperature, minTemperature, highTemperature,
+      lowTemperature, temperatureStateId, forceModeEnd
+    } = scenario.data
 
     return (
-      <TemperatureProgrammer ref={(c) => { this._programmer = c }} theme={theme} animationLevel={animationLevel}
+      <TemperatureProgrammer
+        ref={(c) => { this._programmer = c }} theme={theme} animationLevel={animationLevel}
         plannerGetter={() => ({ plannings: program, todayOverridenPlanning: overriddenProgram })}
         onPlannerChange={this.changePlanner.bind(this)}
         scaleOffset={temperatureStateId ? minTemperature : 0}

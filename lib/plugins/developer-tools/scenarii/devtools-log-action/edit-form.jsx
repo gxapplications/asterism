@@ -16,8 +16,10 @@ class DevtoolsLogActionEditForm extends React.Component {
     return (
       <Row className='section card form'>
         <br />
-        <TextInput placeholder='Will log this message in a logger you can add to your dashboard' s={12} label='Log message'
-          defaultValue={defaultValue} onChange={(e) => { instance.data.name = e.currentTarget.value; this.props.highlightCloseButton() }} />
+        <TextInput
+          placeholder='Will log this message in a logger you can add to your dashboard' s={12} label='Log message'
+          defaultValue={defaultValue} onChange={(e) => { instance.data.name = e.currentTarget.value; this.props.highlightCloseButton() }}
+        />
       </Row>
     )
   }

@@ -13,7 +13,8 @@ class RefreshButtonItem extends Item {
     const { title = 'Refresh' } = this.state.params
 
     return (
-      <Button waves={animationLevel >= 2 ? 'light' : null}
+      <Button
+        waves={animationLevel >= 2 ? 'light' : null}
         className={cx(theme.actions.edition, 'truncate fluid')} onClick={this.click.bind(this)}
       >
         <Icon left>refresh</Icon>{title}

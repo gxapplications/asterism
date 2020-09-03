@@ -36,8 +36,8 @@ class BrowserLevelStateTriggerEditForm extends React.Component {
         step: 1,
         animate: true,
         range: {
-          'min': [1, 1],
-          'max': [32]
+          min: [1, 1],
+          max: [32]
         },
         format: wNumb({
           decimals: 1
@@ -65,14 +65,18 @@ class BrowserLevelStateTriggerEditForm extends React.Component {
     return (
       <Row className='section card form level-state-trigger-panel'>
         <br />
-        <StatesDropdown defaultStateId={levelStateId} onChange={this.levelStateChanged.bind(this)}
+        <StatesDropdown
+          defaultStateId={levelStateId} onChange={this.levelStateChanged.bind(this)}
           theme={theme} animationLevel={animationLevel} services={services} s={12} label='State that triggers'
-          typeFilter={(e) => e.id === 'level-state'} instanceFilter={(e) => e.typeId === 'level-state'} />
+          typeFilter={(e) => e.id === 'level-state'} instanceFilter={(e) => e.typeId === 'level-state'}
+        />
 
         <br />&nbsp;
         <br />
-        <Select s={12} m={4} label='Way' icon='swap_vert' onChange={this.wayChanged.bind(this)}
-          defaultValue={way || 'reach'}>
+        <Select
+          s={12} m={4} label='Way' icon='swap_vert' onChange={this.wayChanged.bind(this)}
+          defaultValue={way || 'reach'}
+        >
           <option key='reach' value='reach'>Level reached</option>
           <option key='upward' value='upward'>Level reached upward</option>
           <option key='downward' value='downward'>Level reached downward</option>
@@ -110,22 +114,22 @@ class BrowserLevelStateTriggerEditForm extends React.Component {
     }
 
     this.scenariiService.getStateInstance(this.props.instance.data.levelStateId)
-    .then((levelState) => {
-      switch (this.props.instance.data.way) {
-        case 'upward':
-          this.props.instance.data.name = `${levelState.data.name} ↱ ${this.props.instance.data.level}`
-          break
-        case 'downward':
-          this.props.instance.data.name = `${levelState.data.name} ↳ ${this.props.instance.data.level}`
-          break
-        case 'left':
-          this.props.instance.data.name = `${levelState.data.name} ↛ ${this.props.instance.data.level}`
-          break
-        case 'reach':
-        default:
-          this.props.instance.data.name = `${levelState.data.name} → ${this.props.instance.data.level}`
-      }
-    })
+      .then((levelState) => {
+        switch (this.props.instance.data.way) {
+          case 'upward':
+            this.props.instance.data.name = `${levelState.data.name} ↱ ${this.props.instance.data.level}`
+            break
+          case 'downward':
+            this.props.instance.data.name = `${levelState.data.name} ↳ ${this.props.instance.data.level}`
+            break
+          case 'left':
+            this.props.instance.data.name = `${levelState.data.name} ↛ ${this.props.instance.data.level}`
+            break
+          case 'reach':
+          default:
+            this.props.instance.data.name = `${levelState.data.name} → ${this.props.instance.data.level}`
+        }
+      })
     this.props.highlightCloseButton()
   }
 }

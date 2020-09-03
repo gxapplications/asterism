@@ -131,17 +131,17 @@ class AddCategoryButtons extends React.Component {
       $('#category-modal').modal('close')
     }
     additionalItem.instantiateNewItem(this.props.itemManager.settingPanelClosed.bind(this.props.itemManager))
-    .then(thenSleep(400)) // wait for modal to close
-    .then((settingOrItem) => {
-      if (settingOrItem.props && settingOrItem.props.settingPanelCallback) {
+      .then(thenSleep(400)) // wait for modal to close
+      .then((settingOrItem) => {
+        if (settingOrItem.props && settingOrItem.props.settingPanelCallback) {
         // initial setting panel before to render the item
-        this.props.itemManager.mainComponent.setState({ itemSettingPanel: settingOrItem, animationFlow })
-      } else {
+          this.props.itemManager.mainComponent.setState({ itemSettingPanel: settingOrItem, animationFlow })
+        } else {
         // item can be added directly
-        const { id, item, preferredHeight, preferredWidth, settingPanel } = settingOrItem
-        this.props.itemManager.addNewItem(id, item, preferredHeight, preferredWidth, settingPanel, animationFlow)
-      }
-    })
+          const { id, item, preferredHeight, preferredWidth, settingPanel } = settingOrItem
+          this.props.itemManager.addNewItem(id, item, preferredHeight, preferredWidth, settingPanel, animationFlow)
+        }
+      })
   }
 
   additionalItemShrinkAnimation (rectBounds) {
@@ -150,16 +150,16 @@ class AddCategoryButtons extends React.Component {
 
     rect.css({ top: rectBounds.top, left: rectBounds.left, height: rectBounds.height, width: rectBounds.width, display: 'block' })
     return sleep(10)
-    .then(() => {
-      bullet.addClass('shrink')
-      const editColor = this.props.theme.palette[this.props.theme.backgrounds.editing] || 'white'
-      bullet.css({ 'background-color': editColor })
-    })
-    .then(thenSleep(40))
-    .then(() => {
-      $('#category-modal').modal('close')
-      return { rect, bullet }
-    })
+      .then(() => {
+        bullet.addClass('shrink')
+        const editColor = this.props.theme.palette[this.props.theme.backgrounds.editing] || 'white'
+        bullet.css({ 'background-color': editColor })
+      })
+      .then(thenSleep(40))
+      .then(() => {
+        $('#category-modal').modal('close')
+        return { rect, bullet }
+      })
   }
 
   shouldComponentUpdate (nextProps, nextState) {
@@ -195,12 +195,14 @@ class AddCategoryButtons extends React.Component {
               </div>
               <div className='collection additional-items-list'>
                 {modalCategory.additionalItems.map((item, idx) => (
-                  <a className={cx('collection-item avatar lighter-background', animationLevel >= 2 ? 'waves-effect waves-light-green' : null)} key={idx} href='#'
-                    onClick={this.additionalItemSelect.bind(this, item)}>
+                  <a
+                    className={cx('collection-item avatar lighter-background', animationLevel >= 2 ? 'waves-effect waves-light-green' : null)} key={idx} href='#'
+                    onClick={this.additionalItemSelect.bind(this, item)}
+                  >
                     <Icon className='circle'>{item.icon || modalCategory.icon}</Icon>
                     <span className='title truncate'>{item.name}</span>
                     <p className='truncate'>{item.description}</p>
-                    { /* <div className='secondary-content'><Icon circle>insert_chart</Icon>When needed... To do.</div> */ }
+                    {/* <div className='secondary-content'><Icon circle>insert_chart</Icon>When needed... To do.</div> */}
                   </a>
                 ))}
               </div>
@@ -218,7 +220,8 @@ class AddCategoryButtons extends React.Component {
         <Button large floating fab={{ direction: 'top', hoverEnabled: false }} icon='add_box' waves={waves} className={cx(theme.actions.edition)}>
           {Array.from(categories).reverse().map((value, idx) => (
             value.condition ? (
-              <Button key={idx}
+              <Button
+                key={idx}
                 floating icon={value.icon} waves={waves}
                 className={cx(value.className || theme.actions.secondary, { pulse: value.additionalItems.find((i) => i.isNew) })}
                 onClick={this.categorySelect.bind(this, value.id)}

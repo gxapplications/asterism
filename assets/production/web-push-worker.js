@@ -20,15 +20,15 @@ const FILES_TO_CACHE = ['', '/',
 ]
 
 self.addEventListener('install', ev => {
-  console.log(`[ServiceWorker] Installing new web-push worker version...`)
+  console.log('[ServiceWorker] Installing new web-push worker version...')
 
   ev.waitUntil(
     caches.open(CACHE_VERSION).then((cache) => {
       console.log('[Serviceorker] Pre-caching offline page')
       return cache.addAll(FILES_TO_CACHE)
-      .catch((error) => {
-        console.error(error)
-      })
+        .catch((error) => {
+          console.error(error)
+        })
     })
   )
 
@@ -36,7 +36,7 @@ self.addEventListener('install', ev => {
 })
 
 self.addEventListener('activate', ev => {
-  console.log(`[ServiceWorker] Activating service worker...`)
+  console.log('[ServiceWorker] Activating service worker...')
 
   ev.waitUntil(
     caches.keys().then((keyList) => {

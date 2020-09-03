@@ -21,10 +21,10 @@ class ActionButtonItem extends Item {
   receiveNewParams (params) {
     if (params.action) {
       this.scenariiService.getActionInstance(params.action)
-      .then((action) => {
-        this.setState({ params, action })
-      })
-      .catch(() => {})
+        .then((action) => {
+          this.setState({ params, action })
+        })
+        .catch(() => {})
     }
   }
 
@@ -47,11 +47,12 @@ class ActionButtonItem extends Item {
     const { actionExecuting, action } = this.state
 
     const btnColor = !action ? theme.feedbacks.warning : (actionExecuting
-        ? theme.feedbacks.progressing
-        : (actionExecuting === undefined ? theme.feedbacks.warning : theme.actions[color]))
+      ? theme.feedbacks.progressing
+      : (actionExecuting === undefined ? theme.feedbacks.warning : theme.actions[color]))
 
     return (
-      <Button waves={animationLevel >= 2 ? 'light' : null}
+      <Button
+        waves={animationLevel >= 2 ? 'light' : null}
         className={cx(btnColor, 'truncate fluid')} onClick={this.click.bind(this)}
       >
         {(!action || actionExecuting) && <Icon left className='red-text'>{!action ? 'healing' : 'cancel'}</Icon>}
@@ -73,28 +74,28 @@ class ActionButtonItem extends Item {
         actionExecuting: executionId
       })
       this.scenariiService.executeActionInstance(this.state.action, 86400000, executionId) // 1 day (1000*60*60*24)
-      .then(() => {
-        this.setState({
-          actionExecuting: false
+        .then(() => {
+          this.setState({
+            actionExecuting: false
+          })
         })
-      })
-      .catch(() => {
-        this.setState({
-          actionExecuting: undefined
+        .catch(() => {
+          this.setState({
+            actionExecuting: undefined
+          })
         })
-      })
     } else {
       this.scenariiService.abortActionInstance(this.state.params.action, this.state.actionExecuting)
-      .then(() => {
-        this.setState({
-          actionExecuting: false
+        .then(() => {
+          this.setState({
+            actionExecuting: false
+          })
         })
-      })
-      .catch(() => {
-        this.setState({
-          actionExecuting: undefined
+        .catch(() => {
+          this.setState({
+            actionExecuting: undefined
+          })
         })
-      })
     }
   }
 
@@ -103,13 +104,13 @@ class ActionButtonItem extends Item {
       return Promise.resolve()
     }
     this.scenariiService.actionExecutionState(this.state.actionExecuting)
-    .then((executing) => {
-      if (!executing) {
-        this.setState({
-          actionExecuting: false
-        })
-      }
-    })
+      .then((executing) => {
+        if (!executing) {
+          this.setState({
+            actionExecuting: false
+          })
+        }
+      })
   }
 }
 

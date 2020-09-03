@@ -55,18 +55,18 @@ class BrowserThermostatStateScenarioEditForm extends React.Component {
   componentWillMount () {
     if (this.props.instance.data.stateId) {
       this.scenariiService.getStateInstance(this.props.instance.data.stateId)
-      .then((stateInstance) => {
-        this.setState({ stateInstance })
-      })
-      .catch(() => {})
+        .then((stateInstance) => {
+          this.setState({ stateInstance })
+        })
+        .catch(() => {})
     }
 
     if (this.props.instance.data.temperatureStateId) {
       this.scenariiService.getStateInstance(this.props.instance.data.temperatureStateId)
-      .then((temperatureStateInstance) => {
-        this.setState({ temperatureStateInstance })
-      })
-      .catch(() => {})
+        .then((temperatureStateInstance) => {
+          this.setState({ temperatureStateInstance })
+        })
+        .catch(() => {})
     }
   }
 
@@ -84,40 +84,50 @@ class BrowserThermostatStateScenarioEditForm extends React.Component {
     return (
       <div className='clearing padded'>
         <Row className='section card form hide-in-procedure'>
-          <TextInput placeholder='Short name' s={12} ref={(c) => { this._nameInput = c }}
+          <TextInput
+            placeholder='Short name' s={12} ref={(c) => { this._nameInput = c }}
             id={`thermostat-state-scenario-name-input-${this._nameInputId}`}
-            defaultValue={name} onChange={(e) => { instance.data.name = e.currentTarget.value }} />
+            defaultValue={name} onChange={(e) => { instance.data.name = e.currentTarget.value }}
+          />
         </Row>
         <Row className='section card form'>
           <h5>Controlling state</h5>
           <div className='col s12'>&nbsp;</div>
-          <StatesDropdown onChange={this.setStateId.bind(this)} theme={theme} animationLevel={animationLevel}
+          <StatesDropdown
+            onChange={this.setStateId.bind(this)} theme={theme} animationLevel={animationLevel}
             services={services} defaultStateId={stateId} s={12} instanceFilter={(e) => e.typeId === 'level-state'}
-            typeFilter={(e) => e.id === 'level-state'} label='State to control' dropdownId={uuid.v4()} />
+            typeFilter={(e) => e.id === 'level-state'} label='State to control' dropdownId={uuid.v4()}
+          />
           <div className='col s12'>&nbsp;</div>
 
           {stateInstance && [
             <div key={0} className='col s12'><Icon left>brightness_5</Icon> High/Comfort temperature level (actually {highLevel}):</div>,
             <div key={1} className='range-field col s12'>
-              <input type='range' min='1' max={stateInstance.data.max}
+              <input
+                type='range' min='1' max={stateInstance.data.max}
                 onChange={(e) => { this.changeHighLevel(e.currentTarget.value) }}
-                defaultValue={highLevel} />
+                defaultValue={highLevel}
+              />
             </div>,
             <div key={2} className='col s12'>&nbsp;</div>,
 
             <div key={3} className='col s12'><Icon left>brightness_3</Icon> Low/Eco temperature level (actually {lowLevel}):</div>,
             <div key={4} className='range-field col s12'>
-              <input type='range' min='1' max={stateInstance.data.max}
+              <input
+                type='range' min='1' max={stateInstance.data.max}
                 onChange={(e) => { this.changeLowLevel(e.currentTarget.value) }}
-                defaultValue={lowLevel} />
+                defaultValue={lowLevel}
+              />
             </div>,
             <div key={5} className='col s12'>&nbsp;</div>,
 
             <div key={6} className='col s12'><Icon left>ac_unit</Icon> Off/Frost free temperature level (actually {offLevel}):</div>,
             <div key={7} className='range-field col s12'>
-              <input type='range' min='1' max={stateInstance.data.max}
+              <input
+                type='range' min='1' max={stateInstance.data.max}
                 onChange={(e) => { this.changeOffLevel(e.currentTarget.value) }}
-                defaultValue={offLevel} />
+                defaultValue={offLevel}
+              />
             </div>
           ]}
         </Row>
@@ -125,39 +135,48 @@ class BrowserThermostatStateScenarioEditForm extends React.Component {
         <Row className='section card form'>
           <h5>Enslave programmer by a temperature measure (optional)</h5>
           <div className='col s12'>&nbsp;</div>
-          <StatesDropdown onChange={this.setTemperatureStateId.bind(this)} theme={theme} animationLevel={animationLevel}
+          <StatesDropdown
+            onChange={this.setTemperatureStateId.bind(this)} theme={theme} animationLevel={animationLevel}
             services={services} defaultStateId={temperatureStateId} s={12} instanceFilter={(e) => e.typeId === 'floating-state'}
-            typeFilter={(e) => e.id === 'floating-state'} label='State that contains the master temperature' dropdownId={uuid.v4()} />
+            typeFilter={(e) => e.id === 'floating-state'} label='State that contains the master temperature' dropdownId={uuid.v4()}
+          />
           <div className='col s12'>&nbsp;</div>
 
           {temperatureStateInstance && [
             <div key={0} className='col s12'><Icon left>vertical_align_top</Icon> Maximal temperature allowed to be set (actually {maxTemperature}):</div>,
             <div key={1} className='range-field col s12'>
-              <input type='range' min='10' max='38'
+              <input
+                type='range' min='10' max='38'
                 onChange={(e) => { this.changeMaxTemperature(e.currentTarget.value) }}
-                defaultValue={maxTemperature} />
+                defaultValue={maxTemperature}
+              />
             </div>,
             <div key={2} className='col s12'>&nbsp;</div>,
 
             <div key={3} className='col s12'><Icon left>vertical_align_bottom</Icon> Minimal temperature allowed to be set (actually {minTemperature}):</div>,
             <div key={4} className='range-field col s12'>
-              <input type='range' min='8' max='36'
+              <input
+                type='range' min='8' max='36'
                 onChange={(e) => { this.changeMinTemperature(e.currentTarget.value) }}
-                defaultValue={minTemperature} />
+                defaultValue={minTemperature}
+              />
             </div>,
             <div key={5} className='col s12'>&nbsp;</div>,
 
             <div key={6} className='col s12'><Icon left>ac_unit</Icon> Temperature for Off/Frost free mode (actually {offTemperature}):</div>,
             <div key={7} className='range-field col s12'>
-              <input type='range' min='4' max='32'
+              <input
+                type='range' min='4' max='32'
                 onChange={(e) => { this.changeOffTemperature(e.currentTarget.value) }}
-                defaultValue={offTemperature} />
+                defaultValue={offTemperature}
+              />
             </div>
           ]}
         </Row>
 
         <Row className='section'>
-          <TemperatureProgrammer ref={(c) => { this._programmer = c }} theme={theme} animationLevel={animationLevel}
+          <TemperatureProgrammer
+            ref={(c) => { this._programmer = c }} theme={theme} animationLevel={animationLevel}
             plannerGetter={() => ({ plannings: program, todayOverridenPlanning: overriddenProgram })}
             onPlannerChange={this.changePlanner.bind(this)}
             scaleOffset={temperatureStateId ? minTemperature : 0}
@@ -193,24 +212,24 @@ class BrowserThermostatStateScenarioEditForm extends React.Component {
     }
 
     this.scenariiService.getStateInstance(this.props.instance.data.stateId, true)
-    .then((state) => {
-      this.props.instance.data.name = `Thermostat for '${state.name}'`
-      this.setState({ name: this.props.instance.data.name })
-      if (this._nameInput) {
-        this._nameInput.setState({ value: this.props.instance.data.name })
-        $(`#thermostat-state-scenario-name-input-${this._nameInputId}`).val(this.props.instance.data.name)
-      }
-    })
+      .then((state) => {
+        this.props.instance.data.name = `Thermostat for '${state.name}'`
+        this.setState({ name: this.props.instance.data.name })
+        if (this._nameInput) {
+          this._nameInput.setState({ value: this.props.instance.data.name })
+          $(`#thermostat-state-scenario-name-input-${this._nameInputId}`).val(this.props.instance.data.name)
+        }
+      })
   }
 
   setStateId (value) {
     this.props.instance.data.stateId = value
     this.scenariiService.getStateInstance(value)
-    .then((stateInstance) => {
-      this.setState({ stateInstance })
-      this.betterName()
-    })
-    .catch(() => {})
+      .then((stateInstance) => {
+        this.setState({ stateInstance })
+        this.betterName()
+      })
+      .catch(() => {})
   }
 
   changeHighLevel (value) {
@@ -240,11 +259,11 @@ class BrowserThermostatStateScenarioEditForm extends React.Component {
   setTemperatureStateId (value) {
     this.props.instance.data.temperatureStateId = value
     this.scenariiService.getStateInstance(value)
-    .then((temperatureStateInstance) => {
-      this.setState({ temperatureStateInstance })
-      this.props.highlightCloseButton()
-    })
-    .catch(() => {})
+      .then((temperatureStateInstance) => {
+        this.setState({ temperatureStateInstance })
+        this.props.highlightCloseButton()
+      })
+      .catch(() => {})
   }
 
   changeMaxTemperature (value) {
