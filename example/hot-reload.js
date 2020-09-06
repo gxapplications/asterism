@@ -1,6 +1,6 @@
 'use strict'
 
-require('babel-core/register')
+const babelRegister = require('@babel/register')
 require('colors')
 
 const server = require('../lib').server
@@ -12,10 +12,16 @@ server.use(require('../lib/plugins/developer-tools'))
 if (process.env.ASTERISM_PLUGINS) {
   process.env.ASTERISM_PLUGINS.split(',').forEach((plugin) => {
     try {
+      babelRegister({
+        root: `../../${plugin}`,
+        extends: './.babelrc',
+        ignore: [/node_modules/],
+        cache: true
+      })
       console.log(`Loading plugin at path ${require.resolve(plugin)}`.green)
       server.use(require(plugin))
     } catch (error) {
-      console.log(`The plugin ${plugin} cannot be found as dependency. Did you miss a npm link for it?`.red)
+      console.log(`The plugin ${plugin} cannot be found as dependency. Did you miss a 'npm run wrap' or 'npm link' for it?`.red)
       console.error(error)
     }
   })

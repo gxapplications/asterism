@@ -186,7 +186,6 @@ class BrowserFloatingLevelStateEditForm extends React.Component {
     value = Number.parseFloat(Number.parseFloat(value).toPrecision(this.state.precision))
     if (Number.isNaN(value)) {
       return
-      // TODO !0: on fait quoi d'autre ?
     }
 
     const i = this.props.instance

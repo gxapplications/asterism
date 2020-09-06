@@ -173,7 +173,7 @@ class DomoticsSettings extends React.Component {
               s={12} m={11} l={11} title='Nearest big city'
               value={currentLocation.name}
               onChange={this.onLocationChanged.bind(this)}
-              options={{ minLength: 2, limit: 10, onAutocomplete: this.onLocationChoosed.bind(this), data: Object.assign({}, ...locations) }}
+              options={{ minLength: 2, limit: 10, onAutocomplete: this.onLocationChoosed.bind(this), data: Object.assign({}, locations) }}
             />
           </Row>
           <Row className='section card form'>

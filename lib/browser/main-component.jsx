@@ -25,7 +25,7 @@ import { thenSleep, sleep, hasCookie, deleteCookie } from './tools'
 
 import 'react-gridifier/dist/styles.css'
 import './asterism.css'
-import 'asterism-plugin-library/styles.css'
+import 'asterism-plugin-library/dist/styles.css'
 
 const localStorage = new DefaultLocalStorage('asterism')
 
