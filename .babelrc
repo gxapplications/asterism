@@ -16,7 +16,7 @@
         [
           "css-modules-transform",
           {
-            "preprocessCss": "babel-sass-preprocess.js",
+            "preprocessCss": "./babel-sass-preprocess.js",
             "generateScopedName": "[local]",
             "extractCss": {
               "dir": "./dist/styles/",

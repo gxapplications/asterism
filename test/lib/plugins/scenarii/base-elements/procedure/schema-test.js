@@ -1,7 +1,7 @@
 /* eslint-env mocha */
 'use strict'
 
-import Joi from 'joi'
+import Joi from '@hapi/joi'
 import uuid from 'uuid'
 
 import schema from '../../../../../../lib/plugins/scenarii/base-elements/procedure/schema.js'

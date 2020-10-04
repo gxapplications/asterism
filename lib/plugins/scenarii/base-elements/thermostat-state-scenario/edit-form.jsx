@@ -78,8 +78,8 @@ class BrowserThermostatStateScenarioEditForm extends React.Component {
 
   render () {
     const { theme, animationLevel, instance, services } = this.props
-    const { stateId, program, overriddenProgram, temperatureStateId, maxTemperature, minTemperature, lowTemperature, highTemperature, offTemperature, forceModeEnd } = instance.data
-    const { stateInstance, highLevel, lowLevel, offLevel, name, temperatureStateInstance } = this.state
+    const { stateId, program, overriddenProgram, temperatureStateId, lowTemperature, highTemperature, forceModeEnd } = instance.data
+    const { stateInstance, highLevel, lowLevel, offLevel, name, temperatureStateInstance, maxTemperature, minTemperature, offTemperature } = this.state
 
     return (
       <div className='clearing padded'>
@@ -137,8 +137,8 @@ class BrowserThermostatStateScenarioEditForm extends React.Component {
           <div className='col s12'>&nbsp;</div>
           <StatesDropdown
             onChange={this.setTemperatureStateId.bind(this)} theme={theme} animationLevel={animationLevel}
-            services={services} defaultStateId={temperatureStateId} s={12} instanceFilter={(e) => e.typeId === 'floating-state'}
-            typeFilter={(e) => e.id === 'floating-state'} label='State that contains the master temperature' dropdownId={uuid.v4()}
+            services={services} defaultStateId={temperatureStateId} s={12} instanceFilter={(e) => e.typeId === 'floating-level-state'}
+            typeFilter={(e) => e.id === 'floating-level-state'} label='State that contains the master temperature' dropdownId={uuid.v4()}
           />
           <div className='col s12'>&nbsp;</div>
 
@@ -185,7 +185,7 @@ class BrowserThermostatStateScenarioEditForm extends React.Component {
             title={this.computeModeText()}
             temperaturesGetter={() => ({ ecoTemperature: lowTemperature || 15, comfortTemperature: highTemperature || 19 })}
 
-            onTemperaturesChange={(eco, comfort) => { console.log('####', eco, comfort) /* TODO !1 */ }}
+            onTemperaturesChange={(eco, comfort) => { console.log('####', eco, comfort) /* TODO !0: mémoriser le réglage fait sur le double knob ! (dans lowTemperature et highTemperature) */ }}
           />
         </Row>
         <br />&nbsp;<br />&nbsp;<br />
@@ -234,25 +234,25 @@ class BrowserThermostatStateScenarioEditForm extends React.Component {
 
   changeHighLevel (value) {
     this.setState({
-      highLevel: value
+      highLevel: +value
     })
-    this.debouncerHighLevelChange(value)
+    this.debouncerHighLevelChange(+value)
     this.props.highlightCloseButton()
   }
 
   changeLowLevel (value) {
     this.setState({
-      lowLevel: value
+      lowLevel: +value
     })
-    this.debouncerLowLevelChange(value)
+    this.debouncerLowLevelChange(+value)
     this.props.highlightCloseButton()
   }
 
   changeOffLevel (value) {
     this.setState({
-      offLevel: value
+      offLevel: +value
     })
-    this.debouncerOffLevelChange(value)
+    this.debouncerOffLevelChange(+value)
     this.props.highlightCloseButton()
   }
 
@@ -268,25 +268,25 @@ class BrowserThermostatStateScenarioEditForm extends React.Component {
 
   changeMaxTemperature (value) {
     this.setState({
-      maxTemperature: value
+      maxTemperature: +value
     })
-    this.debouncerMaxTemperatureChange(value)
+    this.debouncerMaxTemperatureChange(+value)
     this.props.highlightCloseButton()
   }
 
   changeMinTemperature (value) {
     this.setState({
-      minTemperature: value
+      minTemperature: +value
     })
-    this.debouncerMinTemperatureChange(value)
+    this.debouncerMinTemperatureChange(+value)
     this.props.highlightCloseButton()
   }
 
   changeOffTemperature (value) {
     this.setState({
-      offTemperature: value
+      offTemperature: +value
     })
-    this.debouncerOffTemperatureChange(value)
+    this.debouncerOffTemperatureChange(+value)
     this.props.highlightCloseButton()
   }
 
@@ -303,6 +303,7 @@ class BrowserThermostatStateScenarioEditForm extends React.Component {
     let modeText = ''
     const now = new Date()
     const { name, program, overriddenProgram, forceModeEnd, activated } = this.props.instance.data
+    const temperatureStateValue = this.state.temperatureStateInstance && this.state.temperatureStateInstance.data.state
 
     if (!activated) {
       modeText = 'INACTIVE'
@@ -315,8 +316,7 @@ class BrowserThermostatStateScenarioEditForm extends React.Component {
       const currentMode = currentProgram[currentHourStep]
       modeText = (currentMode === 0) ? 'economic' : ((currentMode === 1) ? 'comfort' : 'OFF')
     }
-    return `${name}<br/>${modeText}`
-    // TODO !1: si temperatureStateInstance, alors `${name} (${temperatureStateInstance.valeur}°C)<br/>${modeText}`
+    return temperatureStateValue ? `${name} (${temperatureStateValue}°C)<br/>${modeText}` : `${name}<br/>${modeText}`
   }
 }
 

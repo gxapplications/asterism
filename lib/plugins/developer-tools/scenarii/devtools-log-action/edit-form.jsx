@@ -1,6 +1,6 @@
 'use strict'
 
-import Joi from 'joi'
+import Joi from '@hapi/joi'
 import PropTypes from 'prop-types'
 import React from 'react'
 import { TextInput, Row } from 'react-materialize'
