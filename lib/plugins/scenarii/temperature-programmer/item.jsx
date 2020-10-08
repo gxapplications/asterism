@@ -96,7 +96,6 @@ class TemperatureProgrammerItem extends Item {
 
   shouldComponentUpdate (nextProps, nextState) {
     const comparator = (i) => [
-      // TODO !1 ?
       i.scenario && i.scenario.instanceId,
       i.scenario && i.scenario.data && i.scenario.data.forceModeEnd,
       i.scenario && i.scenario.data && i.scenario.data.overriddenProgram
@@ -118,10 +117,7 @@ class TemperatureProgrammerItem extends Item {
       )
     }
 
-    const {
-      program, overriddenProgram, maxTemperature, minTemperature, highTemperature,
-      lowTemperature, temperatureStateId, forceModeEnd
-    } = scenario.data
+    const { program, overriddenProgram, maxTemperature, minTemperature, temperatureStateId, forceModeEnd } = scenario.data
 
     return (
       <TemperatureProgrammer
@@ -133,9 +129,11 @@ class TemperatureProgrammerItem extends Item {
         onForceModeChange={this.changeForceMode.bind(this)}
         initialForceMode={!!forceModeEnd}
         title={this.computeModeText()}
-        temperaturesGetter={() => ({ ecoTemperature: lowTemperature || 15, comfortTemperature: highTemperature || 19 })}
-
-        onTemperaturesChange={(eco, comfort) => { console.log('####', eco, comfort) /* TODO !0: mémoriser le réglage fait sur le double knob ! (dans lowTemperature et highTemperature) */ }}
+        temperaturesGetter={() => ({
+          ecoTemperature: scenario.data.lowTemperature || 17,
+          comfortTemperature: scenario.data.highTemperature || 21
+        })}
+        onTemperaturesChange={this.changeEcoComfortTemperature.bind(this)}
       />
     )
   }
@@ -184,7 +182,17 @@ class TemperatureProgrammerItem extends Item {
     this._programmer && this._programmer.doubleKnob && this._programmer.doubleKnob.setTitle(this.computeModeText())
   }
 
+  changeEcoComfortTemperature (ecoTemperature, comfortTemperature) {
+    ecoTemperature = Math.round(ecoTemperature * 2) / 2
+    comfortTemperature = Math.round(comfortTemperature * 2) / 2
+    this.state.scenario.data.lowTemperature = ecoTemperature
+    this.state.scenario.data.highTemperature = comfortTemperature
+    this.state.scenario.save()
+    return { ecoTemperature, comfortTemperature }
+  }
+
   refresh (event) {
+    this.forceUpdate()
     // TODO !1: a lot of things to do, huh ?
     return Promise.resolve()
   }

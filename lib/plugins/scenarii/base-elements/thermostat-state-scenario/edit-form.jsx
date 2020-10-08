@@ -78,7 +78,7 @@ class BrowserThermostatStateScenarioEditForm extends React.Component {
 
   render () {
     const { theme, animationLevel, instance, services } = this.props
-    const { stateId, program, overriddenProgram, temperatureStateId, lowTemperature, highTemperature, forceModeEnd } = instance.data
+    const { stateId, program, overriddenProgram, temperatureStateId, forceModeEnd } = instance.data
     const { stateInstance, highLevel, lowLevel, offLevel, name, temperatureStateInstance, maxTemperature, minTemperature, offTemperature } = this.state
 
     return (
@@ -183,9 +183,11 @@ class BrowserThermostatStateScenarioEditForm extends React.Component {
             scaleAmplitude={temperatureStateId ? (maxTemperature - minTemperature) : 0}
             initialForceMode={!!forceModeEnd}
             title={this.computeModeText()}
-            temperaturesGetter={() => ({ ecoTemperature: lowTemperature || 15, comfortTemperature: highTemperature || 19 })}
-
-            onTemperaturesChange={(eco, comfort) => { console.log('####', eco, comfort) /* TODO !0: mémoriser le réglage fait sur le double knob ! (dans lowTemperature et highTemperature) */ }}
+            temperaturesGetter={() => ({
+              ecoTemperature: instance.data.lowTemperature || 17,
+              comfortTemperature: instance.data.highTemperature || 21
+            })}
+            onTemperaturesChange={this.changeEcoComfortTemperature.bind(this)}
           />
         </Row>
         <br />&nbsp;<br />&nbsp;<br />
@@ -288,6 +290,16 @@ class BrowserThermostatStateScenarioEditForm extends React.Component {
     })
     this.debouncerOffTemperatureChange(+value)
     this.props.highlightCloseButton()
+  }
+
+  changeEcoComfortTemperature (ecoTemperature, comfortTemperature) {
+    ecoTemperature = Math.round(ecoTemperature * 2) / 2
+    comfortTemperature = Math.round(comfortTemperature * 2) / 2
+    this.props.instance.data.lowTemperature = ecoTemperature
+    this.props.instance.data.highTemperature = comfortTemperature
+    this.scenariiService.setScenarioInstance(this.props.instance).catch(() => {})
+    this.props.highlightCloseButton()
+    return { ecoTemperature, comfortTemperature }
   }
 
   changePlanner (program, overriddenProgram) {
