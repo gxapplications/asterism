@@ -193,7 +193,6 @@ class TemperatureProgrammerItem extends Item {
 
   refresh (event) {
     this.forceUpdate()
-    // TODO !1: a lot of things to do, huh ?
     return Promise.resolve()
   }
 }
