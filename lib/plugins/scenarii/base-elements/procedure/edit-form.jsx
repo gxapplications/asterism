@@ -2,7 +2,6 @@
 
 /* global $ */
 import cx from 'classnames'
-import Joi from '@hapi/joi'
 import PropTypes from 'prop-types'
 import React from 'react'
 import { Icon, TextInput, Row } from 'react-materialize'
@@ -18,7 +17,7 @@ class BrowserProcedureEditForm extends React.Component {
   constructor (props) {
     super(props)
 
-    this.defaultName = Joi.reach(schemaProcedure, 'name')._flags.default
+    this.defaultName = schemaProcedure.extract('name')._flags.default
     this.scenariiService = props.services()['asterism-scenarii']
 
     this.state = {

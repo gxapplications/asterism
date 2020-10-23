@@ -1,7 +1,6 @@
 /* eslint-env mocha */
 'use strict'
 
-import Joi from '@hapi/joi'
 import uuid from 'uuid'
 
 import schema from '../../../../../../lib/plugins/scenarii/base-elements/procedure/schema.js'
@@ -14,21 +13,21 @@ describe('Plugin scenarii - procedure schema', function () {
       },
       name: 'pouet'
     }
-    return Joi.validate(procedureData, schema)
+    return schema.validate(procedureData)
   })
 
   it('An incomplete procedure is rejected', function (done) {
     const procedureData = {
       script: { }
     }
-    Joi.validate(procedureData, schema)
+    schema.validateAsync(procedureData)
       .then(() => done(new Error()))
       .catch(() => done())
   })
 
   it('An void data procedure is rejected', function (done) {
     const procedureData = { }
-    Joi.validate(procedureData, schema)
+    schema.validateAsync(procedureData)
       .then(() => done(new Error()))
       .catch(() => done())
   })
@@ -57,6 +56,6 @@ describe('Plugin scenarii - procedure schema', function () {
       },
       name: 'pouet'
     }
-    return Joi.validate(procedureData, schema)
+    return schema.validate(procedureData)
   })
 })

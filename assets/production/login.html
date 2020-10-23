@@ -17,7 +17,7 @@
                 height: 94vh;
                 left: calc(50% - 47vh);
                 top: 2vh;
-                transition: opacity 0.8s ease-out 0.2s;
+                transition: opacity 0.6s ease-out 0.15s;
                 opacity: 0;
             }
             .asterism.active .frame {
@@ -36,8 +36,8 @@
                 font-size: 48vh;
                 font-weight: bolder;
                 font-family: monospace;
-                transition: transform 1.2s cubic-bezier(.22,.59,.38,1.3) 0.2s,
-                opacity 1.2s ease-out 0.2s;
+                transition: transform 0.6s ease-out 0.15s,
+                opacity 0.5s ease-out 0.15s;
                 transform: scale(0) rotate(500deg);
                 left: calc(50% - 14.8vh);
                 opacity: 0.4;
@@ -58,16 +58,16 @@
                 left: -32.3vh;
             }
             .asterism .a2.asterisk .letter {
-                transition: transform 1.2s cubic-bezier(.22,.59,.38,1.3) 0.4s,
-                opacity 0.8s ease-out 0.8s !important;
+                transition: transform 0.6s ease-out 0.3s,
+                opacity 0.45s ease-out 0.6s !important;
             }
             .asterism .a3 {
                 top: 51.4vh;
                 left: 31.9vh;
             }
             .asterism .a3.asterisk .letter {
-                transition: transform 1.2s cubic-bezier(.22,.59,.38,1.3) 0.6s,
-                opacity 0.8s ease-out 1s !important;
+                transition: transform 0.6s ease-out 0.45s,
+                opacity 0.45s ease-out 0.8s !important;
             }
 
             #pattern-outer {
@@ -113,6 +113,15 @@
             }
             #pattern-inner .patt-circ.hovered {
                 border: 3px solid #fff;
+            }
+            #pattern-inner.patt-error .patt-circ.hovered {
+                border: 3px solid #f44;
+            }
+            #pattern-inner.patt-error .patt-dots {
+                background: #f44;
+            }
+            #pattern-inner.patt-error .patt-lines {
+                background: rgba(255, 88, 88, 0.8);
             }
         </style>
 
@@ -185,25 +194,37 @@
                 pattern = pattern + '$' + new Date();
                 pattern = forge.util.bytesToHex(encoder.encrypt(forge.util.encodeUtf8(pattern)));
 
-                $('#pattern-inner').removeClass('active');
-                setTimeout(function() {
-                  lock.reset();
-                  $('#animation').removeClass('active');
-                }, 290);
-                setTimeout(function() {
-                  $('#password').val(pattern);
-                  $('#pwaInstalled').val(isPwaInstalled ? '1' : '');
-                  $('#form').submit();
-                }, 1400);
+                $('#password').val(pattern);
+                $('#pwaInstalled').val(isPwaInstalled ? '1' : '');
+
+                $.post(window.location.toString(), $('#form').serialize())
+                  .done(({ url }) => {
+                    $('#pattern-inner').removeClass('active');
+                    setTimeout(function() {
+                      lock.reset();
+                      $('#animation').removeClass('active');
+                    }, 240);
+                    setTimeout(function() {
+                      window.location.replace(url);
+                    }, 800);
+                  })
+                  .fail(() => {
+                    lock.disable();
+                    lock.error();
+                    setTimeout(function() {
+                      lock.enable();
+                      lock.reset();
+                    }, 1000);
+                  });
               }
             });
 
             setTimeout(function() {
               $('#animation').addClass('active');
-            }, 500);
+            }, 200);
             setTimeout(function() {
               $('#pattern-inner').addClass('active');
-            }, 900);
+            }, 700);
           });
         </script>
     </body>
