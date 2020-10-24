@@ -76,6 +76,7 @@ class BrowserHttpCallTriggerEditForm extends React.Component {
           <a href='javascript:void(0);' onClick={this.copyToClipboard.bind(this, curlCall)}>
             {curlCall} &nbsp; (copy me)
           </a>
+          <br />
           {path !== pathExample && (<span><br />This is an example matching the path regular expression.</span>)}
         </div>
 
@@ -103,17 +104,13 @@ class BrowserHttpCallTriggerEditForm extends React.Component {
       })
   }
 
-  nameChange () {
-    // TODO !0
-  }
-
   changePath (ev) {
     const path = ev.currentTarget.value
     this.props.instance.data.path = path
     this.setState({
       path
     })
-    this.nameChange()
+    this.props.highlightCloseButton()
   }
 
   changeMethod (ev) {
@@ -122,7 +119,7 @@ class BrowserHttpCallTriggerEditForm extends React.Component {
     this.setState({
       method
     })
-    this.nameChange()
+    this.props.highlightCloseButton()
   }
 }
 
