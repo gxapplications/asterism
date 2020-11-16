@@ -72,11 +72,11 @@ class BrowserHttpCallTriggerEditForm extends React.Component {
         <br />
 
         <div s={12}>
-          CURL call:
+          CURL call:<br />
           <a href='javascript:void(0);' onClick={this.copyToClipboard.bind(this, curlCall)}>
             {curlCall} &nbsp; (copy me)
           </a>
-          <br />
+          <br /><br />
           {path !== pathExample && (<span><br />This is an example matching the path regular expression.</span>)}
         </div>
 
