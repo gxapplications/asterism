@@ -1,7 +1,6 @@
 'use strict'
 
 import debounce from 'debounce'
-import Joi from '@hapi/joi'
 import PropTypes from 'prop-types'
 import React from 'react'
 import { TextInput, Row, Select } from 'react-materialize'
@@ -26,7 +25,7 @@ class BrowserBitmaskStateEditForm extends React.Component {
   render () {
     const { instance } = this.props
     const { state, count } = this.state
-    const defaultName = Joi.reach(bitmaskStateSchema, 'name')._flags.default
+    const defaultName = bitmaskStateSchema.extract('name')._flags.default
     const defaultValue = instance.data.name === defaultName ? '' : instance.data.name
 
     return (

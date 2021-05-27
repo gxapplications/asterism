@@ -2,7 +2,6 @@
 'use strict'
 
 import PropTypes from 'prop-types'
-import Joi from '@hapi/joi'
 import React from 'react'
 import RandExp from 'randexp'
 import { Row, TextInput, Select } from 'react-materialize'
@@ -34,7 +33,7 @@ class BrowserHttpCallTriggerEditForm extends React.Component {
   render () {
     const { instance } = this.props
     const { name, method, path, success, error } = this.state
-    const defaultName = Joi.reach(httpCallTriggerSchema, 'name')._flags.default
+    const defaultName = httpCallTriggerSchema.extract('name')._flags.default
     const defaultValue = name === defaultName ? '' : name
     const pathExample = this._randomPath(path)
 

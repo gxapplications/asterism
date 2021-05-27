@@ -1,7 +1,6 @@
 'use strict'
 
 import debounce from 'debounce'
-import Joi from '@hapi/joi'
 import PropTypes from 'prop-types'
 import React from 'react'
 import { Select, TextInput, Row } from 'react-materialize'
@@ -25,7 +24,7 @@ class BrowserLevelStateEditForm extends React.Component {
 
   render () {
     const { instance } = this.props
-    const defaultName = Joi.reach(levelStateSchema, 'name')._flags.default
+    const defaultName = levelStateSchema.extract('name')._flags.default
     const defaultValue = instance.data.name === defaultName ? '' : instance.data.name
 
     return (
