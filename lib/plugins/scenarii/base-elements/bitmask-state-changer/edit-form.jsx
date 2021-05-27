@@ -84,6 +84,7 @@ class BrowserBitmaskStateChangerEditForm extends React.Component {
 
     return (
       <Row className='section card form bitmaskStateChangerPanel'>
+        <h6 className='show-in-procedure'>{instance.shortLabel}</h6>
         <br />
         <StatesDropdown
           defaultStateId={instance.data.bitmaskStateId} onChange={this.bitmaskStateChanged.bind(this)}

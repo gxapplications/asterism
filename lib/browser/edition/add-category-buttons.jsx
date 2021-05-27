@@ -183,16 +183,16 @@ class AddCategoryButtons extends React.Component {
       <div>
         {modal ? (
           <div id='category-modal' className={cx('modal modal-fixed-footer', theme.backgrounds.body)}>
-            <div className='modal-content'>
-              <div className={cx('coloring-header', { [modalCategory.className || theme.backgrounds.card]: animationLevel < 3 })}>
-                {animationLevel >= 3 ? (<div className={cx('ripple', modalCategory.className || theme.backgrounds.card)} />) : null}
-                <div className={animationLevel >= 3 && (modalCategory.className || theme.backgrounds.card).endsWith('white-text') ? 'white-text' : null}>
-                  <h4>
-                    <Icon small>{modalCategory.icon}</Icon>
-                    {modalCategory.title}
-                  </h4>
-                </div>
+            <div className={cx('coloring-header', { [modalCategory.className || theme.backgrounds.card]: animationLevel < 3 })}>
+              {animationLevel >= 3 ? (<div className={cx('ripple', modalCategory.className || theme.backgrounds.card)} />) : null}
+              <div className={animationLevel >= 3 && (modalCategory.className || theme.backgrounds.card).endsWith('white-text') ? 'white-text' : null}>
+                <h4>
+                  <Icon small>{modalCategory.icon}</Icon>
+                  {modalCategory.title}
+                </h4>
               </div>
+            </div>
+            <div className='modal-content thin-scrollable'>
               <div className='collection additional-items-list'>
                 {modalCategory.additionalItems.map((item, idx) => (
                   <a

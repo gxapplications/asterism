@@ -96,6 +96,18 @@ class SettingsSecurity extends React.Component {
             )}
           </p>
         </div>
+        <div className='section left-align'>
+          <h5><Icon left>extension</Icon>Updates</h5>
+          <p>
+            Updating asterism will be soon possible from here. For now you can just halt the system. If you use PM2 to manage asterism, it will restart.
+          </p>
+          <p className='row'>
+            <Button waves={waves} className={cx('marged col s12 m5 l7', theme.actions.secondary)} onClick={this.haltSystem.bind(this)}>
+              <Icon left>power_off</Icon>
+              Halt system
+            </Button>
+          </p>
+        </div>
         <div className={cx('card-reveal', theme.backgrounds.body)}>
           <span className='card-title pattern-close-card'>Draw a pattern<Icon right>close</Icon></span>
           <div className='center-align '>
@@ -135,13 +147,18 @@ class SettingsSecurity extends React.Component {
         $('.pattern-close-card').click()
       })
   }
+
+  haltSystem () {
+    this.props.mainState().haltSystem()
+  }
 }
 
 SettingsSecurity.propTypes = {
   theme: PropTypes.object.isRequired,
   serverStorage: PropTypes.object.isRequired,
   showRefreshButton: PropTypes.func.isRequired,
-  animationLevel: PropTypes.number.isRequired
+  animationLevel: PropTypes.number.isRequired,
+  mainState: PropTypes.func.isRequired
 }
 
 export default SettingsSecurity

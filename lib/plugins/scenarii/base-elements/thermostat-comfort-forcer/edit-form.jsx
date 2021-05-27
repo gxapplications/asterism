@@ -19,6 +19,7 @@ class ThermostatComfortForcerEditForm extends React.Component {
 
     return (
       <Row className='section card form thermostatComfortForcerPanel'>
+        <h6 className='show-in-procedure'>{instance.shortLabel}</h6>
         <br />
         <ScenariiDropdown
           defaultScenarioId={instance.data.thermostatStateScenarioId} onChange={this.scenarioChanged.bind(this)}

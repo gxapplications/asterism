@@ -14,6 +14,9 @@ import BitmaskStateControlSettingPanel from './bitmask-state-control/setting-pan
 import TemperatureProgrammerItem from './temperature-programmer/item'
 import TemperatureProgrammerSettingPanel from './temperature-programmer/setting-panel'
 
+import SurveyControlItem from './survey-control/item'
+import SurveyControlSettingPanel from './survey-control/setting-panel'
+
 const builder = new ItemFactoryBuilder()
   .newItemType('action_button', AdditionalItem.categories.DOMOTICS)
   .withDescription('Action button', 'A button that launches an action')
@@ -65,6 +68,18 @@ const builder = new ItemFactoryBuilder()
     { w: 3, h: 3 },
     { w: 3, h: 4 },
     { w: 3, h: 5 }
+  ])
+  .build()
+  .newItemType('survey_control', AdditionalItem.categories.SECURITY)
+  .withDescription('Alarm survey control', 'A control to manage survey by zone')
+  .settingPanelWithHeader('Alarm survey control settings', 'notification_important') // optional override, but always before *Instance*() calls...
+  .newInstanceFromInitialSetting(2, 2, SurveyControlSettingPanel)
+  .existingInstance(SurveyControlItem, SurveyControlSettingPanel)
+  .acceptDimensions([
+    { w: 1, h: 2 },
+    { w: 1, h: 3 },
+    { w: 2, h: 2 },
+    { w: 2, h: 3 }
   ])
   .build()
 

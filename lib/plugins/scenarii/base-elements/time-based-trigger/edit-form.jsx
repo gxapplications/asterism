@@ -136,6 +136,7 @@ class BrowserTimeBasedTriggerEditForm extends React.Component {
 
     return (
       <Row className='section card form time-based-trigger-panel' id={this._formId}>
+        <h6 className='show-in-procedure'>{instance.shortLabel}</h6>
         <br />
         <Select key={0} s={12} label='Day / Date' icon='calendar_today' onChange={this.changeDayMode.bind(this)} defaultValue={dayMode}>
           <option key='everyday' value='everyday'>Every day</option>

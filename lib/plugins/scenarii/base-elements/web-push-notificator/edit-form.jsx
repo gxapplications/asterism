@@ -16,6 +16,7 @@ class BrowserWebPushNotificatorEditForm extends React.Component {
 
     return (
       <Row className='section card form webPushNotificatorPanel'>
+        <h6 className='show-in-procedure'>{instance.shortLabel}</h6>
         <br />
         <Select
           s={12} m={4} label='Level' icon='announcement' onChange={this.levelChanged.bind(this)}

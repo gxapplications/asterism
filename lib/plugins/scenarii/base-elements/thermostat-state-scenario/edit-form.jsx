@@ -90,6 +90,7 @@ class BrowserThermostatStateScenarioEditForm extends React.Component {
             defaultValue={name} onChange={(e) => { instance.data.name = e.currentTarget.value }}
           />
         </Row>
+        <h6 className='show-in-procedure'>{instance.shortLabel}</h6>
         <Row className='section card form'>
           <h5>Controlling state</h5>
           <div className='col s12'>&nbsp;</div>

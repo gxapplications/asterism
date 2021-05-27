@@ -71,6 +71,7 @@ class BrowserWaitEditForm extends React.Component {
     const timePickerId = uuid.v4()
     return (
       <Row className='section card form waitPanel'>
+        <h6 className='show-in-procedure'>{instance.shortLabel}</h6>
         <br />
         <Select
           key={0} s={12} label='Mode' icon={waitMode === 'amount' ? 'timer' : (waitMode === 'until' ? 'timelapse' : 'av_timer')} onChange={this.changeWaitMode.bind(this)}

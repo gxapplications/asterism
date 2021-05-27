@@ -72,6 +72,7 @@ class Settings extends React.Component {
             theme={theme} serverStorage={serverStorage}
             animationLevel={animationLevel}
             showRefreshButton={this.showRefreshButton.bind(this)}
+            mainState={mainState}
           />
         </Tab>
         <Tab title='User interface' active={this._activeTabIndex === 1}>

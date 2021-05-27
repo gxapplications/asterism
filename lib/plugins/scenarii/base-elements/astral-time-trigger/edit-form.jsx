@@ -124,6 +124,7 @@ class BrowserAstralTimeTriggerEditForm extends React.Component {
 
     return (
       <Row className='section card form astral-time-trigger-panel' id={this._formId}>
+        <h6 className='show-in-procedure'>{instance.shortLabel}</h6>
         <br />
         <Select
           s={12} label='Event to monitor' icon='brightness_4' onChange={this.changeEvent.bind(this)}

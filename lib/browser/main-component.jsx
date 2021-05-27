@@ -39,7 +39,9 @@ class MainComponent extends React.Component {
     this.securityOn = hasCookie('readOnly-access-token') || hasCookie('admin-access-token')
 
     this.notificationManager = new NotificationManager(this, this.logger)
-    this.socketManager = new SocketManager(this.notificationManager, this.logger)
+    this.socketManager = new SocketManager(this.logger)
+    this.systemSocket = this.socketManager.generateSystemSocket(this.notificationManager)
+
     // Instantiate orderHandler and initial items for this.state (need to be sync)
     this.itemManager = new ItemManager(props.localStorage, props.serverStorage, this)
 
@@ -158,7 +160,12 @@ class MainComponent extends React.Component {
       notifications: [], // not directly used to render, but to trigger a render() when modified
       messageModal: null,
       speechDialog: null,
-      deferredInstallPrompt: null
+      deferredInstallPrompt: null,
+      haltSystem: () => {
+        this.systemSocket.emit('halt-system', () => {
+          this.logout()
+        })
+      }
       // logs: []
     }
   }
@@ -427,7 +434,7 @@ class MainComponent extends React.Component {
         ) : null}
 
         {editMode && EditPanel ? (
-          <div id='edit-panel-modal' className={cx('modal thin-scrollable', theme.backgrounds.body)}>
+          <div id='edit-panel-modal' className={cx('modal very-large-modal thin-scrollable', theme.backgrounds.body)}>
             <Navbar
               alignLinks='right' className={EditPanel.extendHeader ? theme.backgrounds.body : theme.backgrounds.editing} extendWith={EditPanel.extendHeader ? (
                 <EditPanel

@@ -65,6 +65,7 @@ class BrowserLevelStateChangerEditForm extends React.Component {
 
     return (
       <Row className='section card form levelStateChangerPanel'>
+        <h6 className='show-in-procedure'>{instance.shortLabel}</h6>
         <br />
         <StatesDropdown
           defaultStateId={instance.data.levelStateId} onChange={this.levelStateChanged.bind(this)}

@@ -18,6 +18,7 @@ class BrowserScenarioActivatorEditForm extends React.Component {
     const { instance, animationLevel, theme, services } = this.props
     return (
       <Row className='section card form'>
+        <h6 className='show-in-procedure'>{instance.shortLabel}</h6>
         <br />
         <ScenariiDropdown
           defaultScenarioId={instance.data.scenarioId} onChange={this.scenarioChanged.bind(this)}

@@ -632,6 +632,10 @@ body::-webkit-scrollbar-thumb {
 
 /* EDITION MODE: CATEGORY MODAL */
 
+#category-modal {
+  overflow: hidden;
+}
+
 #category-modal .modal-content {
   padding: 0;
 }
@@ -670,6 +674,7 @@ body::-webkit-scrollbar-thumb {
 #category-modal .additional-items-list {
   border: none;
   margin: 0.5em;
+  margin-bottom: 6em;
 }
 
 #category-modal .additional-items-list > .collection-item {
@@ -678,6 +683,10 @@ body::-webkit-scrollbar-thumb {
 
 #category-modal .additional-items-list > a {
   color: inherit;
+}
+
+#category-modal .modal-footer {
+  z-index: 2;
 }
 
 /* EDITION MODE: SETTINGS MODAL */
@@ -698,7 +707,15 @@ body::-webkit-scrollbar-thumb {
 #edit-panel-modal .modal-content {
   overflow-y: auto;
   width: -webkit-fill-available;
-  height: calc(100% - 4.5rem);
+  height: calc(100% - 4.2rem);
+  padding: 24px;
+  margin-top: 2px;
+}
+
+@media only screen and (max-width: 600px) {
+  #edit-panel-modal modal-content {
+    padding: 14px;
+  }
 }
 
 #settings-modal span.brand-logo, #edit-panel-modal span.brand-logo {
@@ -709,6 +726,11 @@ body::-webkit-scrollbar-thumb {
 }
 #settings-modal > nav > .nav-wrapper, #edit-panel-modal > nav > .nav-wrapper {
   min-height: 65px;
+}
+@media only screen and (max-width: 600px) {
+  #settings-modal > nav > .nav-wrapper, #edit-panel-modal > nav > .nav-wrapper {
+    min-height: 56px;
+  }
 }
 #settings-modal > nav > .nav-content > ul.tabs, #edit-panel-modal > nav > .nav-content > * > ul.tabs {
   box-shadow: 0 3px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 3px 4px 0 rgba(0,0,0,0.2);

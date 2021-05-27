@@ -60,6 +60,7 @@ class BrowserProcedureEditForm extends React.Component {
             onChange={(e) => { instance.data.name = e.currentTarget.value; this.props.highlightCloseButton() }}
           />
         </Row>
+        <h6 className='show-in-procedure'>{instance.shortLabel}</h6>
 
         <Row className='section procedurePanel'>
           {this.renderScript(instance.data.script)}
@@ -231,6 +232,9 @@ class BrowserProcedureEditForm extends React.Component {
   _deleteAction (sequence, idx, actionId) {
     sequence.splice(idx, 1) // removes 1 element from idx position
 
+    if (!this.isActionGlobal(actionId)) {
+      this.scenariiService.deleteActionInstance({ instanceId: actionId })
+    }
     const { ...newState } = this.state
     delete newState[`actionEditPanel-${actionId}`]
     this.setState(newState)

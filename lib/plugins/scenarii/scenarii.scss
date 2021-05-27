@@ -1,3 +1,7 @@
+.show-in-procedure {
+  display: none;
+}
+
 .ScenariiEditPanel {
   height: 100%;
   width: 100%;
@@ -431,6 +435,10 @@
         & .hide-in-procedure {
           display: none;
         }
+
+        & .show-in-procedure {
+          display: block !important;
+        }
       }
     }
 
@@ -503,7 +511,7 @@
 
 .waitPanel, .levelStateChangerPanel, .astral-time-trigger-panel, .level-state-trigger-panel, .time-based-condition-panel,
 .astral-time-condition-panel, .level-state-condition-panel, .bitmaskStateChangerPanel, .bitmask-state-condition-panel,
-.bitmask-state-trigger-panel, .floatingLevelStatePanel {
+.bitmask-state-trigger-panel, .floatingLevelStatePanel, .surveyControlItem, .survey-scenario-panel {
   & .slider {
     height: 5.4rem;
     padding-top: 1.6rem;
@@ -810,4 +818,101 @@
 }
 body > .rg-grid-item > .rg-item-wrapper .bitmaskStateItem .switches {
   display: none;
+}
+
+.surveyControlItem {
+  .mainTitle {
+    margin-bottom: 0;
+    margin-top: 0;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    height: 40%;
+    font-size: 1.4rem;
+
+    & .fluid {
+      width: 100%;
+      flex-grow: 1;
+      height: fit-content !important;
+      display: grid;
+    }
+  }
+  button {
+    margin-left: 4.16% !important;
+    margin-right: 4.16%;
+  }
+  div.progress {
+    position: absolute;
+    bottom: 0;
+    margin: 0;
+    height: 6px;
+    background-color: rgba(0, 0, 0, 0.25);
+
+    & .determinate {
+      background-color: orange;
+    }
+  }
+}
+
+.survey-scenario-panel {
+  & div.min-height-6 {
+    min-height: 6rem;
+  }
+  & div.folder > i {
+    font-size: xx-large !important;
+  }
+  & li.sub-panels {
+    padding-top: 1.4rem;
+    padding-left: 0;
+    padding-right: 0;
+    position: relative;
+
+    & div.removeAction {
+      float: right;
+      margin-right: 0.8rem;
+      height: 36px;
+      line-height: 36px;
+      padding: 0 8px;
+    }
+    & div.globalizeAction {
+      float: right;
+      margin-right: 0.4rem;
+      height: 36px;
+      line-height: 36px;
+      padding: 0 8px;
+
+      &.disabled {
+        font-size: 0.8em;
+        z-index: 2;
+        display: block;
+        position: absolute;
+        margin: 0.8rem;
+        padding: 0.6em 0.8rem;
+        top: 4rem;
+        bottom: 0em;
+        left: 0;
+        right: 0;
+        height: inherit;
+        text-align: right;
+        background-color: rgba(196, 196, 196, 0.75);
+      }
+    }
+    & div.globalizeAction + div {
+      margin-top: 3.4rem;
+      position: relative;
+
+      & .hide-in-procedure {
+        display: none;
+      }
+    }
+  }
+
+  & li.sub-panels:not(.titled-embed-render) > div.globalizeAction + div {
+    & .show-in-procedure {
+      position: absolute;
+      top: -3.4rem;
+      left: 6rem;
+      display: block !important;
+    }
+  }
 }

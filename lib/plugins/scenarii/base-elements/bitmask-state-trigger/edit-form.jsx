@@ -90,6 +90,7 @@ class BrowserBitmaskStateTriggerEditForm extends React.Component {
 
     return (
       <Row className='section card form bitmask-state-trigger-panel'>
+        <h6 className='show-in-procedure'>{instance.shortLabel}</h6>
         <br />
         <StatesDropdown
           defaultStateId={bitmaskStateId} onChange={this.bitmaskStateChanged.bind(this)}

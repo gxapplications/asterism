@@ -51,8 +51,8 @@ class DomoticsSettings extends React.Component {
           })
         }
       })
-      .catch(error => {
-        console.log(error)
+      .catch(() => {
+        // console.log(error)
         this.setState({
           currentLocation: {}
         })
@@ -70,8 +70,8 @@ class DomoticsSettings extends React.Component {
           this.plugWidgets()
         }
       })
-      .catch(error => {
-        console.log(error)
+      .catch(() => {
+        // console.log(error)
         this.setState({
           energyCosts: {
             prices: [0, 0, 0, 0, 0, 0],

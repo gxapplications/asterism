@@ -77,6 +77,7 @@ class BrowserAstralTimeConditionEditForm extends React.Component {
 
     return (
       <Row className='section card form astral-time-condition-panel'>
+        <h6 className='show-in-procedure'>{instance.shortLabel}</h6>
         <br />
         <Select
           s={12} label='Sunlight condition' icon='brightness_4' onChange={this.changeEvent.bind(this)}

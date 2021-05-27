@@ -18,6 +18,7 @@ class BrowserActionAborterEditForm extends React.Component {
     const { instance, animationLevel, theme, services } = this.props
     return (
       <Row className='section card form'>
+        <h6 className='show-in-procedure'>{instance.shortLabel}</h6>
         <br />
         <ActionsDropdown
           defaultActionId={instance.data.actionId} onChange={this.actionChanged.bind(this)}

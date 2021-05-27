@@ -186,6 +186,7 @@ class ScenariiEditPanel extends React.Component {
               theme={theme} animationLevel={animationLevel}
               highlightCloseButton={highlightCloseButton}
               privateSocket={this._socket}
+              scenariiPanel={this}
             />}
         </div>
 

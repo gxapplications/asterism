@@ -64,6 +64,7 @@ class BrowserLevelStateTriggerEditForm extends React.Component {
 
     return (
       <Row className='section card form level-state-trigger-panel'>
+        <h6 className='show-in-procedure'>{instance.shortLabel}</h6>
         <br />
         <StatesDropdown
           defaultStateId={levelStateId} onChange={this.levelStateChanged.bind(this)}
