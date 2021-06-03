@@ -427,7 +427,7 @@ class MainComponent extends React.Component {
         ) : null}
 
         {editMode && EditPanel ? (
-          <div id='edit-panel-modal' className={cx('modal thin-scrollable', theme.backgrounds.body)}>
+          <div id='edit-panel-modal' className={cx('modal very-large-modal thin-scrollable', theme.backgrounds.body)}>
             <Navbar
               alignLinks='right' className={EditPanel.extendHeader ? theme.backgrounds.body : theme.backgrounds.editing} extendWith={EditPanel.extendHeader ? (
                 <EditPanel
