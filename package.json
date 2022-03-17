@@ -1,6 +1,6 @@
 {
   "name": "asterism",
-  "version": "1.10.12",
+  "version": "1.10.15",
   "description": "Extensible & dynamic dashboard platform",
   "author": "Xavier Gouley <gxapplications@gmail.com> (asterism.tk)",
   "contributors": [],
@@ -67,7 +67,7 @@
     "ajv": "6.12.x",
     "all-the-cities": "3.x",
     "annyang": "2.6.x",
-    "asterism-plugin-library": "^2.4.4",
+    "asterism-plugin-library": "^2.4.5",
     "babel-loader": "8.1.x",
     "babel-plugin-css-modules-transform": "1.6.x",
     "body-parser": "1.x",
