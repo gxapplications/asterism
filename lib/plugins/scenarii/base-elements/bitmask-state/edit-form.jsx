@@ -40,7 +40,7 @@ class BrowserBitmaskStateEditForm extends React.Component {
         <div className='col s12'>Positions count: {instance.data.count}</div>
         <div className='range-field col s12'>
           <input
-            type='range' list='count' min='1' max='8' onChange={this.changeCountValue.bind(this)}
+            type='range' list='count' min='1' max='10' onChange={this.changeCountValue.bind(this)}
             defaultValue={instance.data.count}
           />
           <datalist id='count'>
@@ -52,6 +52,8 @@ class BrowserBitmaskStateEditForm extends React.Component {
             <option>6</option>
             <option>7</option>
             <option>8</option>
+            <option>9</option>
+            <option>10</option>
           </datalist>
         </div>
 
