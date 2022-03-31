@@ -734,11 +734,11 @@
 
     & i {
       transform: rotate(90deg);
-      font-size: 0.85rem;
+      font-size: 0.7rem;
       position: relative;
       left: -0.35rem;
       height: 100%;
-      opacity: 0.2;
+      opacity: 0.5;
       color: #000;
     }
 
@@ -851,6 +851,33 @@ body > .rg-grid-item > .rg-item-wrapper .bitmaskStateItem .switches {
     & .determinate {
       background-color: orange;
     }
+  }
+}
+
+.survey-pattern-modal {
+  height: 82%;
+  max-height: 82%;
+  overflow: hidden;
+  width: 60%;
+
+  & .modal-footer {
+    background-color: transparent;
+  }
+  & .modal-content {
+    overflow-y: auto;
+    width: -webkit-fill-available;
+    height: calc(100% - 4.2rem);
+    padding: 24px;
+    margin-top: 2px;
+
+    & .patternLock {
+      /* TODO !0 */
+    }
+  }
+}
+@media only screen and (max-width: 600px) {
+  .survey-pattern-modal {
+    width: 80%;
   }
 }
 

@@ -1,10 +1,11 @@
 'use strict'
 
+/* global $ */
 import React from 'react'
 
-import { Item } from 'asterism-plugin-library'
+import { Item, PatternLock } from 'asterism-plugin-library'
 import cx from 'classnames'
-import { Button, Icon, ProgressBar, Row } from 'react-materialize'
+import { Button, Icon, Modal, ProgressBar, Row } from 'react-materialize'
 
 class SurveyControlItem extends Item {
   constructor (props) {
@@ -16,10 +17,13 @@ class SurveyControlItem extends Item {
     this.state.levelStateInstance = null
     this.state.stateListenerId = null
     this.state.currentLevel = 0 // 0=unknown
+    this.state.alarmMessage = null
+    this.state.warningDelay = null
     this.receiveNewParams(this.state.params)
 
     this._mounted = false
     this._armingInterval = null
+    this._warningInterval = null
   }
 
   receiveNewParams (params) {
@@ -54,6 +58,38 @@ class SurveyControlItem extends Item {
               arming: false
             })
           })
+
+          this.scenariiService.privateSocket.on('surveyLevelChanged', ({ instanceId, triggerId, triggerName, delay, level }) => {
+            if (!this._mounted || (params.scenario !== instanceId)) {
+              return
+            }
+            if (level === 1) {
+              $(`#survey-pattern-${scenario.instanceId}`).modal('close')
+              return this.setState({
+                alarmMessage: null,
+                warningDelay: null
+              })
+            }
+
+            this.setState({
+              alarmMessage: triggerName || null,
+              warningDelay: delay || null
+            })
+            if (this._warningInterval) {
+              clearInterval(this._warningInterval)
+            }
+            if (delay > 0) {
+              this._warningInterval = setInterval(() => {
+                const d = this.state.warningDelay - 1
+                if (d <= 0) {
+                  clearInterval(this._warningInterval)
+                }
+                this.setState({ warningDelay: d })
+              }, 1000)
+            }
+
+            $(`#survey-pattern-${instanceId}`).modal('open')
+          })
         })
         .catch(() => {})
     }
@@ -75,6 +111,42 @@ class SurveyControlItem extends Item {
   shouldComponentUpdate (nextProps, nextState) {
     // TODO !2
     return true
+  }
+
+  renderAlarmStatus () {
+    const { alarmMessage, warningDelay } = this.state
+    return (
+      <i>
+        {alarmMessage || ''}
+        &nbsp;&nbsp;
+        {warningDelay > 0 && `(${warningDelay}s left)`}
+      </i>
+    )
+  }
+
+  renderPattern () {
+    const { mainState, theme } = this.props.context
+    const { animationLevel } = mainState()
+    const { scenario, alarmMessage, warningDelay, levelStateInstance, currentLevel } = this.state
+    const { name } = scenario.data
+
+    const isWarning = levelStateInstance.data.max >= 3 && currentLevel === 2
+    const isAlarming = !isWarning && currentLevel > 1
+    const modalColor = isWarning ? theme.feedbacks.warning : (isAlarming ? theme.feedbacks.error : theme.feedbacks.success)
+
+    return (
+      <Modal
+        id={`survey-pattern-${scenario.instanceId}`} header={name} options={{
+          inDuration: animationLevel >= 2 ? 300 : 0,
+          outDuration: animationLevel >= 2 ? 300 : 0,
+          preventScrolling: true
+        }}
+        className={cx(modalColor, 'survey-pattern-modal')}
+      >
+        {alarmMessage || 'nothing'} / {warningDelay || '0'} TODO !0: l'afficher d'une façon ou d'une autre....
+        <PatternLock theme={theme} animationLevel={animationLevel} patternCallback={this.patternDraw.bind(this)} />
+      </Modal>
+    )
   }
 
   render () {
@@ -119,22 +191,23 @@ class SurveyControlItem extends Item {
         <Row className='col s12 truncate'>
           {!activated && !arming && <i>Survey OFF</i>}
           {arming && <i>Activating...</i>}
-          {activated && (((currentLevel > 1) && <i>TODO</i>) || <i>Clear</i>)}
+          {activated && (((currentLevel > 1) && this.renderAlarmStatus()) || <i>Clear</i>)}
         </Row>
 
         <Button
           waves={waves}
           className={cx(btnColor, 'truncate col s11')}
-          onClick={this.switchActivation.bind(this)}
+          onClick={this.switchActivation.bind(this, false)}
         >
           {arming ? 'Cancel' : (activated ? 'Deactivate' : 'Activate')}
           {arming && ('  (' + arming + 's)')}
         </Button>
+        {this.renderPattern()}
       </div>
     )
   }
 
-  switchActivation () {
+  switchActivation (force = false) {
     const { scenario, arming } = this.state
 
     if (arming) { // cancel case
@@ -160,7 +233,12 @@ class SurveyControlItem extends Item {
         }
       }, 1000)
     } else {
-      scenario.setActivation(false)
+      if (force) {
+        scenario.setActivation(false)
+        $(`#survey-pattern-${scenario.instanceId}`).modal('close')
+      } else {
+        $(`#survey-pattern-${scenario.instanceId}`).modal('open')
+      }
     }
   }
 
@@ -188,6 +266,11 @@ class SurveyControlItem extends Item {
         })
         .catch(() => {})
     }
+  }
+
+  patternDraw (pattern) {
+    // TODO !1
+    this.switchActivation(true)
   }
 }
 
