@@ -855,23 +855,49 @@ body > .rg-grid-item > .rg-item-wrapper .bitmaskStateItem .switches {
 }
 
 .survey-pattern-modal {
-  height: 82%;
-  max-height: 82%;
+  height: 90%;
+  max-height: 90%;
   overflow: hidden;
-  width: 60%;
+  width: 55%;
 
   & .modal-footer {
     background-color: transparent;
   }
   & .modal-content {
-    overflow-y: auto;
+    overflow-y: visible;
     width: -webkit-fill-available;
     height: calc(100% - 4.2rem);
-    padding: 24px;
-    margin-top: 2px;
+    padding: 12px;
 
-    & .patternLock {
-      /* TODO !0 */
+    & > h4 {
+      margin-bottom: 0.1rem;
+      padding-right: 5rem;
+    }
+    & > div:first-of-type {
+      padding-bottom: 1rem;
+    }
+    & > div.delay {
+      font-size: xx-large;
+      float: right;
+      padding-right: 1.5rem;
+      position: relative;
+      top: -3.8rem;
+      height: 0;
+      overflow: visible;
+    }
+    & .patternLock .patt-holder {
+      background-color: transparent;
+    }
+    & .patternLock .patt-error {
+      & .patt-circ.hovered {
+        border: 3px solid #f44;
+      }
+      & .patt-dots {
+        background: #f44;
+      }
+      & .patt-lines {
+        background: rgba(255, 88, 88, 0.8);
+      }
     }
   }
 }

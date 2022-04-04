@@ -136,7 +136,7 @@ class BrowserSurveyScenarioEditForm extends React.Component {
         <Row className='section card form'>
           <h5>
             <i className='material-icons left'>speed</i>
-            Alarm level state <small>(2 or 3 levels: Ok, [Warning], Alarm)</small>
+            Alarm level state <small>(3 or 4 levels: Off, On, [Warning], Alarm)</small>
           </h5><br />
           <StatesDropdown
             defaultStateId={instance.data.levelStateId} onChange={this.levelStateChanged.bind(this)}
