@@ -2,7 +2,7 @@
 
 import PropTypes from 'prop-types'
 import React from 'react'
-import { Select, Row } from 'react-materialize'
+import { Select, Row, Checkbox } from 'react-materialize'
 
 import { Scenarii } from 'asterism-plugin-library'
 
@@ -36,6 +36,13 @@ class BrowserScenarioActivatorEditForm extends React.Component {
           <option key='activate' value='activate'>Activate</option>
           <option key='deactivate' value='deactivate'>Deactivate</option>
         </Select>
+
+        <br />&nbsp;
+        <br />
+        <Checkbox
+          label='Immediately' className='filled-in' checked={instance.data.immediately} value={1}
+          onChange={this.changeImmediately.bind(this)}
+        />
       </Row>
     )
   }
@@ -48,6 +55,12 @@ class BrowserScenarioActivatorEditForm extends React.Component {
   operationChanged (event) {
     const operation = event.currentTarget.value
     this.props.instance.data.operation = operation
+    this.nameChange()
+  }
+
+  changeImmediately (event) {
+    const immediately = event.currentTarget.checked
+    this.props.instance.data.immediately = immediately
     this.nameChange()
   }
 
