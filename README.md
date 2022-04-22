@@ -10,7 +10,6 @@ _asterism_ is made in NodeJS, React and Materialize CSS. Palm oil free!
 [![npm package version](https://badge.fury.io/js/asterism.svg?logo=npm)](https://www.npmjs.com/package/asterism)
 [![npm downloads](https://img.shields.io/npm/dt/asterism.svg?logo=npm&label=npm%20downloads)](https://www.npmjs.com/package/asterism)
 [![Build Status](https://travis-ci.org/gxapplications/asterism.png?branch=master&logo=travis)](https://travis-ci.org/gxapplications/asterism)
-[![Dependencies](https://david-dm.org/gxapplications/asterism/status.svg?logo=dependabot)](https://david-dm.org/gxapplications/asterism)
 [![lib dep version](https://img.shields.io/npm/dependency-version/asterism/asterism-plugin-library.svg)](https://www.npmjs.com/package/asterism-plugin-library)
 
 _[Development progression / Roadmap available here (asterism and plugins)](https://github.com/users/gxapplications/projects/1)_

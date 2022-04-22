@@ -24,6 +24,8 @@ class BrowserProcedureEditForm extends React.Component {
       deleteElementConfirm: null
     }
     this._mounted = false
+
+    this._renderActionThrottle = 0
   }
 
   componentDidMount () {
@@ -166,9 +168,9 @@ class BrowserProcedureEditForm extends React.Component {
   }
 
   renderAction (actionId) {
-    if (this.state[`actionEditPanel-${actionId}`] !== undefined) {
-      const action = this.state[`actionEditPanel-${actionId}`]
-      if (action) {
+    const action = this.state[`actionEditPanel-${actionId}`]
+    if (action !== undefined && action !== false) {
+      if (action) { // can be null if not found!
         const ActionEditForm = action.EditForm
         return (
           <ActionEditForm
@@ -178,7 +180,7 @@ class BrowserProcedureEditForm extends React.Component {
         )
       }
 
-      // not found case
+      // not found case (null)
       return (
         <div className='section card red-text'>
           <Icon small>warning</Icon> <Icon small>healing</Icon>&nbsp;
@@ -186,20 +188,28 @@ class BrowserProcedureEditForm extends React.Component {
         </div>
       )
     } else {
-      this.scenariiService.getActionInstance(actionId, true)
-        .then((action) => {
-          this.setState({
-            [`actionEditPanel-${actionId}`]: action || null // force null if undefined (not found)
-          })
-          this.props.instance.editedActions = this.props.instance.editedActions || {}
-          this.props.instance.editedActions[actionId] = action
+      if (action !== false) {
+        this._renderActionThrottle++
+        this.setState({
+          [`actionEditPanel-${actionId}`]: false
         })
-        .catch((error) => {
-          this.setState({
-            [`actionEditPanel-${actionId}`]: null
-          })
-          console.error(error)
-        })
+        setTimeout(() => {
+          this.scenariiService.getActionInstance(actionId, true)
+            .then((action) => {
+              this.setState({
+                [`actionEditPanel-${actionId}`]: action || null // force null if undefined (not found)
+              })
+              this.props.instance.editedActions = this.props.instance.editedActions || {}
+              this.props.instance.editedActions[actionId] = action
+            })
+            .catch((error) => {
+              this.setState({
+                [`actionEditPanel-${actionId}`]: null
+              })
+              console.error(error)
+            })
+        }, this._renderActionThrottle * 250)
+      }
       return null
     }
   }
