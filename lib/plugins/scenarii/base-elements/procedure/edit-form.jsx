@@ -208,7 +208,7 @@ class BrowserProcedureEditForm extends React.Component {
               })
               console.error(error)
             })
-        }, this._renderActionThrottle * 250)
+        }, this._renderActionThrottle * 200)
       }
       return null
     }
