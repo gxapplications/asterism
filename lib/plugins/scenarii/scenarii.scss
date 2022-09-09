@@ -509,6 +509,41 @@
   }
 }
 
+.actionableScenario {
+  & .executionTriggerForm {
+    position: relative;
+    margin-bottom: 2rem;
+
+    & div.global {
+      position: absolute;
+      top: 0;
+      left: 0.8rem;
+      right: 0.8rem;
+      bottom: 0;
+      text-align: right;
+      background-color: rgba(196, 196, 196, 0.75);
+      margin: 0;
+      padding: 0.4em;
+      display: block;
+      z-index: 2;
+
+      & i.material-icons {
+        vertical-align: middle;
+        display: inline;
+      }
+
+      & div.removeAction {
+        display: inline-block;
+        padding: 0 9px;
+        position: absolute;
+        left: 0.4rem;
+        top: 0.4rem;
+        z-index: 3;
+      }
+    }
+  }
+}
+
 .waitPanel, .levelStateChangerPanel, .astral-time-trigger-panel, .level-state-trigger-panel, .time-based-condition-panel,
 .astral-time-condition-panel, .level-state-condition-panel, .bitmaskStateChangerPanel, .bitmask-state-condition-panel,
 .bitmask-state-trigger-panel, .floatingLevelStatePanel, .surveyControlItem, .survey-scenario-panel {

@@ -27,6 +27,6 @@ if (process.env.ASTERISM_PLUGINS) {
   })
 }
 
-server.start(6000, ['127.0.0.1', '0.0.0.0', '::1', '192.168.1.111', '192.168.1.6'], function () {
+server.start(6000, ['127.0.0.1', '0.0.0.0', '::1', '192.168.1.111', '192.168.1.6', '::ffff:172.19.0.1'], function () {
   console.log('Hot-reload mode Asterism listening on port 6080/6443!'.green)
 })

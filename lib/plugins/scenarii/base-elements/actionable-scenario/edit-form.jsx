@@ -6,6 +6,7 @@ import React from 'react'
 import { TextInput, Row } from 'react-materialize'
 import uuid from 'uuid'
 import { Scenarii } from 'asterism-plugin-library'
+import cx from "classnames";
 
 const { ActionsDropdown, TriggersDropdown, ConditionsDropdown } = Scenarii
 
@@ -15,7 +16,9 @@ class BrowserActionableScenarioEditForm extends React.Component {
 
     this.state = {
       name: props.instance.data.name,
-      advancedExpanded: !!props.instance.data.abortTrigger
+      advancedExpanded: !!props.instance.data.abortTrigger,
+      triggerEditPanel: undefined, // undef: not set, false: loading, null: missing, else: to display
+      deleteExecutionTriggerConfirm: false
     }
 
     this.scenariiService = props.services()['asterism-scenarii']
@@ -32,11 +35,11 @@ class BrowserActionableScenarioEditForm extends React.Component {
 
   render () {
     const { theme, animationLevel, instance, services } = this.props
-    const { action, executionTrigger, executionCondition, abortTrigger } = instance.data
+    const { action, executionCondition, abortTrigger } = instance.data
     const { name, advancedExpanded } = this.state
 
     return (
-      <div>
+      <div className='actionableScenario'>
         <Row className='section card form hide-in-procedure'>
           <TextInput
             placeholder='Short name' s={12} ref={(c) => { this._nameInput = c }}
@@ -47,12 +50,8 @@ class BrowserActionableScenarioEditForm extends React.Component {
         <h6 className='show-in-procedure'>{instance.shortLabel}</h6>
         <Row className='section card form'>
           <h5>When:</h5>
-          <div className='col s12'>&nbsp;</div>
-          <TriggersDropdown
-            onChange={this.setTrigger.bind(this)} theme={theme} animationLevel={animationLevel}
-            services={services} noCreationPanel defaultTriggerId={executionTrigger}
-            typeFilter={() => false} icon={null} label='Set a trigger' dropdownId={uuid.v4()}
-          />
+          {this.renderExecutionTrigger()}
+
           <h5>With additional condition:</h5>
           <div className='col s12'>&nbsp;</div>
           <ConditionsDropdown
@@ -94,6 +93,93 @@ class BrowserActionableScenarioEditForm extends React.Component {
     )
   }
 
+  renderExecutionTrigger () {
+    const { theme, animationLevel, instance, services } = this.props
+    const { executionTrigger } = instance.data
+
+    const trigger = this.state.triggerEditPanel
+    if (trigger !== undefined && trigger !== false) {
+      if (trigger) { // can be null if not found!
+        const TriggerEditForm = trigger.EditForm
+
+        const deleteWaves = animationLevel >= 2 ? 'btn-flat waves-effect waves-red' : 'btn-flat'
+        const deleteWavesConfirm = (animationLevel >= 2 ? 'btn waves-effect waves-light' : 'btn') + ` ${theme.actions.negative}`
+
+        return (
+            <div className='executionTriggerForm'>
+
+              <TriggerEditForm theme={theme} animationLevel={animationLevel}
+                instance={this.state.triggerEditPanel} services={services}
+              />
+
+              {this.isExecutionTriggerGlobal() ? (
+                <div className='global'>
+                  <i className='material-icons'>public</i> Public Shared action, cannot be edited here.
+                  <div className={cx('removeAction', this.state.deleteExecutionTriggerConfirm ? deleteWavesConfirm : deleteWaves)}
+                    onClick={this.deleteExecutionTrigger.bind(this)}
+                  >
+                    <i className='material-icons'>clear</i>
+                  </div>
+                </div>
+              ) : (
+                <div>
+                  TODO !0
+                  <i className='material-icons'>public</i> Si non public, click pour le rendre public
+
+                  <div className={cx('removeAction', this.state.deleteExecutionTriggerConfirm ? deleteWavesConfirm : deleteWaves)}
+                    onClick={this.deleteExecutionTrigger.bind(this)}
+                  >
+                    <i className='material-icons'>delete</i>
+                  </div>
+                </div>
+              )}
+
+            </div>
+        )
+      }
+
+      // not found case (null)
+      return (
+        <div className='section card red-text'>
+          <i className='material-icons'>warning</i> <i className='material-icons'>healing</i>&nbsp;
+          The trigger that was here seems to be missing. This avoid the scenario to be run properly, so you have to fix this.
+        </div>
+      )
+    } else {
+      if (trigger !== false && executionTrigger) {
+        this.setState({
+          triggerEditPanel: false
+        })
+        setTimeout(() => {
+          this.scenariiService.getTriggerInstance(executionTrigger, true)
+          .then((trig) => {
+            this.setState({
+              triggerEditPanel: trig || null // force null if undefined (not found)
+            })
+          })
+          .catch((error) => {
+            this.setState({
+              triggerEditPanel: null
+            })
+            console.error(error)
+          })
+        }, 200)
+        return null
+      }
+
+      return executionTrigger ? null : (
+        <div>
+          <br />
+          <TriggersDropdown
+            onChange={this.setTrigger.bind(this)} theme={theme} animationLevel={animationLevel}
+            services={services} parentIdForNewInstance={instance.instanceId} noCreationPanel
+            typeFilter={() => true} icon={null} label='Set a trigger' dropdownId={uuid.v4()}
+          />
+        </div>
+      )
+    }
+  }
+
   setAction (actionId) {
     this.props.instance.data.action = actionId
     this.betterName()
@@ -101,6 +187,7 @@ class BrowserActionableScenarioEditForm extends React.Component {
 
   setTrigger (triggerId) {
     this.props.instance.data.executionTrigger = triggerId
+    this.forceUpdate()
     this.betterName()
   }
 
@@ -148,6 +235,45 @@ class BrowserActionableScenarioEditForm extends React.Component {
         $(`#actionable-scenario-name-input-${this._nameInputId}`).val(this.props.instance.data.name)
       }
     })
+  }
+
+  isExecutionTriggerGlobal () {
+    const trigger = this.state.triggerEditPanel
+    if (trigger && trigger.parent === this.props.instance.instanceId) {
+      return false
+    }
+    return true // by default if not fetched yet
+  }
+
+  deleteExecutionTrigger () {
+    if (!this.state.deleteExecutionTriggerConfirm) {
+      this._deleteExecutionTriggerConfirm()
+      return
+    }
+
+    clearTimeout(this._deleteTimer)
+    if (!this.isExecutionTriggerGlobal()) {
+      this.scenariiService.deleteTriggerInstance({ instanceId: this.props.instance.data.executionTrigger })
+    }
+    this.setState({
+      triggerEditPanel: undefined, // TODO !0: works ?
+      deleteExecutionTriggerConfirm: false
+    })
+    // TODO !0: need force update ?
+  }
+
+  _deleteExecutionTriggerConfirm () {
+    clearTimeout(this._deleteTimer)
+    this.setState({
+      deleteExecutionTriggerConfirm: true
+    })
+    if (element) {
+      this._deleteTimer = setTimeout(() => {
+        if (this._mounted) {
+          this.setState({ deleteExecutionTriggerConfirm: false })
+        }
+      }, 3000)
+    }
   }
 }
 
