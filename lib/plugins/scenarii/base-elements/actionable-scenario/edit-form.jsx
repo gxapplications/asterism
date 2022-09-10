@@ -104,36 +104,35 @@ class BrowserActionableScenarioEditForm extends React.Component {
 
         const deleteWaves = animationLevel >= 2 ? 'btn-flat waves-effect waves-red' : 'btn-flat'
         const deleteWavesConfirm = (animationLevel >= 2 ? 'btn waves-effect waves-light' : 'btn') + ` ${theme.actions.negative}`
+        const globalizeWaves = animationLevel >= 2 ? 'btn-flat waves-effect' : 'btn-flat'
 
         return (
             <div className='executionTriggerForm'>
-
               <TriggerEditForm theme={theme} animationLevel={animationLevel}
                 instance={this.state.triggerEditPanel} services={services}
               />
 
               {this.isExecutionTriggerGlobal() ? (
                 <div className='global'>
-                  <i className='material-icons'>public</i> Public Shared action, cannot be edited here.
-                  <div className={cx('removeAction', this.state.deleteExecutionTriggerConfirm ? deleteWavesConfirm : deleteWaves)}
+                  <i className='material-icons'>public</i> Public Shared trigger, cannot be edited here.
+                  <div className={cx('removeTrigger', this.state.deleteExecutionTriggerConfirm ? deleteWavesConfirm : deleteWaves)}
                     onClick={this.deleteExecutionTrigger.bind(this)}
                   >
                     <i className='material-icons'>clear</i>
                   </div>
                 </div>
               ) : (
-                <div>
-                  TODO !0
-                  <i className='material-icons'>public</i> Si non public, click pour le rendre public
-
-                  <div className={cx('removeAction', this.state.deleteExecutionTriggerConfirm ? deleteWavesConfirm : deleteWaves)}
+                <div className='local'>
+                  <div className={cx('globalizeTrigger', globalizeWaves)} onClick={this.globalizeExecutionTrigger.bind(this)}>
+                    <i className='material-icons'>public</i>
+                  </div>
+                  <div className={cx('removeTrigger', this.state.deleteExecutionTriggerConfirm ? deleteWavesConfirm : deleteWaves)}
                     onClick={this.deleteExecutionTrigger.bind(this)}
                   >
                     <i className='material-icons'>delete</i>
                   </div>
                 </div>
               )}
-
             </div>
         )
       }
@@ -273,6 +272,16 @@ class BrowserActionableScenarioEditForm extends React.Component {
           this.setState({ deleteExecutionTriggerConfirm: false })
         }
       }, 3000)
+    }
+  }
+
+  globalizeExecutionTrigger () {
+    const trigger = this.state.triggerEditPanel
+    if (trigger && trigger.parent === this.props.instance.instanceId) {
+      trigger.parent = null
+      this.scenariiService.setTriggerInstance(trigger, null)
+        .then(() => this.forceUpdate())
+      this.props.highlightCloseButton()
     }
   }
 }

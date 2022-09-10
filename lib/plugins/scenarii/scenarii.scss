@@ -532,13 +532,28 @@
         display: inline;
       }
 
-      & div.removeAction {
+      & div.removeTrigger {
         display: inline-block;
         padding: 0 9px;
         position: absolute;
         left: 0.4rem;
         top: 0.4rem;
         z-index: 3;
+      }
+    }
+
+    & div.local {
+      & div.globalizeTrigger {
+
+      }
+
+      & div.removeTrigger {
+
+      }
+
+      & i.material-icons {
+        vertical-align: middle;
+        display: inline;
       }
     }
   }
