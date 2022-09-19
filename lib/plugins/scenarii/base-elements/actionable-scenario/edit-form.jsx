@@ -17,20 +17,24 @@ class BrowserActionableScenarioEditForm extends React.Component {
     this.state = {
       name: props.instance.data.name,
       advancedExpanded: !!props.instance.data.abortTrigger,
-      triggerEditPanel: undefined, // undef: not set, false: loading, null: missing, else: to display
+      triggerEditPanel: props.instance.data.executionTrigger ? false : undefined, // undef: not set, false: loading, null: missing, else: to display
       deleteExecutionTriggerConfirm: false
     }
 
     this.scenariiService = props.services()['asterism-scenarii']
 
+    this._mounted = false
     this._nameInput = null
     this._nameInputId = uuid.v4()
   }
 
   componentDidMount () {
-    if (this.props.instance.data.executionTrigger.length) {
-      this.betterName()
-    }
+    this._mounted = true
+    this._mountExecutionTrigger().then(this.betterName.bind(this))
+  }
+
+  componentWillUnmount () {
+    this._mounted = false
   }
 
   render () {
@@ -107,39 +111,40 @@ class BrowserActionableScenarioEditForm extends React.Component {
         const globalizeWaves = animationLevel >= 2 ? 'btn-flat waves-effect' : 'btn-flat'
 
         return (
-            <div className='executionTriggerForm'>
-              <TriggerEditForm theme={theme} animationLevel={animationLevel}
-                instance={this.state.triggerEditPanel} services={services}
-              />
+          <div className='executionTriggerForm'>
+            <TriggerEditForm theme={theme} animationLevel={animationLevel}
+              instance={this.state.triggerEditPanel} services={services}
+            />
 
-              {this.isExecutionTriggerGlobal() ? (
-                <div className='global'>
-                  <i className='material-icons'>public</i> Public Shared trigger, cannot be edited here.
-                  <div className={cx('removeTrigger', this.state.deleteExecutionTriggerConfirm ? deleteWavesConfirm : deleteWaves)}
-                    onClick={this.deleteExecutionTrigger.bind(this)}
-                  >
-                    <i className='material-icons'>clear</i>
-                  </div>
+            {this.isExecutionTriggerGlobal() ? (
+              <div className='global'>
+                <i className='material-icons'>public</i> Public Shared trigger, cannot be edited here.
+                <div className={cx('removeTrigger', this.state.deleteExecutionTriggerConfirm ? deleteWavesConfirm : deleteWaves)}
+                  onClick={this.deleteExecutionTrigger.bind(this)}
+                >
+                  <i className='material-icons'>clear</i>
                 </div>
-              ) : (
-                <div className='local'>
-                  <div className={cx('globalizeTrigger', globalizeWaves)} onClick={this.globalizeExecutionTrigger.bind(this)}>
-                    <i className='material-icons'>public</i>
-                  </div>
-                  <div className={cx('removeTrigger', this.state.deleteExecutionTriggerConfirm ? deleteWavesConfirm : deleteWaves)}
-                    onClick={this.deleteExecutionTrigger.bind(this)}
-                  >
-                    <i className='material-icons'>delete</i>
-                  </div>
+              </div>
+            ) : (
+              <div className='local'>
+                <div className={cx('removeTrigger', this.state.deleteExecutionTriggerConfirm ? deleteWavesConfirm : deleteWaves)}
+                  onClick={this.deleteExecutionTrigger.bind(this)}
+                >
+                  <i className='material-icons'>delete</i>
                 </div>
-              )}
-            </div>
+
+                <div className={cx('globalizeTrigger', globalizeWaves)} onClick={this.globalizeExecutionTrigger.bind(this)}>
+                  <i className='material-icons'>public</i>
+                </div>
+              </div>
+            )}
+          </div>
         )
       }
 
       // not found case (null)
       return (
-        <div className='section card red-text'>
+        <div className='section card red-text' onClick={this.deleteExecutionTrigger.bind(this)}>
           <i className='material-icons'>warning</i> <i className='material-icons'>healing</i>&nbsp;
           The trigger that was here seems to be missing. This avoid the scenario to be run properly, so you have to fix this.
         </div>
@@ -149,20 +154,7 @@ class BrowserActionableScenarioEditForm extends React.Component {
         this.setState({
           triggerEditPanel: false
         })
-        setTimeout(() => {
-          this.scenariiService.getTriggerInstance(executionTrigger, true)
-          .then((trig) => {
-            this.setState({
-              triggerEditPanel: trig || null // force null if undefined (not found)
-            })
-          })
-          .catch((error) => {
-            this.setState({
-              triggerEditPanel: null
-            })
-            console.error(error)
-          })
-        }, 200)
+        setTimeout(this._mountExecutionTrigger.bind(this), 200)
         return null
       }
 
@@ -184,10 +176,29 @@ class BrowserActionableScenarioEditForm extends React.Component {
     this.betterName()
   }
 
+  _mountExecutionTrigger () {
+    if (!this.props.instance.data.executionTrigger) {
+      return Promise.resolve()
+    }
+    return this.scenariiService.getTriggerInstance(this.props.instance.data.executionTrigger, true)
+    .then((trigger) => {
+      this.setState({
+        triggerEditPanel: trigger || null // force null if undefined (not found)
+      })
+      this.props.instance.executionTrigger = trigger
+    })
+    .catch((error) => {
+      this.setState({
+        triggerEditPanel: null
+      })
+      delete this.props.instance.executionTrigger
+      console.error(error)
+    })
+  }
+
   setTrigger (triggerId) {
     this.props.instance.data.executionTrigger = triggerId
-    this.forceUpdate()
-    this.betterName()
+    this._mountExecutionTrigger().then(this.betterName.bind(this))
   }
 
   setCondition (conditionId) {
@@ -223,7 +234,7 @@ class BrowserActionableScenarioEditForm extends React.Component {
     }
 
     Promise.all([
-      this.scenariiService.getTriggerInstance(this.props.instance.data.executionTrigger, true),
+      this.state.triggerEditPanel ? Promise.resolve(this.state.triggerEditPanel) : this.scenariiService.getTriggerInstance(this.props.instance.data.executionTrigger, true),
       this.props.instance.data.executionCondition.length ? this.scenariiService.getConditionInstance(this.props.instance.data.executionCondition, true) : Promise.resolve(null),
       this.scenariiService.getActionInstance(this.props.instance.data.action, true)
     ]).then(([trigger, condition, action]) => {
@@ -254,11 +265,13 @@ class BrowserActionableScenarioEditForm extends React.Component {
     if (!this.isExecutionTriggerGlobal()) {
       this.scenariiService.deleteTriggerInstance({ instanceId: this.props.instance.data.executionTrigger })
     }
-    this.setState({
-      triggerEditPanel: undefined, // TODO !0: works ?
-      deleteExecutionTriggerConfirm: false
-    })
-    // TODO !0: need force update ?
+    this.props.instance.data.executionTrigger = ''
+    const newState = this.state
+    newState.deleteExecutionTriggerConfirm = false
+    delete newState.triggerEditPanel
+    this.setState(newState)
+    delete this.props.instance.executionTrigger
+    this.props.highlightCloseButton()
   }
 
   _deleteExecutionTriggerConfirm () {
@@ -266,13 +279,11 @@ class BrowserActionableScenarioEditForm extends React.Component {
     this.setState({
       deleteExecutionTriggerConfirm: true
     })
-    if (element) {
-      this._deleteTimer = setTimeout(() => {
-        if (this._mounted) {
-          this.setState({ deleteExecutionTriggerConfirm: false })
-        }
-      }, 3000)
-    }
+    this._deleteTimer = setTimeout(() => {
+      if (this._mounted) {
+        this.setState({ deleteExecutionTriggerConfirm: false })
+      }
+    }, 3000)
   }
 
   globalizeExecutionTrigger () {

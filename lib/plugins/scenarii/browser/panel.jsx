@@ -221,6 +221,9 @@ class ScenariiEditPanel extends React.Component {
       })
       .then(() => {
         this._tabs[0].forceUpdate && this._tabs[0].forceUpdate()
+        this._tabs[1].forceUpdate && this._tabs[1].forceUpdate()
+        this._tabs[2].forceUpdate && this._tabs[2].forceUpdate()
+        this._tabs[3].forceUpdate && this._tabs[3].forceUpdate()
         this._tabs[this.state.currentTab].forceUpdate && this._tabs[this.state.currentTab].forceUpdate()
         this._editInstance = null
         if (this.state.EditForm) {
