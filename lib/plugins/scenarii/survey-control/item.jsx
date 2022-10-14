@@ -56,7 +56,7 @@ class SurveyControlItem extends Item {
               return
             }
 
-            this.state.scenario.data = data
+            this.state.scenario.data = data // do not trigger a refresh
             this.setState({
               arming: false
             })
@@ -69,7 +69,7 @@ class SurveyControlItem extends Item {
 
             console.log('###### ON surveyLevelChanged', level) // TODO !0: modal close to test
 
-            if (level === 1) {
+            if (level <= 2) {
               $(`#survey-pattern-${scenario.instanceId}`).modal('close')
               return this.setState({
                 alarmMessage: null,
@@ -184,7 +184,7 @@ class SurveyControlItem extends Item {
       ? theme.feedbacks.progressing
       : theme.actions.inconspicious)
 
-    const alertIcons = levelStateInstance.data.max >= 3
+    const alertIcons = levelStateInstance.data.max >= 4
       ? ['question_mark', 'done', 'warning', 'report']
       : ['question_mark', 'done', 'report']
 
@@ -193,7 +193,7 @@ class SurveyControlItem extends Item {
         {arming && (<ProgressBar progress={armingProgress} />)}
 
         <Row className='col s12 mainTitle'>
-          {(activated && (<Icon>{alertIcons[currentLevel]}</Icon>)) || <Icon>block</Icon>}
+          {(activated && (<Icon>{alertIcons[currentLevel-1]}</Icon>)) || <Icon>block</Icon>}
           <div className='fluid'>
             <div className='truncate'>{name}</div>
           </div>
