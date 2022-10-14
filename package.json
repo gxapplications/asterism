@@ -1,6 +1,6 @@
 {
   "name": "asterism",
-  "version": "1.11.4",
+  "version": "1.11.5",
   "description": "Extensible & dynamic dashboard platform",
   "author": "Xavier Gouley <gxapplications@gmail.com> (asterism.tk)",
   "contributors": [],
@@ -56,7 +56,10 @@
       "/docs/"
     ]
   },
-
+  "pre-commit": [
+    "lint",
+    "test"
+  ],
   "dependencies": {
     "@babel/preset-env": "7.11.x",
     "@babel/preset-react": "7.10.x",
