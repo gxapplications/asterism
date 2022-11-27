@@ -67,8 +67,6 @@ class SurveyControlItem extends Item {
               return
             }
 
-            console.log('###### ON surveyLevelChanged', level) // TODO !0: modal close to test
-
             if (level <= 2) {
               $(`#survey-pattern-${scenario.instanceId}`).modal('close')
               return this.setState({

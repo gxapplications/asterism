@@ -8,6 +8,7 @@ const server = require('../lib').server
 server.use(require('../lib/plugins/scenarii'))
 server.use(require('../lib/plugins/navigation-tools'))
 server.use(require('../lib/plugins/developer-tools'))
+server.use(require('../lib/plugins/monitor'))
 
 if (process.env.ASTERISM_PLUGINS) {
   process.env.ASTERISM_PLUGINS.split(',').forEach((plugin) => {
