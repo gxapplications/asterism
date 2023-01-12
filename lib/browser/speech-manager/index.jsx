@@ -13,6 +13,7 @@ export default class SpeechManager {
     this.mainComponent = mainComponent
     this.logger = logger
     this.mainState = mainState
+    this.commandGenerators = []
     this.available = (('SpeechRecognition' in window) || ('webkitSpeechRecognition' in window)) &&
       ('speechSynthesis' in window)
     this.voice = false
@@ -29,14 +30,19 @@ export default class SpeechManager {
           this.setLanguage.bind(this),
           this.continueDialog.bind(this),
           this.stopDialog.bind(this),
-          logger
+          logger,
+          this.commandGenerators,
         )
-      }, 200)
+      }, 300)
     }
 
     this.resultAnimating = false
     this.justStarted = false
     this.dialogMode = false
+  }
+
+  connectCommandGenerator (commandGenerator) {
+    this.commandGenerators.push(commandGenerator)
   }
 
   initEngines (localStorage) {

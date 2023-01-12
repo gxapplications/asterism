@@ -110,7 +110,8 @@ class MainComponent extends React.Component {
         publicSockets: toRequire.publicSockets ? toRequire.publicSockets.reduce((acc, namespace) => {
           acc[namespace] = this.socketManager.connectPublicSocket(namespace)
           return acc
-        }, {}) : []
+        }, {}) : [],
+        speechManager: this.speechManager
       })
 
       map[toRequire.libName] = instance

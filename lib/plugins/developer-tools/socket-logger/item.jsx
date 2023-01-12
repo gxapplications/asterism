@@ -8,6 +8,7 @@ import { Button, Icon, Modal } from 'react-materialize'
 import { Item } from 'asterism-plugin-library'
 
 import styles from './styles.css.js'
+import LightingGraph from "../../../tropical-aquarium-lighting/graph";
 
 class SocketLoggerItem extends Item {
   constructor (props) {
@@ -102,6 +103,8 @@ class SocketLoggerItem extends Item {
             )
           })}
         </div>
+
+        <LightingGraph />
       </div>
     )
   }
