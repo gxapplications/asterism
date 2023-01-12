@@ -16,15 +16,17 @@ class LightingGraph extends React.Component {
     this.latitude = 48.842205 // TODO: props
     this.longitude = 2.69802 // TODO: props
     this.astralData = new AstralData(this.latitude, this.longitude, 0)
+    this.useMoon = true // TODO: props
 
-    this.statu = {
+    this.state = {
+      date: new Date('2022-06-01'),
       sunNormalizationRate: 0.6, // TODO: state
       useMoonFraction: true, // TODO: state
-      minBlueRate: 0.05, // TODO: state
-      maxRedRatio: 0.4, // TODO: state
-      minRedRatio: 0.1, // TODO: state
+      minBlueRate: 0.03, // TODO: state
+      maxRedRatio: 0.25, // TODO: state
+      minRedRatio: 0.15, // TODO: state
       redMainFactor: 1, // TODO: state
-      blueMainFactor: 1, // TODO: state
+      blueMainFactor: this.useMoon ? 1.3 : 0, // TODO: state
       whiteMainFactor: 1, // TODO: state
     }
 
@@ -45,10 +47,12 @@ class LightingGraph extends React.Component {
   }
 
   render () {
-    //const { test } = this.state
+    const { date } = this.state
 
     return (
       <div className='lightingGraph'>
+        {this.useMoon && (<div>Fraction lune: {Math.round(this.astralData.getMoonFraction(date) * 100)}%</div>)}
+
         START
         <canvas id={`lighting-chart-${this._id}`} className='chart'/>
         END
@@ -57,38 +61,32 @@ class LightingGraph extends React.Component {
   }
 
   updateChart () {
+    const { date } = this.state
     if (this._chart) {
       this._chart.destroy()
     }
 
-    const sunAltitudes = this.astralData.getDatesSeries(60)
+    const sunAltitudes = this.astralData.getDatesSeries(60, date)
       .map((x) => ({ x: x.getTime(), y: Math.max(-1, this.astralData.getSunAltitude(x)) }))
       .filter(({y}) => y >= 0)
 
-    const moonAltitudes = this.astralData.getDatesSeries(60)
+    const moonAltitudes = this.astralData.getDatesSeries(60, date)
       .map((x) => ({ x: x.getTime(), y: Math.max(-1, this.astralData.getMoonAltitude(x)) }))
       .filter(({y}) => y >= 0)
 
     const moments = [
-      { x: this.astralData.getSunRiseTime().getTime(), y: 0.5, label: 'Sunrise' },
-      { x: this.astralData.getSunsetTime().getTime(), y: 0.5, label: 'Sunset' },
-      { x: this.astralData.getNightTime().getTime(), y: 0.5, label: 'Night' },
-      { x: this.astralData.getNightEndTime().getTime(), y: 0.5, label: 'Night end' },
+      { x: this.astralData.getSunRiseTime(date).getTime(), y: 0.5, label: 'Sunrise' },
+      { x: this.astralData.getSunsetTime(date).getTime(), y: 0.5, label: 'Sunset' },
+      { x: this.astralData.getNightTime(date).getTime(), y: 0.5, label: 'Night' },
+      { x: this.astralData.getNightEndTime(date).getTime(), y: 0.5, label: 'Night end' },
     ]
 
-    const lights = this.astralData.getDatesSeries()
-        .map((x) => ({ x: x.getTime(), values: this.astralData.getLights(x, {
-            sunNormalizationRate: 0.6, // TODO: state
-            useMoonFraction: true, // TODO: state
-            minBlueRate: 0.05, // TODO: state
-            maxRedRatio: 0.4, // TODO: state
-            minRedRatio: 0.1, // TODO: state
-          }) }))
+    const lights = this.astralData.getDatesSeries(15, date)
+        .map((x) => ({ x: x.getTime(), values: this.astralData.getLights(x, this.state) }))
 
     const redLight = lights.map(({ x, values }) => ({ x, y: values.red }))
     const blueLight = lights.map(({ x, values }) => ({ x, y: values.blue }))
     const whiteLight = lights.map(({ x, values }) => ({ x, y: values.white }))
-    console.log('WHITE', this.statu, whiteLight)
 
     // http://www.chartjs.org/docs/latest
 
@@ -106,8 +104,9 @@ class LightingGraph extends React.Component {
               radius: 7,
               fill: false,
               showLine: false,
+              yAxisID: 'astral',
             },
-            {
+            { // TODO !1: hide if !this.useMoon
               type: 'line',
               data: moonAltitudes,
               borderColor: '#77aaff',
@@ -115,6 +114,7 @@ class LightingGraph extends React.Component {
               radius: 4,
               fill: false,
               showLine: false,
+              yAxisID: 'astral',
             },
             {
               type: 'bar',
@@ -123,6 +123,7 @@ class LightingGraph extends React.Component {
               borderWidth: 0,
               barThickness: 1,
               fill: false,
+              yAxisID: 'astral',
             },
             {
               type: 'line',
@@ -130,13 +131,15 @@ class LightingGraph extends React.Component {
               borderColor: '#ff1111',
               radius: 0,
               fill: false,
+              yAxisID: 'lights',
             },
-            {
+            { // TODO !1: hide if !this.useMoon
               type: 'line',
               data: blueLight,
               borderColor: '#3366bb',
               radius: 0,
               fill: false,
+              yAxisID: 'lights',
             },
             {
               type: 'line',
@@ -144,6 +147,7 @@ class LightingGraph extends React.Component {
               borderColor: '#eeeebb',
               radius: 0,
               fill: false,
+              yAxisID: 'lights',
             },
           ]
         },
@@ -158,17 +162,33 @@ class LightingGraph extends React.Component {
               min: 0,
               max: 1.6,
             },
-            yAxes: [{
-              display: true,
-              beginAtZero: true,
-              ticks: {
-                suggestedMax: 0.1 // min amplitude for y
+            yAxes: [
+              {
+                id: 'astral',
+                display: false,
+                beginAtZero: true,
+                ticks: {
+                  suggestedMax: 1.6 // min amplitude for y
+                },
+                suggestedMin: 0,
+                suggestedMax: 1.6,
+                min: 0,
+                max: 1.6,
               },
-              suggestedMin: 0,
-              suggestedMax: 1.6,
-              min: 0,
-              max: 1.6,
-            }],
+              {
+                id: 'lights',
+                display: true,
+                beginAtZero: true,
+                ticks: {
+                  callback: (value) => ((value * 100) + '%'),
+                  suggestedMax: 1 // min amplitude for y
+                },
+                suggestedMin: 0,
+                suggestedMax: 1,
+                min: 0,
+                max: 1,
+              }
+            ],
             xAxes: [{
               type: 'time',
               display: true,
@@ -178,7 +198,7 @@ class LightingGraph extends React.Component {
                   hour: 'H'
                 }
               },
-              min: 1673222400000,
+              min: 1673222400000,  // TODO !1: what is this ?
               max: 1673308800000,
             }]
           },
